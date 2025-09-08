@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/04 17:38:59 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/04 17:40:05 by nboer            ###   ########.fr       */
+/*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
+/*   Updated: 2025/09/08 12:03:42 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,19 @@
 #include <iostream>
 
 class Server {
-	private:
-	public:
+private:
+	int	_port;
+	
+public:
+// constructors
+	Server();
+	Server(const Server& copy);
+	~Server();
+	Server& operator=(const Server& other);
+
 		// accept client connection
-		// 
+		//
+
 };
 
 #endif

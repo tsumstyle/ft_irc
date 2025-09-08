@@ -6,7 +6,7 @@
 #    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/04 13:11:48 by aroux             #+#    #+#              #
-#    Updated: 2025/09/04 13:47:39 by aroux            ###   ########.fr        #
+#    Updated: 2025/09/08 12:00:55 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ KEY = 🔧
 TRASH = 🗑️
 
 # Compiler setup
-NAME = irc
+NAME = ircserv
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iinc
 SRC_DIR = src
@@ -65,7 +65,16 @@ fclean: clean
 	@echo "$(TRASH)$(RED) All clean.$(RESET)"
 
 valgrind:
-	valgrind --leak-check=full ./$(NAME)
+	valgrind --leak-check=full ./$(NAME) 8080 test
+
+valfull:
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+	./$(NAME) 8080 test
+
+valchild:
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+	--track-fds=yes --trace-children=yes --suppressions=readline_suppress.supp \
+	./$(NAME) 8080 test
 
 # Rebuild everything
 re: fclean all
