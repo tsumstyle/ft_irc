@@ -6,15 +6,17 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/08 12:06:07 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/08 16:47:20 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma	once
+#ifndef	CHANNEL_HPP
+# define CHANNEL_HPP
 
-#include <string>
-#include <vector>
-#include "Client.hpp"
+# include <string>
+# include <vector>
+
+class Client; 
 
 class Channel	{
 private:
@@ -37,3 +39,5 @@ Channel::Channel(/* args */)
 Channel::~Channel()
 {
 }
+
+#endif
