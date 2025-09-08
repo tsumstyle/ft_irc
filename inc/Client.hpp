@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/08 12:05:47 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/08 13:36:54 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ private:
 	std::string	_user;
 	bool		_state;
 	int			_fd;
-	std::vector<Channel>	channels; // channels it is part of
+	std::vector<Channel>	channels; // channels it is part of/ or in the format of std::vector<bool> ?
 
 public:
 // constructors
