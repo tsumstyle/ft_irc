@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/08 16:50:03 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/10 14:10:18 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,25 @@
 #define CLIENT_H
 
 #include <iostream>
-#include "Channel.hpp"
+#include <sys/socket.h>		// socket()
+#include <vector>
+
+enum	clientState {
+	NOT_REGISTERED,		// just accepted by server, no NICK or USER yet
+	PARTIAL_REGISTERED,	// sent NICK but not USER
+	REGISTERED,			// NICK+USER set, can join channel 
+	DISCONNECTED,
+};
+
+class Channel;
 
 class Client {
 private:
 	std::string	_nick;
 	std::string	_user;
-	bool		_state;
+	clientState	_state;
 	int			_socket;
-	std::vector<Channel>	channels; // channels it is part of/ or in the format of std::vector<bool> ?
+	std::vector<Channel*>	_channels; // channels it is part of/ or in the format of std::vector<bool> ?
 
 public:
 // constructors
@@ -33,6 +43,17 @@ public:
 	Client(const Client& copy);
 	~Client();
 	Client& operator=(const Client& other);
+	
+// getters and setters
+	int					getSocket() const;
+	const std::string&	getNick() const;
+	const std::string&	getUser() const;
+	clientState			getState() const;
+	void				setNick(const std::string& nick);
+	void				setUser(const std::string& user);
+	void				setState(clientState state);
+
+	
 		// create socket
 		// connect
 		// send data
@@ -40,26 +61,5 @@ public:
 		// disconnect
 
 };
-
-Client::Client() {}
-
-Client::Client(int client_socket) : _socket(client_socket) {}
-
-Client::Client(const Client& copy) : _nick(copy._nick),
-									 _user(copy._user),
-									 _state(copy._state),
-									 _socket(copy._socket)	{}
-
-Client::~Client() {}
-
-Client&	Client::operator=(const Client& other) {
-	if (this != &other) {
-		_nick = other._nick;
-		_user = other._user;
-		_state = other._state;
-		_socket	= other._socket;
-	}
-	return *this;
-}
 
 #endif

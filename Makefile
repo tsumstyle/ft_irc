@@ -6,7 +6,7 @@
 #    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/04 13:11:48 by aroux             #+#    #+#              #
-#    Updated: 2025/09/08 12:00:55 by aroux            ###   ########.fr        #
+#    Updated: 2025/09/10 14:12:15 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,9 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 # Sources and objects
-SRC 	=	$(SRC_DIR)/main.cpp \
+SRC 	=	$(SRC_DIR)/main.cpp		$(SRC_DIR)/Channel.cpp		$(SRC_DIR)/Client.cpp \
+			$(SRC_DIR)/Server.cpp
+
 
 
 OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
