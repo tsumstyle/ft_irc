@@ -6,14 +6,13 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/10 14:10:18 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/10 16:33:54 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // Represents each connected user
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma	once
 
 #include <iostream>
 #include <sys/socket.h>		// socket()
@@ -34,7 +33,7 @@ private:
 	std::string	_user;
 	clientState	_state;
 	int			_socket;
-	std::vector<Channel*>	_channels; // channels it is part of/ or in the format of std::vector<bool> ?
+	std::vector<Channel*>	_channels;
 
 public:
 // constructors
@@ -53,13 +52,10 @@ public:
 	void				setUser(const std::string& user);
 	void				setState(clientState state);
 
-	
-		// create socket
-		// connect
-		// send data
-		// receive data
-		// disconnect
+// other member functions	
+	void	sendMessage(const std::string& msg) const {};	// send data
+	// addChannel: becomes part of this channel, and channel is part of the Client's list of channels
+	// removeChannel: is removed from this channel, and channel is remove from the client's list of channels
 
 };
 
-#endif

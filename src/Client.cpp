@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/09 16:27:45 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/10 16:21:44 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,3 +49,11 @@ clientState	Client::getState() const { return _state; }
 void	Client::setNick(const std::string& nick) { _nick = nick; }
 void	Client::setUser(const std::string& user) { _user = user; }
 void	Client::setState(clientState state) { _state = state; }
+
+//other member functions
+void	Client::sendMessage(const std::string& msg) const {
+	if (_socket != -1) {
+		::send(_socket, msg.c_str(), msg.size(), 0);
+	}
+}
+

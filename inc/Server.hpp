@@ -6,12 +6,11 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 14:18:23 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/10 16:35:05 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_H
-#define SERVER_H
+#pragma	once
 
 #include <iostream>
 #include <map>
@@ -30,7 +29,8 @@ private:
 	std::vector<pollfd>		_fds;	// vector of pollfds : 
 									// pollfd describes which fd poll() should watch and what events to look for
 									// events: input, output, errors; and revents (what events actually happened, set by poll(
-	std::map<int, Client>	_connected;// also stores the list of clients?
+	std::map<int, Client>			_connected;	// also stores the list of clients?
+	std::map<std::string, Channel>	_channels;	// list of all existing channels
 	
 public:
 // constructors
@@ -45,6 +45,7 @@ public:
 	void	run();		// main loop with accept(), recv()
 	void	acceptClient();	// accept a new client and adds to client list
 	void	handleClient(int fd); 	//read from a client
+	//void	createChannel ?
+
 };
 
-#endif

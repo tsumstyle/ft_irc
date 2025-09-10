@@ -6,12 +6,11 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 14:14:49 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/10 16:34:16 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	CHANNEL_HPP
-# define CHANNEL_HPP
+#pragma	once
 
 # include <string>
 # include <vector>
@@ -40,5 +39,3 @@ public:
 	void	removeOperator(Client* user);
 	void	broadcast(std::string& msg, Client* sender);
 };
-
-#endif

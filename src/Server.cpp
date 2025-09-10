@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/09 16:28:55 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/10 16:31:01 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,16 @@ void	Server::acceptClient() {
 }
 
 void	Server::handleClient(int fd) {
-	// read from the connection
+// read from the connection
 	char	buffer[510];
+	Client&	client = _connected[fd];
 	ssize_t	bytes_read = recv(fd, buffer, sizeof(buffer) - 1, 0);		// read fucntion for sockets		
 	if (bytes_read <= 0)	{
 		std::cout << "Client disconnected: fd " << fd << std::endl;
 		close(fd);
 		fd = -1; // mark socket as closed
 	}
-	else { // if there's something, handle message
+	else { // if there's something, handle message. Here replace with command parsing (NICK, USER, PASS, JOIN)
 		buffer[bytes_read] = '\0';
 		std::cout << "Message: " << buffer << std::endl;
 		std::string	response = "Received: ";
