@@ -6,14 +6,17 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 14:15:48 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/11 15:40:20 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Channel.hpp"
+#include "../inc/utils.hpp"
 
 // constructors_operators
 Channel::Channel() : _name("defaultchannel") {}
+
+Channel::Channel(std::string channel_name) : _name(channel_name) {}
 
 Channel::Channel(const Channel& copy) : _name(copy._name), 
 										_users(copy._users),

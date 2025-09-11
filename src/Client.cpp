@@ -6,11 +6,12 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 16:21:44 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/11 15:40:26 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Client.hpp"
+#include "../inc/utils.hpp"
 
 // constructors
 Client::Client() : _nick(""), _user(""), _state(NOT_REGISTERED), _socket(-1) {}
@@ -40,10 +41,11 @@ Client&	Client::operator=(const Client& other) {
 }
 
 // getters
-int	Client::getSocket() const { return _socket; }
+int					Client::getSocket() const { return _socket; }
 const std::string&	Client::getNick() const { return _nick; }
 const std::string&	Client::getUser() const { return _user; }
-clientState	Client::getState() const { return _state; }
+clientState			Client::getState() const { return _state; }
+std::string			Client::getBuffer() const { return _buffer; }
 
 // setters
 void	Client::setNick(const std::string& nick) { _nick = nick; }
@@ -51,9 +53,9 @@ void	Client::setUser(const std::string& user) { _user = user; }
 void	Client::setState(clientState state) { _state = state; }
 
 //other member functions
-void	Client::sendMessage(const std::string& msg) const {
+/* void	Client::sendMessage(const std::string& msg) const {
 	if (_socket != -1) {
 		::send(_socket, msg.c_str(), msg.size(), 0);
 	}
-}
+} */
 

@@ -6,16 +6,17 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 16:34:16 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/11 15:05:11 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma	once
 
+# include <sys/socket.h>	// send()
 # include <string>
 # include <vector>
 # include "Client.hpp"
-# include <sys/socket.h>	// send()
+
 
 class Client; 
 
@@ -28,6 +29,7 @@ private:
 public:
 // constructors
 	Channel();
+	Channel(std::string channel_name);
 	Channel(const Channel& copy);
 	~Channel();
 	Channel& operator=(const Channel& other);

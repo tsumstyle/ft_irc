@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/10 16:33:54 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/11 15:41:14 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 
 enum	clientState {
 	NOT_REGISTERED,		// just accepted by server, no NICK or USER yet
-	PARTIAL_REGISTERED,	// sent NICK but not USER
-	REGISTERED,			// NICK+USER set, can join channel 
+	NICK_REGISTERED,	// sent NICK but not USER
+	USERNAME_REGISTERED,
+	FULLY_REGISTERED,			// NICK+USER set, can join channel 
 	DISCONNECTED,
 };
 
@@ -34,6 +35,7 @@ private:
 	clientState	_state;
 	int			_socket;
 	std::vector<Channel*>	_channels;
+	std::string	_buffer;		// stores incomplete/complete messages
 
 public:
 // constructors
@@ -48,12 +50,13 @@ public:
 	const std::string&	getNick() const;
 	const std::string&	getUser() const;
 	clientState			getState() const;
+	std::string			getBuffer() const;
 	void				setNick(const std::string& nick);
 	void				setUser(const std::string& user);
 	void				setState(clientState state);
 
 // other member functions	
-	void	sendMessage(const std::string& msg) const {};	// send data
+	//void	sendMessage(const std::string& msg) const {};	// send data
 	// addChannel: becomes part of this channel, and channel is part of the Client's list of channels
 	// removeChannel: is removed from this channel, and channel is remove from the client's list of channels
 

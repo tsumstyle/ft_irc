@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 16:35:05 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/11 15:36:13 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,11 @@ public:
 	void	handleClient(int fd); 	//read from a client
 	//void	createChannel ?
 
+	void	parseCommand(Client& client, const std::string& line);
+	void	handleNick(Client& client, std::istringstream iss);
+	void	handleUser(Client& client, std::istringstream iss);
+	void	handleJoin(Client& client, std::istringstream iss);
+	void	handlePrivmsg(Client& client, std::istringstream iss);
+	void	handleUnknown(Client& client, std::istringstream iss);
 };
 
