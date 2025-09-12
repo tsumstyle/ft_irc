@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 14:52:08 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/11 15:18:34 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/12 17:29:31 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,6 @@
 /* 			PROTOTYPES 			*/
 /********************************/
 
+/* logs.cpp */
+std::string	getTimeStamp();
+void		logSendToClient(Client* client, const std::string& msg, bool toClient);

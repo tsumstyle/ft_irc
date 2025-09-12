@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/11 15:38:14 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/12 17:33:25 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "../inc/utils.hpp"
 
 //constructors
-Server::Server() : _port(8080) {}
+Server::Server() : _port(6667), _server_pw("default_pw") {}
 
-Server::Server(const int& port) : _port(port) {}
+Server::Server(const int& port, const std::string& password) : _port(port), _server_pw(password) {}
 
 Server::Server(const Server& copy) : _port(copy._port),
 									 _server_socket(copy._server_socket),
@@ -36,7 +36,9 @@ Server&	Server::operator=(const Server& other) {
 	return *this;
 }
 
+
 //other member functions
+/* start and run server */
 void	Server::start() {
 // 1) creating a socket (fd that will be used for communication) : IPv4, TCP
 // we're using Internet IPv4 protocol (AF_INET) 
@@ -55,15 +57,15 @@ void	Server::start() {
 //    struct in_addr sin_addr;   /* internet address */
 // };
 
-// listen to port 8080
+// listen to port _port
 	sockaddr_in	server_address;
 	server_address.sin_family = AF_INET;
 	server_address.sin_addr.s_addr = INADDR_ANY;	// accepts from any IP
-	server_address.sin_port = htons(8080); 			// htons converts to network byte order
+	server_address.sin_port = htons(_port); 			// htons converts to network byte order
 
 // 3) bind socket : bind() assigns an IP address and port to the socket:
 	if (bind(_server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) < 0)	{
-		std::cout << "Failed to bind port 8080." << std::endl;
+		std::cout << "Failed to bind port " << _port << "." << std::endl;
 		exit(EXIT_FAILURE);
 	}
 // 4) listen to port: set server_socket as passive eg listening to whatever clients will send
@@ -101,6 +103,7 @@ void	Server::run() {
 	close(_server_socket);
 }
 
+/* client handling */
 void	Server::acceptClient() {
 	int	client_socket = accept(_server_socket, NULL, NULL);
 	if (client_socket < 0)	{
@@ -137,10 +140,11 @@ void	Server::handleClient(int fd) {
 	while ((pos = client.getBuffer().find("\r\n")) != std::string::npos) { // as long as I find complete message (ie terminated by \r\n), process them
 		std::string	line = client.getBuffer().substr(0, pos);
 		client.getBuffer().erase(0, pos+ 2); // remove processed line
-		parseCommand(server, client, line);
+		parseCommand(client, line);
 	}
 }
 
+/* Parse command */
 void	Server::parseCommand(Client& client, const std::string& line) {
 	std::cout << "Received from client " << client.getSocket()
 			  << ": " << line << std::endl;
@@ -149,94 +153,135 @@ void	Server::parseCommand(Client& client, const std::string& line) {
 	std::string			command;
 	iss >> command;					// the >> operator reads the 1st whitespace-sperated token from the stream into command and then advances the cursor (ie it does your parsing for you token by token)
 
-	if (command == "NICK")			// nickname --> store it in the Client class
+	if (command == "PASS")	// give super secret password (given when running our ./irc)
+		handlePass(client, iss);
+	else if (command == "NICK")			// nickname --> store it in the Client class
 		handleNick(client, iss);
 	else if (command == "USER")		// username --> idem
 		handleUser(client, iss);
-	else if (command == "PASS") {	// give super secret password 
-		}
 	else if (command == "JOIN") 	// join a channel
 		handleJoin(client, iss);
 	else if (command == "PRIVMSG") 	// send a message to another user, or to a whole channel
 		handlePrivmsg(client, iss);
 	else if (command == "PART") {	// quit one channel
-
+		//TODO
 	}
 	else if (command == "QUIT") {	// quit server
-
+		//TODO
 	}	
 	else							// unknown command
-		handleUnknown(client, iss);
+		handleUnknown(client, command);
 }
 
-// parse command:
-void	Server::handleNick(Client& client, std::istringstream iss) {
+void	Server::handlePass(Client& client, std::istringstream& iss) {
+	std::string	password;
+	iss >> password;
+
+	if (client.getState() != NEW) {
+		// specific err message because if youre sending password but youre already in, wtf?
+		// password should be the first thing that a new client sends
+		logSendToClient(&client, "ERROR :PASS already sent", true);
+		return;
+	}
+	if (password != _server_pw) {
+		(void)client;
+		logSendToClient(&client, "ERROR :wrong password", true);
+		// send specific err msg to clientOT_REGISTERED
+		return; 
+	}
+	logSendToClient(&client, "PASS OK", true);
+	client.setState(PASS_OK);
+}
+
+void	Server::handleNick(Client& client, std::istringstream& iss) {
 	std::string	nick;
 	iss >> nick;			// next token is the value given for nickname, store it in a string
 	client.setNick(nick);
-	if (client.getState() == USERNAME_REGISTERED) {
-		client.setState(FULLY_REGISTERED);
+	if (client.getState() == NEW) {
+		// err msg, should send the PASS first
+		return;
+	}
+	if (client.getState() == USERNAME_OK) {
+		client.setState(REGISTERED);
 		// write server log: Client XX set nickname to 'YYY' 
 		// sendMessage(msg, client); [TODO: implement] // send IRC welcome messages to client
 	}
 	else {
-		client.setState(NICK_REGISTERED);
+		client.setState(NICK_OK);
 		// write server log: Client XX set nickname to 'YYY' 
 	}
 	std::cout << "Client " << client.getSocket() << " set NICK = " << nick << std::endl;
 }
 
-void	Server::handleUser(Client& client, std::istringstream iss) {
+void	Server::handleUser(Client& client, std::istringstream& iss) {
 	std::string	user;
 	iss >> user;
 	client.setUser(user);
-	if (client.getState() == NICK_REGISTERED) {
-		client.setState(FULLY_REGISTERED);
+	if (client.getState() == NEW) {
+		// err msg, should send the PASS first
+		return;
+	}
+	if (client.getState() == NICK_OK) {
+		client.setState(REGISTERED);
 		// write server log: Client XX set username to 'YYY' 
 		// sendMessage(msg, client); [TODO: implement] // send IRC welcome messages to client
 	}
 	else {
-		client.setState(USERNAME_REGISTERED);
+		client.setState(USERNAME_OK);
 		// write server log: Client XX set username to 'YYY' 
 	}
 }
 
-void	Server::handleJoin(Client& client, std::istringstream iss) {
+void	Server::handleJoin(Client& client, std::istringstream& iss) {
 	std::string channel;
-	std::string	channel_name;
 	iss >> channel;
-	if (channel[0] != '#')
-		// invalid, return 
-	channel_name = channel.substr(1, channel.size() - 1);
-	for (size_t i = 0; i < _channels.size(); i++) {
-		if (_channels[i] == channel_name) {
-			// channel  already exists, add user to channel
-			_channels[i].addUser(client);
-			// add channel to the client's list of channels (or useless step?) : client.joinChannel(_channels[i])
-			// server and client output
-		}
-		else {
-			Channel	newChannel = Channel(channel_name); // create new channel
-			_channels[channel_name] = newChannel;		// add it to the server
-			_channels[i].addUser(client);
-			// server output: channel created + user joined channel + made operator
-			// client output: channel created + joined the channel + made operator
-		}	
+	if (client.getState() != REGISTERED) {
+		// err msg, should send PASS, then NICK and USER
+		return;
 	}
+	if (channel.empty() || channel[0] != '#') {
+		std::cout << "Invalid channel name: " << channel << ".\nShould be prefixed by '#'" << std::endl;
+		return;
+	}
+	std::string	channel_name = channel.substr(1);	// remove # char
+	std::map<std::string, Channel>::iterator iter = _channels.find(channel_name);	// look for channel in map of channels
+	if (iter != _channels.end()) {					// channel exists, add user
+		iter->second.addUser(&client);
+		// TODO add channel to the client's list of channels (or useless step?) : client.joinChannel(_channels[i])
+		// TODO server and client output
+	}
+	else {
+		Channel	newChannel(channel_name); 			// create new channel
+		newChannel.addUser(&client);
+		newChannel.addOperator(&client);
+		_channels[channel_name] = newChannel;		// add it to the server
+		// TODO server output: channel created + user joined channel + made operator
+		// TODO client output: channel created + joined the channel + made operator
+	}	
 }
 
-void	Server::handlePrivmsg(Client& client, std::istringstream iss) {
+void	Server::handlePrivmsg(Client& client, std::istringstream& iss) {
 	std::string	target, msg;
 	iss >> target;
+	if (client.getState() != REGISTERED) {
+		// err msg, should send PASS, then NICK and USER
+		return;
+	}
 	std::getline(iss, msg); // gets the rest of the stream after the first argument token
 	if (!msg.empty() && msg[0] == ' ') // trim leading space
 		msg.erase(0, 1);
 	if (!msg.empty() && msg[0] == ':') // trim leading :
 		msg.erase(0, 1);
+	(void)client;	// silence compile warnings for now, line to be removed
 	// send msg to target (user or channel)
 }
 
-void	Server::handleUnknown(Client& client, std::istringstream iss) {
+void	Server::handleUnknown(Client& client, std::string& command) {
+	if (client.getState() != REGISTERED) {
+		// err msg, should send PASS, then NICK and USER
+		return;
+	}
 	std::cout << "Unknown command: " << command << std::endl;
+	(void)client;	// silence compile warnings for now, line to be removed
 }
 

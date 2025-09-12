@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/11 15:40:26 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/12 16:04:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 #include "../inc/utils.hpp"
 
 // constructors
-Client::Client() : _nick(""), _user(""), _state(NOT_REGISTERED), _socket(-1) {}
+Client::Client() : _nick(""), _user(""), _state(NEW), _socket(-1) {}
 
 Client::Client(int client_socket) : _nick(""), 
 									_user(""), 
-									_state(NOT_REGISTERED), 
+									_state(NEW), 
 									_socket(client_socket) {}
 
 Client::Client(const Client& copy) : _nick(copy._nick),

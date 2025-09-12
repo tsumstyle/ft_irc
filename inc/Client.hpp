@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/11 15:41:14 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/12 15:45:16 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@
 #include <vector>
 
 enum	clientState {
-	NOT_REGISTERED,		// just accepted by server, no NICK or USER yet
-	NICK_REGISTERED,	// sent NICK but not USER
-	USERNAME_REGISTERED,
-	FULLY_REGISTERED,			// NICK+USER set, can join channel 
+	NEW,		// just accepted by server, no PASS, NICK or USER yet
+	PASS_OK,
+	NICK_OK,	// sent NICK but not USER
+	USERNAME_OK,
+	REGISTERED,			// NICK+USER set, can join channel 
 	DISCONNECTED,
 };
 

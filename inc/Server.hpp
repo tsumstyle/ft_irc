@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/11 15:36:13 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/12 15:55:09 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <map>
 #include <cstdlib>			// exit(), EXIT_FAILURE, EXIT_SUCCESS
+#include <sstream>
 #include <errno.h>			// not sure if we're allowed to use it
 #include <poll.h>
 #include <unistd.h>			// read(), open(), close()
@@ -25,6 +26,7 @@
 class Server {
 private:
 	int						_port;
+	std::string				_server_pw;
 	int						_server_socket;
 	std::vector<pollfd>		_fds;	// vector of pollfds : 
 									// pollfd describes which fd poll() should watch and what events to look for
@@ -35,7 +37,7 @@ private:
 public:
 // constructors
 	Server();					// let's default it to _port value 8080
-	Server(const int& port);	// param constructor with a specified port value
+	Server(const int& port, const std::string& password);	// param constructor with a specified port value
 	Server(const Server& copy);
 	~Server();
 	Server& operator=(const Server& other);
@@ -48,10 +50,11 @@ public:
 	//void	createChannel ?
 
 	void	parseCommand(Client& client, const std::string& line);
-	void	handleNick(Client& client, std::istringstream iss);
-	void	handleUser(Client& client, std::istringstream iss);
-	void	handleJoin(Client& client, std::istringstream iss);
-	void	handlePrivmsg(Client& client, std::istringstream iss);
-	void	handleUnknown(Client& client, std::istringstream iss);
+	void	handlePass(Client& client, std::istringstream& iss);
+	void	handleNick(Client& client, std::istringstream& iss);
+	void	handleUser(Client& client, std::istringstream& iss);
+	void	handleJoin(Client& client, std::istringstream& iss);
+	void	handlePrivmsg(Client& client, std::istringstream& iss);
+	void	handleUnknown(Client& client, std::string& command);
 };
 
