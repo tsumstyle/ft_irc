@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/13 19:47:38 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/13 19:51:27 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	Server::start() {
 	sockaddr_in	server_address;
 	server_address.sin_family = AF_INET;
 	server_address.sin_addr.s_addr = INADDR_ANY;	// accepts from any IP
-	server_address.sin_port = htons(8080); 			// htons converts to network byte order
+	server_address.sin_port = htons(_port); 			// htons converts to network byte order
 
 // 3) bind socket : bind() assigns an IP address and port to the socket:
 	if (bind(_server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) < 0)	{
