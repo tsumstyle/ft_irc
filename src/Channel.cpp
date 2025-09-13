@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 14:15:48 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/13 16:25:06 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ Channel& Channel::operator=(const Channel& other) {
 // other members functions
 bool	Channel::hasUser(Client* user) {
 	for (size_t i = 0; i < _users.size(); i++) {
-		if (user == _users[i])
-			return true; // write message that client is already in the channel?
+		if (user == _users[i]) {
+			err_handler("Client is already in the channel");
+			return true; 
+		}
 	}
 	return false;
 }
@@ -43,7 +45,8 @@ bool	Channel::hasUser(Client* user) {
 void	Channel::addUser(Client* user) {
 	if (!hasUser(user))
 		_users.push_back(user);
-	// else write error msg: user already on channel?
+	else
+		err_handler("User already on channel");
 }
 
 void	Channel::removeUser(Client* user) {
@@ -53,7 +56,7 @@ void	Channel::removeUser(Client* user) {
 			return ;
 		}
 	}
-	// else write an error message? could not remove because dont belong to channel? 
+	err_handler("User is not in channel");
 }
 
 void	Channel::addOperator(Client* user) {

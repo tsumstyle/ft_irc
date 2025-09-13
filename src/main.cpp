@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 13:22:32 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/08 16:40:38 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/13 18:19:28 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,20 @@
 #include <cstdlib>			// exit(), EXIT_FAILURE
 #include <cerrno>			// errno
 #include <poll.h>			// poll(), pollfd
-#include "utils.hpp"
+#include "utilities.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
 
-int	main(void)	{
-	Server	irc(8080);
+//Client join: telnet 127.0.0.1 8080
+
+int	main(int argc, char **argv)	{
+	int port;
+	
+	if ((argc == 2 || argc == 3) && isnum(argv[1]))
+		port = std::atoi(argv[1]); 
+	else
+		return err_handler("Invalid input, use: ./ircserv <port> <password> ");
+	Server	irc(port);
 	irc.start(); 
 	irc.run();
 	return 0;

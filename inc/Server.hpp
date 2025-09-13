@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/13 13:53:45 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/13 19:46:53 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,30 @@
 #include <sys/socket.h>		// socket()
 #include <netinet/in.h>		// sockaddr_in (struct used to define the address we want to assign to the socket in the case of an Internet Protocol (IP))
 #include "Client.hpp"
+#include "utilities.hpp"
+#include "parser.hpp"
+
+struct ParsedCmd;
 
 class Server {
 private:
-	int						_port;
-	int						_server_socket;
-	std::vector<pollfd>		_fds;	// vector of pollfds : 
-									// pollfd describes which fd poll() should watch and what events to look for
-									// events: input, output, errors; and revents (what events actually happened, set by poll(
-	std::map<int, Client*> 	_connected;	// also stores the list of clients? // NB: list of pointers?
-	std::map<std::string, Channel*>	_channels;	// list of all existing channels // NB: list of names?
-	
+	int								_port;
+	int								_server_socket;
+	std::vector<pollfd>				_fds;	// vector of pollfds : // pollfd describes which fd poll() should watch and what events to look for // events: input, output, errors; and revents (what events actually happened, set by poll(
+	std::map<int, Client*>			_connected;	// also stores the list of clients? //
+	std::map<std::string, Channel*>	_channels;	// list of all existing channels //
 public:
 // constructors
 	Server();					// let's default it to _port value 8080
 	Server(const int& port);	// param constructor with a specified port value
-	Server(const Server& copy);
 	~Server();
-	Server& operator=(const Server& other);
 
 // member functions
 	void	start();	// setup socket, bind, listen
 	void	run();		// main loop with accept(), recv()
 	void	acceptClient();	// accept a new client and adds to client list
 	void	handleClient(int fd); 	//read from a client
+	void	handleCmd(const ParsedCmd &data);
 	//void	createChannel ?
 
 };

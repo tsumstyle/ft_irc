@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
+#    By: nboer <nboer@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/04 13:11:48 by aroux             #+#    #+#              #
-#    Updated: 2025/09/10 14:12:15 by aroux            ###   ########.fr        #
+#    Updated: 2025/09/13 17:04:30 by nboer            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,9 +30,7 @@ OBJ_DIR = obj
 
 # Sources and objects
 SRC 	=	$(SRC_DIR)/main.cpp		$(SRC_DIR)/Channel.cpp		$(SRC_DIR)/Client.cpp \
-			$(SRC_DIR)/Server.cpp
-
-
+			$(SRC_DIR)/Server.cpp	$(SRC_DIR)/utilities.cpp	$(SRC_DIR)/parser.cpp
 
 OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 

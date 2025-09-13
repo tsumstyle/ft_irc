@@ -6,34 +6,20 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/13 14:03:20 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/13 19:47:38 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Server.hpp"
+#include "../inc/utilities.hpp"
+#include "../inc/parser.hpp"
+
+#define BUFSIZE 510
 
 //constructors
-Server::Server() : _port(8080) {}
+Server::Server() : _port(8080) { }
 
-Server::Server(const int& port) : _port(port) {}
-
-Server::Server(const Server& copy) : _port(copy._port),
-									 _server_socket(copy._server_socket),
-									 _fds(copy._fds),
-									 _connected(copy._connected) {}
-
-Server::~Server() {}
-
-//assigment operator
-Server&	Server::operator=(const Server& other) {
-	if (this != &other) {
-		_port = other._port;
-		_server_socket = other._server_socket;
-		_fds = other._fds;
-		_connected = other._connected;
-	}
-	return *this;
-}
+Server::Server(const int& port) : _port(port) { }
 
 //other member functions
 void	Server::start() {
@@ -78,6 +64,15 @@ void	Server::start() {
 	_fds.push_back(server_poll);		// adding the server poll the pollfd vector
 }
 
+Server::~Server() { }
+
+void	Server::handleCmd(const ParsedCmd &data) {
+	if (data.cmd == "NICK")
+		std::cout << "adjust nickname" << std::endl;
+	else if (data.cmd == "PASS")
+		std::cout << "adjust password" << std::endl;
+}
+
 void	Server::acceptClient() {
 	int	client_socket = accept(_server_socket, NULL, NULL);
 	if (client_socket < 0)	{
@@ -96,9 +91,12 @@ void	Server::acceptClient() {
 
 void	Server::handleClient(int fd) {
 // read from the connection
-	char	buffer[510];
+	char	buffer[BUFSIZE];
+	ParsedCmd parse_data;
 	Client*	client = _connected[fd];
-	ssize_t	bytes_read = recv(fd, buffer, sizeof(buffer) - 1, 0);		// read fucntion for sockets		
+	ssize_t	bytes_read = recv(fd, buffer, BUFSIZE - 1, 0); // read fucntion for sockets
+	
+	
 	if (bytes_read <= 0)	{
 		std::cout << "Client disconnected: fd " << fd << std::endl;
 		close(fd);
@@ -106,13 +104,17 @@ void	Server::handleClient(int fd) {
 		delete client;
 		_connected.erase(fd);
 	}
-	else { // if there's something, handle message. Here replace with command parsing (NICK, USER, PASS, JOIN)
+	else {
 		buffer[bytes_read] = '\0';
-		std::cout << "Message: " << buffer << std::endl;
-		std::string	response = "Received: ";
+		parse_data = parseMsg(std::string(buffer));
+		std::cout << "CMD: = " << parse_data.cmd << std::endl;
+		for (unsigned long i = 0; i < parse_data.args.size(); i++)
+			std::cout << "Arg " << i << ": " << parse_data.args[i] << std::endl;
+		handleCmd(parse_data);
+		std::string	response = "Received: ";	
 		response.append(buffer);
 		send(fd, response.c_str(), response.size(), 0);
-	}			
+	}
 }
 
 void	Server::run() {

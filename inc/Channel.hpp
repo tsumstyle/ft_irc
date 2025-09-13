@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 16:34:16 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/13 16:26:16 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <string>
 # include <vector>
 # include "Client.hpp"
+# include "utilities.hpp"
 # include <sys/socket.h>	// send()
 
 class Client; 
