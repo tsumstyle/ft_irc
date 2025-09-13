@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 16:31:01 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/13 14:03:20 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,18 +91,20 @@ void	Server::acceptClient() {
 	client_poll.events = POLLIN;
 	_fds.push_back(client_poll);
 // instantiate Client object and add it to the _connected map
-	_connected[client_socket] = Client(client_socket);
+	_connected[client_socket] = new Client(client_socket);
 }
 
 void	Server::handleClient(int fd) {
 // read from the connection
 	char	buffer[510];
-	Client&	client = _connected[fd];
+	Client*	client = _connected[fd];
 	ssize_t	bytes_read = recv(fd, buffer, sizeof(buffer) - 1, 0);		// read fucntion for sockets		
 	if (bytes_read <= 0)	{
 		std::cout << "Client disconnected: fd " << fd << std::endl;
 		close(fd);
 		fd = -1; // mark socket as closed
+		delete client;
+		_connected.erase(fd);
 	}
 	else { // if there's something, handle message. Here replace with command parsing (NICK, USER, PASS, JOIN)
 		buffer[bytes_read] = '\0';

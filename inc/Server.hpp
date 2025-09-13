@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/10 16:35:05 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/13 13:53:45 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ private:
 	std::vector<pollfd>		_fds;	// vector of pollfds : 
 									// pollfd describes which fd poll() should watch and what events to look for
 									// events: input, output, errors; and revents (what events actually happened, set by poll(
-	std::map<int, Client>			_connected;	// also stores the list of clients?
-	std::map<std::string, Channel>	_channels;	// list of all existing channels
+	std::map<int, Client*> 	_connected;	// also stores the list of clients? // NB: list of pointers?
+	std::map<std::string, Channel*>	_channels;	// list of all existing channels // NB: list of names?
 	
 public:
 // constructors

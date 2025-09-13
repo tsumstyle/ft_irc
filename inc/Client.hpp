@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/10 16:33:54 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/13 13:39:30 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ public:
 	void				setState(clientState state);
 
 // other member functions	
-	void	sendMessage(const std::string& msg) const {};	// send data
+	void	sendMessage(const std::string& msg) const;	// send data
 	// addChannel: becomes part of this channel, and channel is part of the Client's list of channels
 	// removeChannel: is removed from this channel, and channel is remove from the client's list of channels
 
