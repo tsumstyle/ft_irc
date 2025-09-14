@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/14 15:01:29 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/14 18:09:42 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,61 @@ void	Server::start() {
 
 Server::~Server() { }
 
-void	Server::handleCmd(const ParsedCmd &data) {
+void Server::InvalidCmd(Client *c, const ParsedCmd &data) {
+	std::string token = data.cmd;
+	std::string reply = "Invalid command: " + token + "\r\n";
+	send(c->getSocket(), reply.c_str(), reply.size(), 0);	
+}
+
+void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 	if (data.cmd == "NICK")
-		std::cout << "adjust nickname" << std::endl;
+		handleNick(c, data);
+	else if (data.cmd == "PING")
+		handlePing(c, data);
 	else if (data.cmd == "PASS")
-		std::cout << "adjust password" << std::endl;
+		handlePass(c, data);
+	else
+		InvalidCmd(c, data);
+}
+
+void	Server::handleNick(Client *c, const ParsedCmd &data) {
+	std::string reply;
+	if (data.args.empty())
+		reply = "Error 431: No nickname given \r\n";
+	else if (data.args.size() > 1)
+		reply = "Error 432: No more than one argument allowed \r\n";
+	else {
+		c->setNick(data.args[0]);
+		reply = "Nickname set to: " + c->getNick() + "\r\n";
+	}
+	send(c->getSocket(), reply.c_str(), reply.size(), 0);
+}
+
+void	Server::handlePass(Client *c, const ParsedCmd &data) {
+	std::string reply;
+
+	if (c->getState() != NOT_REGISTERED) {
+		reply = "462: You may not reregister\r\n"; // ERR_ALREADYREGISTRED
+		send(c->getSocket(), reply.c_str(), reply.size(), 0);
+		return;
+	}
+	if (data.args.size() < 1) {
+		reply = "461 PASS: Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS
+		send(c->getSocket(), reply.c_str(), reply.size(), 0);
+		return;
+	}
+	if (data.args[0] == getPass()) {
+		c->setState(PARTIAL_REGISTERED);
+		reply = "Password accepted. Provide NICK and USER.\r\n";
+	} else
+		reply = "464: Password incorrect"; // ERR_PASSWDMISMATCH
+	send(c->getSocket(), reply.c_str(), reply.size(), 0);
+}
+
+void	Server::handlePing(Client *c, const ParsedCmd &data) {
+	std::string token = (data.args.empty() ? "" : data.args[0]);
+	std::string reply = "PONG " + token + "\r\n";
+	send(c->getSocket(), reply.c_str(), reply.size(), 0);
 }
 
 void	Server::acceptClient() {
@@ -84,7 +134,7 @@ void	Server::acceptClient() {
 	client_poll.events = POLLIN;
 	_fds.push_back(client_poll);
 // instantiate Client object and add it to the _connected map
-	_connected[client_socket] = new Client(client_socket);
+	_connected[client_socket] = new Client(client_socket); // dont forget to DELETE against memleaks
 }
 
 void	Server::handleClient(int fd) {
@@ -105,14 +155,11 @@ void	Server::handleClient(int fd) {
 	else {
 		buffer[bytes_read] = '\0';
 		parse_data = parseMsg(std::string(buffer));
-		for (unsigned long i = 0; i < parse_data.args.size(); i++)
-			std::cout << "Arg " << i << ": " << parse_data.args[i] << std::endl;
 		toUpperCmd(&parse_data);
-		std::cout << "CMD: " << parse_data.cmd << std::endl;
-		handleCmd(parse_data);
-		std::string	response = "Received: ";	
-		response.append(buffer);
-		send(fd, response.c_str(), response.size(), 0);
+		std::cout << "CMD: " << parse_data.cmd << std::endl; 						//for debug
+		for (unsigned long i = 0; i < parse_data.args.size(); i++)					//for debug
+			std::cout << "Arg " << i << " " << parse_data.args[i] << std::endl;	//for debug
+		handleCmd(client, parse_data);
 	}
 }
 

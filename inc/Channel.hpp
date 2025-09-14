@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/13 16:26:16 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/14 17:32:18 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ private:
 	std::string				_name;			// channel name
 	std::vector<Client*>	_users;			// list of clients that are on the channel //pointing to already existing clients; could also just store the fds
 	std::vector<Client*>	_operators;		// all operators (=moderators) of the channel
-
+	std::string				_localpass;		// password on channel
 public:
 // constructors
 	Channel();

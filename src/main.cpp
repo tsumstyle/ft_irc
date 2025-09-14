@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 13:22:32 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/13 18:19:28 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/14 17:39:05 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@
 int	main(int argc, char **argv)	{
 	int port;
 	
-	if ((argc == 2 || argc == 3) && isnum(argv[1]))
-		port = std::atoi(argv[1]); 
+	if ((argc == 2 || argc == 3) && isnum(argv[1])) {
+		port = std::atoi(argv[1]);
+		Server	irc(port);
+		if (argc == 3)
+			irc.setPass(argv[2]);
+		irc.start(); 
+		irc.run();
+	}
 	else
 		return err_handler("Invalid input, use: ./ircserv <port> <password> ");
-	Server	irc(port);
-	irc.start(); 
-	irc.run();
 	return 0;
 }
