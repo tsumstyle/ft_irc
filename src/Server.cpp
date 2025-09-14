@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/13 19:51:27 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/14 15:01:29 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,12 @@ Server::Server(const int& port) : _port(port) { }
 //other member functions
 void	Server::start() {
 // 1) creating a socket (fd that will be used for communication) : IPv4, TCP
-// we're using Internet IPv4 protocol, so it's AF_INET 
-// SOCK_STREAM means we're using a TCP (two-way reliable communication type)
-// 0 is to use the default protocol associated with the type SOCK_STREAM
 	_server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_server_socket == -1) {
 		std::cout << "Failed to create socket. errno: " << errno <<std::endl;	// dont think we're allowed errno
 		exit(EXIT_FAILURE);
 	}
+	
 //	2) specify address
 // sockaddr_in (struct used to define the address we want to assign to the socket in the case of an Internet Protocol (IP))
 // struct sockaddr_in {
@@ -48,7 +46,7 @@ void	Server::start() {
 
 // 3) bind socket : bind() assigns an IP address and port to the socket:
 	if (bind(_server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) < 0)	{
-		std::cout << "Failed to bind port 8080." << std::endl;
+		std::cout << "Failed to bind port " << _port << std::endl;
 		exit(EXIT_FAILURE);
 	}
 // 4) listen to port: 
@@ -107,9 +105,10 @@ void	Server::handleClient(int fd) {
 	else {
 		buffer[bytes_read] = '\0';
 		parse_data = parseMsg(std::string(buffer));
-		std::cout << "CMD: = " << parse_data.cmd << std::endl;
 		for (unsigned long i = 0; i < parse_data.args.size(); i++)
 			std::cout << "Arg " << i << ": " << parse_data.args[i] << std::endl;
+		toUpperCmd(&parse_data);
+		std::cout << "CMD: " << parse_data.cmd << std::endl;
 		handleCmd(parse_data);
 		std::string	response = "Received: ";	
 		response.append(buffer);
