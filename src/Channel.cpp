@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/13 16:25:06 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/15 14:26:22 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 // constructors_operators
 Channel::Channel() : _name("defaultchannel") {}
+
+Channel::Channel(std::string channel_name) : _name(channel_name) {}
 
 Channel::Channel(const Channel& copy) : _name(copy._name), 
 										_users(copy._users),

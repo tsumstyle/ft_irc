@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/14 17:32:06 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/15 12:32:42 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
 #include <vector>
 
 enum	clientState {
-	NOT_REGISTERED,		// just accepted by server, no NICK or USER yet
-	PARTIAL_REGISTERED,	// sent NICK but not USER
-	REGISTERED,			// NICK+USER set, can join channel 
+	NEW,			// just accepted by server, no PASS, NICK or USER yet
+	PASS_OK,
+	NICK_OK,		// sent NICK but not USER
+	USERNAME_OK,	// sent USER but not NCIK
+	REGISTERED,		// NICK+USER set, can join channel and do other stuff
 	DISCONNECTED,
 };
 

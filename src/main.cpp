@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 13:22:32 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/14 17:39:05 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/15 14:52:00 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,20 @@
 int	main(int argc, char **argv)	{
 	int port;
 	
-	if ((argc == 2 || argc == 3) && isnum(argv[1])) {
+	if ((argc == 3) && isnum(argv[1])) {
 		port = std::atoi(argv[1]);
-		Server	irc(port);
-		if (argc == 3)
-			irc.setPass(argv[2]);
+		std::string	password = argv[2];
+	
+		Server	irc(port, password);
 		irc.start(); 
 		irc.run();
 	}
 	else
-		return err_handler("Invalid input, use: ./ircserv <port> <password> ");
+		return err_handler("Invalid input, use: ./ircserv <port> <password>\n");
+	// other stuff for the argument check?
+//		- Port must be in the range 1-65535.
+//		- atoi must not fail
+//		- password cannot be empty
+	
 	return 0;
 }

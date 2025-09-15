@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/14 17:32:18 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/15 14:27:03 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@ private:
 	std::vector<Client*>	_users;			// list of clients that are on the channel //pointing to already existing clients; could also just store the fds
 	std::vector<Client*>	_operators;		// all operators (=moderators) of the channel
 	std::string				_localpass;		// password on channel
+
 public:
 // constructors
 	Channel();
+	Channel(std::string channel_name);
 	Channel(const Channel& copy);
 	~Channel();
 	Channel& operator=(const Channel& other);

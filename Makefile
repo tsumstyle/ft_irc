@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nboer <nboer@student.42.fr>                +#+  +:+       +#+         #
+#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/04 13:11:48 by aroux             #+#    #+#              #
-#    Updated: 2025/09/13 17:04:30 by nboer            ###   ########.fr        #
+#    Updated: 2025/09/15 16:29:52 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,9 +29,13 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 # Sources and objects
-SRC 	=	$(SRC_DIR)/main.cpp		$(SRC_DIR)/Channel.cpp		$(SRC_DIR)/Client.cpp \
-			$(SRC_DIR)/Server.cpp	$(SRC_DIR)/utilities.cpp	$(SRC_DIR)/parser.cpp
-
+SRC 	=	$(SRC_DIR)/main.cpp		\
+			$(SRC_DIR)/Channel.cpp	$(SRC_DIR)/Client.cpp	$(SRC_DIR)/Server.cpp \
+			$(SRC_DIR)/utilities.cpp	$(SRC_DIR)/parser.cpp \
+			$(SRC_DIR)/cmds/pass.cpp	$(SRC_DIR)/cmds/user.cpp	$(SRC_DIR)/cmds/nick.cpp \
+			$(SRC_DIR)/cmds/join.cpp	$(SRC_DIR)/cmds/quit.cpp	$(SRC_DIR)/cmds/ping.cpp \
+			$(SRC_DIR)/cmds/invalid.cpp
+			
 OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
 # Default target
