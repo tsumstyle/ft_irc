@@ -6,13 +6,21 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:12 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/15 15:31:14 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/16 15:38:10 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
-#include "../../inc/messages.hpp"
+#include "../../inc/replies.hpp"
 
+/*  PASS
+Requirements:
+   - Must be the first command sent by the client (state == NEW), otherwise ignore or send ERR_ALREADYREGISTERED (462).
+   - Must match server password; otherwise send ERR_PASSWDMISMATCH (464). 
+Behavior:
+   - If valid, sets client state to PASS_OK.
+   - Logs the successful password verification on the server. */
+   
 void	Server::handlePass(Client *c, const ParsedCmd &data) {
 	std::string reply;
 

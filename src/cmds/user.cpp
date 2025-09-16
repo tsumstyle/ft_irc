@@ -6,14 +6,26 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/15 16:28:06 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/16 15:31:05 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
-#include "../../inc/messages.hpp"
+#include "../../inc/replies.hpp"
 
-
+/* USER
+Requirements:
+   - Client must have sent PASS first (state != NEW), otherwise send ERR_NOTREGISTERED (451).
+   - Must provide all required parameters (username, hostname, servername, realname), otherwise send ERR_NEEDMOREPARAMS (461). 
+Behavior:
+   - Sets the client's username and real name.
+   - Updates client state:
+       - If NICK_OK, client becomes REGISTERED → send welcome messages.
+       - Otherwise, state becomes USERNAME_OK (waiting for NICK command).
+   - Logs the username assignment on the server. 
+   
+ 1609A: I changed most of the NICK command but not this one yet. It should follow the same structure  */
+   
 void	Server::handleUser(Client *c, const ParsedCmd &data) {
 	std::string reply;
 

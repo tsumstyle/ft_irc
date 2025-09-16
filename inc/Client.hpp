@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/15 12:32:42 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/16 14:52:20 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <iostream>
 #include <sys/socket.h>		// socket()
 #include <vector>
+#include <algorithm>
+#include "Channel.hpp"
 
 enum	clientState {
 	NEW,			// just accepted by server, no PASS, NICK or USER yet
@@ -56,6 +58,8 @@ public:
 
 // other member functions	
 	void	sendMessage(const std::string& msg) const;	// send data
+	void	addChannel(Channel* channel);
+	bool	isOnChannel(Channel* channel);
 	// addChannel: becomes part of this channel, and channel is part of the Client's list of channels
 	// removeChannel: is removed from this channel, and channel is remove from the client's list of channels
 

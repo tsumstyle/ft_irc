@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/14 15:52:02 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/16 14:52:24 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Client.hpp"
 
 // constructors
-Client::Client() : _nick(""), _user(""), _state(NOT_REGISTERED), _socket(-1) {}
+Client::Client() : _nick(""), _user(""), _state(NEW), _socket(-1) {}
 
 Client::Client(int client_socket) : _nick(""), 
 									_user(""), 
-									_state(NOT_REGISTERED), 
+									_state(NEW), 
 									_socket(client_socket) {}
 
 Client::Client(const Client& copy) : _nick(copy._nick),
@@ -57,3 +57,15 @@ void	Client::sendMessage(const std::string& msg) const {
 	}
 }
 
+void	Client::addChannel(Channel* channel) {
+	if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end()) {		// check that client isn't already in this channel
+		_channels.push_back(channel);
+	}
+}
+
+bool	Client::isOnChannel(Channel* channel) {
+	if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end())		// if client is not on channel
+		return false;
+	else
+		return true;
+}

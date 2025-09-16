@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/15 16:29:22 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/16 12:50:31 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "../inc/parser.hpp"
 
 #define BUFSIZE 510
+//#define QUEUE_SIZE 10 --> inside the listen() function
 
 //constructors
 Server::Server() : _port(6667), _server_pass("default_pw") {}
@@ -120,8 +121,15 @@ void	Server::acceptClient() {
 	_connected[client_socket] = new Client(client_socket); // dont forget to DELETE against memleaks
 }
 
-void	Server::handleClient(int fd) {
-// read from the connection
+bool	Server::isNickTaken(const std::string& nick) {
+	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); it++) {
+		if (it->second && it->second->getNick() == nick)
+			return true;
+	}
+	return false;
+}
+
+void	Server::handleClient(int fd) {		// read from the connection
 	char	buffer[BUFSIZE];
 	ParsedCmd parse_data;
 	Client*	client = _connected[fd];

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/15 14:46:03 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/16 12:48:29 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ public:
 	void		run();		// main loop with accept(), recv()
 	void		acceptClient();	// accept a new client and adds to client list
 	void		handleClient(int fd); 	//read from a client
+	bool		isNickTaken(const std::string& nick);
 // CMD handlers:
 	void		handleCmd(Client *c, const ParsedCmd &data);
 	void		handlePass(Client *c, const ParsedCmd &data);
