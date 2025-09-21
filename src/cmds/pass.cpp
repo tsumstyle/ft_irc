@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:12 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 15:38:10 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/21 15:31:07 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	Server::handlePass(Client *c, const ParsedCmd &data) {
 		c->setState(PASS_OK);
 		reply = "Password accepted. Provide NICK and USER.\r\n";
 	} else
-		reply = "464: Password incorrect"; // ERR_PASSWDMISMATCH
+		reply = "464: Password incorrect.\r\n"; // ERR_PASSWDMISMATCH
 	// TODO: if password is incorrect, client gets disconnected
 	send(c->getSocket(), reply.c_str(), reply.size(), 0);
 }

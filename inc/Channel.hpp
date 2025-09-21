@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/15 14:27:03 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/21 17:18:48 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,12 @@ public:
 	~Channel();
 	Channel& operator=(const Channel& other);
 
-	void	addUser(Client* user);
-	void	removeUser(Client* user);
-	bool	hasUser(Client* user);
-	void	addOperator(Client* user);
-	void	removeOperator(Client* user);
-	void	broadcast(std::string& msg, Client* sender);
+	void					addUser(Client* user);
+	void					removeUser(Client* user);
+	bool					hasUser(Client* user);
+	void					addOperator(Client* user);
+	void					removeOperator(Client* user);
+	void					broadcast(std::string& msg, Client* sender);
+	std::string				getName();
+	std::vector<Client*>	getUsers();
 };

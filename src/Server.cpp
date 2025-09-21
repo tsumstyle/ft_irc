@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 12:50:31 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/21 16:00:40 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,24 +165,22 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 // 2. user commands
 	else if (data.cmd == "JOIN") 		// join a channel
 		handleJoin(c, data);
-//	else if (data.cmd == "PRIVMSG") 	// send a message to another user, or to a whole channel
-//		handlePrivmsg(c, data);
+	else if (data.cmd == "PRIVMSG") 	// send a message to another user, or to a whole channel
+		handlePrivMsg(c, data);
 //	else if (data.cmd == "PART") {		// quit one channel
 		// TODO: handlePart(c, data);
 //	}
 //	else if (data.cmd == "QUIT") {		// quit server
 		//TODO: handleQuit(c, data);
 //	}
-//	else if (data.cmd == "NAMES") {	
-		// TODO: handleNames(c, data);
+	else if (data.cmd == "NAMES")	//display all nicks in a channel
+		handleNames(c, data);
 //	}
-//	else if (data.cmd == "LIST") {
+//	else if (data.cmd == "LIST") { //display list of all channels and details
 		//TODO: handleList(c, data);
 //	}
 	else if (data.cmd == "PING")
 		handlePing(c, data);
-//		NAMES; gives all names of people in the channel
-//		LIST
 
 // 3. operator commands (TODO)
 //		KICK, 
@@ -194,5 +192,17 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		InvalidCmd(c, data);
 }
 
+Channel *Server::findChannel(std::string target){
+	std::map<std::string, Channel>::iterator it = _channels.find(target);
+	if (it != _channels.end())
+		return &it->second;
+	return NULL;
+}
 
-
+Client* Server::findClientByNick(const std::string& nick) {
+	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); ++it) {
+		if (it->second && it->second->getNick() == nick)
+			return it->second;
+	}
+	return NULL;
+}

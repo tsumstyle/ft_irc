@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/20 13:57:06 by nick             ###   ########.fr       */
+/*   Updated: 2025/09/21 16:04:17 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,18 @@ public:
 	void		handlePing(Client *c, const ParsedCmd &data);
 	void		handleJoin(Client *c, const ParsedCmd &data);
 	void		handlePrivMsg(Client *c, const ParsedCmd &data);
+	void		handleNames(Client *c, const ParsedCmd &data);
+	void		handleChannelMsg(Client *c, std::string target, std::string msg);
 	void		handleDirectMsg(Client *sender, std::string target, std::string msg);
+// utils
+	Channel*	findChannel(std::string target);
+	Client* 	findClientByNick(const std::string& nick);
+
+
 	// 	TODO: other main cmds
 //	void		handlePart(Client *c, const ParsedCmd &data);
 //	void		handleQuit(Client *c, const ParsedCmd &data);
+
 // 	TODO: operator cmds : 
 //		MODE (i, t, k, o, l): change specific things about channel
 //		NAMES; gives all names of people in the channel

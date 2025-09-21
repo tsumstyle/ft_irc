@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 15:39:31 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/21 17:28:47 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace Replies {
 	}
 
 	inline std::string	RPL_YOURHOST(const std::string& nick) {
-		const std::string	serverName = "Our cute IRC";
+		const std::string	serverName = "InstantRegretChat";
 		const std::string	serverVersion = "ft_irc_1.0";
 		return ":" + serverName + " 002 " + nick + " :Your host is " + serverName +
 		", running version " + serverVersion + "\r\n";
@@ -36,6 +36,14 @@ namespace Replies {
 	
 	inline std::string	RPL_JOIN(const std::string& nick, const std::string& channel) {
 		return ":" + nick + " JOIN #" + channel + "\r\n";
+	}
+
+	inline std::string RPL_NAMES(Client *c, const std::string& ch, const std::string& users){
+		std::string reply;
+		const std::string	serverName = "InstantRegretChat";
+		reply = ":" + serverName + " 353 " + c->getNick() + " = " + ch + " :" + users + "\r\n";
+		reply += ":" + serverName + " 366 " + c->getNick() + " " + ch + " :End of /NAMES list.\r\n";
+		return reply;
 	}
 
 // error replies

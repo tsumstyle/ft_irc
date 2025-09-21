@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/15 14:26:22 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/21 17:19:51 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	Channel::removeOperator(Client* user) {
 			return ;
 		}
 	}
-
 }
 
 void	Channel::broadcast(std::string& msg, Client* sender) {
@@ -86,4 +85,13 @@ void	Channel::broadcast(std::string& msg, Client* sender) {
 			send(fd, msg.c_str(), msg.size(), 0);
 		}
 	}
+}
+
+std::string	Channel::getName(){
+	return (_name);
+}
+
+
+std::vector<Client*>	Channel::getUsers() {
+	return (_users);
 }
