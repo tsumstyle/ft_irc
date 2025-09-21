@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 12:48:29 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/20 13:57:06 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,9 @@ public:
 	void		handleUser(Client *c, const ParsedCmd &data);
 	void		handlePing(Client *c, const ParsedCmd &data);
 	void		handleJoin(Client *c, const ParsedCmd &data);
-// 	TODO: other main cmds
-//	void		handlePrivmsg(Client *c, const ParsedCmd &data);
+	void		handlePrivMsg(Client *c, const ParsedCmd &data);
+	void		handleDirectMsg(Client *sender, std::string target, std::string msg);
+	// 	TODO: other main cmds
 //	void		handlePart(Client *c, const ParsedCmd &data);
 //	void		handleQuit(Client *c, const ParsedCmd &data);
 // 	TODO: operator cmds : 
