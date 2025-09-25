@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:24:54 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 15:29:02 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/25 16:17:16 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	Server::handleJoin(Client *c, const ParsedCmd &data){
 	if (c->getState() != REGISTERED)
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "JOIN"));
 	else if (data.args.empty() || data.args[0][0] != '#')
-		c->sendMessage(Replies::ERR_BADCHANNAME(c->getNick(), data.args.empty() ? "" : data.args[0]));
+		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args.empty() ? "" : data.args[0]));
 	else {
 		std::string	channel_name = data.args[0].substr(1);	// remove # char
 		std::map<std::string, Channel>::iterator iter = _channels.find(channel_name);	// look for channel in map of channels

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 15:31:05 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/25 15:41:14 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,23 @@ Behavior:
 void	Server::handleUser(Client *c, const ParsedCmd &data) {
 	std::string reply;
 
-	if (c->getState() == NEW) {
-		reply = "Error XX?: Should send the pass first \r\n";
-	}
+	if (c->getState() == NEW) 
+		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "USER"));	// TODO: check, i'm not sure
 	else if (data.args.empty())
-		reply = "Error 431: No username given \r\n";
-	else if (data.args.size() > 1)
-		reply = "Error 432: No more than one argument allowed \r\n";
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS("USER"));
+//	else if (data.args.size() > 1)
+//		reply = "Error 432: No more than one argument allowed \r\n";
 	else {
 		c->setUser(data.args[0]);
 		if (c->getState() == NICK_OK) {
 			c->setState(REGISTERED);
-			// write server log: Client XX set nickname to 'YYY' 
-			reply = "Username set to: " + c->getUser() + "\r\n"; // ADD welcome to IRC message
+			serverLog(c, " is fully registered");
+			c->sendMessage(Replies::RPL_WELCOME(c->getNick(), c->getUser()));		
 		}
 		else {
 			c->setState(USERNAME_OK);
-			reply = "Username set to: " + c->getUser() + "\r\n";
-			// write server log: Client XX set nickname to 'YYY' 
+			serverLog(c, " set nickname to '" + c->getNick() + "'");
+			c->sendMessage(Replies::RPL_YOURHOST(c->getNick()));
 		}
 	}
 	send(c->getSocket(), reply.c_str(), reply.size(), 0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:08:36 by nick              #+#    #+#             */
-/*   Updated: 2025/09/21 17:19:59 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/25 16:18:40 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,23 @@
 
 void Server::handleDirectMsg(Client *sender, std::string target, std::string msg) {
 	Client *receiver = findClientByNick(target);
-	if (!receiver) {
-		err_handler("target nickname not found");
-		return;
-	}
-	std::string full_msg = ":" + sender->getNick() + " PRIVMSG " + target + " :" + msg + "\r\n";
-	send(receiver->getSocket(), full_msg.c_str(), full_msg.size(), 0); 
+	if (!receiver) 
+		sender->sendMessage(Replies::ERR_NOSUCHNICK(sender->getNick(), target));
+	else 
+		receiver->sendMessage(Replies::RPL_PRIVMSG(sender->getNick(), target, msg));
 }
 
 void Server::handleChannelMsg(Client *c, std::string target, std::string msg) {
-	Channel *ch = findChannel(target);
-	if (!ch) {
-		std::string reply = "403" + target + " :No such channel \r\n";
-		send(c->getSocket(), reply.c_str(), reply.size(), 0);
-		return;
-	}
-	ch->broadcast(msg, c);	
+	Channel *ch = findChannel(target.substr(1));
+	if (!ch)
+		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), target));
+	else
+		ch->broadcast(msg, c);	
 }
 
 void Server::handlePrivMsg(Client *c, const ParsedCmd &data) {
 	if (data.args.size() < 2) {
-		err_handler("handlePrivMsg: not enough arguments");
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PRIVMSG"));
 		return;
 	}
 	std::string target = data.args[0];

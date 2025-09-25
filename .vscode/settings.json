@@ -72,6 +72,24 @@
 		"regex": "cpp",
 		"valarray": "cpp",
 		"stacktrace": "cpp",
-		"any": "cpp"
+		"any": "cpp",
+		"cfenv": "cpp",
+		"charconv": "cpp",
+		"cinttypes": "cpp",
+		"coroutine": "cpp",
+		"csetjmp": "cpp",
+		"csignal": "cpp",
+		"cuchar": "cpp",
+		"forward_list": "cpp",
+		"source_location": "cpp",
+		"scoped_allocator": "cpp",
+		"shared_mutex": "cpp",
+		"typeindex": "cpp",
+		"variant": "cpp",
+		"barrier": "cpp",
+		"latch": "cpp",
+		"syncstream": "cpp",
+		"expected": "cpp",
+		"spanstream": "cpp"
 	}
 }

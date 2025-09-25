@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/21 17:28:47 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/25 16:16:39 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,20 @@ namespace Replies {
 		return reply;
 	}
 
+	inline std::string	RPL_PRIVMSG(const std::string& sender, const std::string& target, const std::string& msg) {
+		return ":" + sender + " PRIVMSG " + target + " :" + msg + "\r\n"; 
+	}
+
 // error replies
+	inline std::string	ERR_NOSUCHNICK(const std::string& nick, const std::string& target) {
+		return "401 " + nick + " " + target + " :No such nickname \r\n";
+	}
+
+	inline std::string	ERR_NOSUCHCHANNEL(const std::string& nick, const std::string& channel) {
+		return "403 " + nick + " " + channel + " :No such channel \r\n";
+	}
+
+
 	inline std::string	ERR_NICKNAMEINUSE(const std::string& nick) {
 		return "433 " + nick + " :Nickname is already in use\r\n";
 	}
@@ -63,8 +76,8 @@ namespace Replies {
 		return "443 " + nick + " #" + channel + " :is already on channel\r\n";
 	}
 
-	inline std::string	ERR_NEEDMOREPARAMS(const std::string& cmd) {
-		return "461 " + cmd + " :Not enough parameters\r\n";
+	inline std::string	ERR_NEEDMOREPARAMS(const std::string& nick, const std::string& cmd) {
+		return "461 " + nick + " " + cmd + " :Not enough parameters\r\n";
 	}
 
 	inline std::string	ERR_ALREADYREGISTERED() {
@@ -75,8 +88,5 @@ namespace Replies {
 		return "464 :Password incorrect\r\n";
 	}
 
-	inline std::string	ERR_BADCHANNAME(const std::string& nick, const std::string& channel) {
-		return "403 " + nick + " " + channel + " :Invalid channel name \r\n";
-	}
 
 }

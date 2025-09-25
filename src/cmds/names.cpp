@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   names.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 16:01:18 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/21 17:56:05 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/25 16:27:27 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ void	Server::handleNames(Client *c, const ParsedCmd &data){
 	if (c->getState() != REGISTERED)
 		reply = Replies::ERR_NOTREGISTERED(c->getNick(), "NAMES");
 	else if (data.args.empty())
-		reply = Replies::ERR_NEEDMOREPARAMS(data.cmd);
+		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
 	else {
 		Channel *ch = findChannel(data.args[0]);
 		if (!ch)
-			reply = "Channel does not exist. \r\n";
+			reply = Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[0]);
 		else {
 			std::string names;
 			std::vector<Client*> _users = ch->getUsers();
