@@ -59,7 +59,6 @@ namespace Replies {
 		return "403 " + nick + " " + channel + " :No such channel \r\n";
 	}
 
-
 	inline std::string	ERR_NICKNAMEINUSE(const std::string& nick) {
 		return "433 " + nick + " :Nickname is already in use\r\n";
 	}
@@ -88,9 +87,30 @@ namespace Replies {
 		return "462 :You may not reregister\r\n";
 	}
 
-	inline std::string	ERR_PASSWMISMATCH() {
+	inline std::string	ERR_PASSWMISMATCH() { // i think it's PASSWDMISMATCH ? with D
 		return "464 :Password incorrect\r\n";
 	}
 
+	// added for chanop things:
+	inline std::string	ERR_NOTONCHANNEL(const std::string &channel) {
+		return "442 " + channel + " :You're not on that channel\r\n";
+	}
+	
+	inline std::string	ERR_KEYSET(const std::string& channel) {
+		return "467 " + channel + " :Channel key already set\r\n";
+	}
 
+	inline std::string	ERR_CHANNELISFULL(const std::string& channel) {
+		return "471 " + channel + " :Cannot join channel (+l)\r\n";
+	}
+
+	inline std::string	ERR_INVITEONLYCHAN(const std::string& channel) {
+		return "471 " + channel + " :Cannot join channel (+i)\r\n";
+	}
+
+	inline std::string	ERR_CHANOPPRIVSNEEDED(const std::string& channel) {
+		return "471 " + channel + " :You're not channel operator\r\n";
+	}
+
+	//inline std::string	RPL_CHANNELMODEIS(const )
 }
