@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 14:52:24 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 15:40:15 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,13 @@ void	Client::sendMessage(const std::string& msg) const {
 void	Client::addChannel(Channel* channel) {
 	if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end()) {		// check that client isn't already in this channel
 		_channels.push_back(channel);
+	}
+}
+
+void	Client::removeChannel(Channel* channel) {
+	std::vector<Channel*>::iterator it = std::find(_channels.begin(), _channels.end(), channel);
+	if (it != _channels.end()) {
+		_channels.erase(it);
 	}
 }
 

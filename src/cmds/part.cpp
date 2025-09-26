@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 15:02:27 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 15:43:47 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,60 @@ PART single channel
 PART multiple channels
 PART with reason
 PART from channel you're not in */
+
+void	Server::handlePart(Client *c, const ParsedCmd &data) {
+	std::string reply;
+	if (c->getState() != REGISTERED) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "PART"));
+		return ;
+	}
+	if (data.args.empty()) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PART"));
+		return ;
+	}
+	std::string	reason;
+	if (data.args.size() > 1 && data.args[1][0] == ':') {
+		reason = data.args[1].substr(1);
+		for (size_t	i = 2; i < data.args.size(); i++)							// if there are more args. append them to the reason
+			reason += " " + data.args[i];
+	}
+	std::vector<std::string>	channelNames = split(data.args[0], ',');		// multiple channels
+	std::vector<Channel*>		channelsToPart;
+// validate each channel and collect valid ones
+	for (size_t i = 0; i < channelNames.size(); i++) {							
+		std::string	channelName = channelNames[i];
+		if (channelName[0] != '#') {
+			c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[i]));
+			continue;
+		}
+		Channel *ch = findChannel(channelName);
+		if (!ch) {
+			c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), channelName));
+			continue ;
+		}	
+		if (!ch->hasUser(c)) {
+			c->sendMessage(Replies::ERR_NOTONCHANNEL(c->getNick(), ch->getName()));
+			continue ;
+		}
+		channelsToPart.push_back(ch);
+	}
+// process valid channels
+	for (size_t j = 0; j < channelsToPart.size(); j++) {
+		Channel* channel = channelsToPart[j];
+		std::string reply = c->getNick() + "!" + c->getUser() + "@host" + " PART " + channel->getName();	// replace @host part with getSource() function
+		if (!reason.empty()) 
+			reply += " :" + reason;
+		channel->broadcast(reply, NULL);
+		channel->removeUser(c);
+		// TODO:  Remove operator status: If client was operator, remove from operators list
+		// TODO:  Clean invitations: Remove client from channel's invitation list
+		c->removeChannel(channel);
+		// TODO: delete channel if empty
+		
+	}			
+}
+
+
 
 /* Basic Functionality
     Purpose: Remove a client from one or more channels
@@ -49,48 +103,3 @@ Error Responses
     403 ERR_NOSUCHCHANNEL - Channel doesn't exist
     442 ERR_NOTONCHANNEL - Client not in specified channel
     451 ERR_NOTREGISTERED - Client not registered */
-	
-/* void	Server::handlePart(Client *c, const ParsedCmd &data) {
-	std::string reply;
-	if (c->getState() != REGISTERED) {
-		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "PART"));
-		return ;
-	}
-	if (data.args.empty()) {
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PART"));
-		return ;
-	}
-	std::string	reason;
-	if (data.args.size() > 1 && data.args[1][0] == ':') {
-		reason = data.args[1].substr(1);
-		for (size_t	i = 2; i < data.args.size(); i++)							// if there are more args. append them to the reason
-			reason += " " + data.args[i];
-	}
-	std::vector<std::string>	channelNames = split(data.args[0], ',');		// multiple channels
-	std::vector<Channel*>		channelsToPart;
-	if (channelName[0])
-
-	for (size_t i = 0; i < data.args.size(); i++) {
-		if (data.args[i][0] == ':') {
-			reason = data.args[i];
-			break;			
-		}
-		else if (data.args[i][0] != '#' || !findChannel(data.args[i]))
-			c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[i]));
-			//break?
-		else {
-			Channel *ch = findChannel(data.args[i]);
-			if (!ch->hasUser(c))
-				c->sendMessage(Replies::ERR_NOTONCHANNEL(c->getNick(), ch->getName()));
-			channels.push_back(ch);
-		}
-	}
-	for (size_t j = 0; j < channels.size(); j++) {
-		if (reason.empty())
-			channels[j]->broadcast(c->getNick() + "!" + c->getUser() + "@host" + " PART " + channels[j]->getName(), c);
-		else
-			channels[j]->broadcast(c->getNick() + "!" + c->getUser() + "@host" + " PART " + channels[j]->getName() + " :" + reason, c);
-	}		
-	
-}
- */

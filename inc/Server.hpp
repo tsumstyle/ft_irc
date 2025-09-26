@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 15:09:53 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 15:41:27 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ public:
 	void		handleNames(Client *c, const ParsedCmd &data);
 	void		handleChannelMsg(Client *c, std::string target, std::string msg);
 	void		handleDirectMsg(Client *sender, std::string target, std::string msg);
-	//void		handlePart(Client *c, const ParsedCmd &data);
+	void		handlePart(Client *c, const ParsedCmd &data);
 // utils
 	Channel*	findChannel(std::string target);
 	Client* 	findClientByNick(const std::string& nick);

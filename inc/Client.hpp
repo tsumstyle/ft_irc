@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/16 14:52:20 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 15:36:31 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ public:
 // other member functions	
 	void	sendMessage(const std::string& msg) const;	// send data
 	void	addChannel(Channel* channel);
+	void	removeChannel(Channel* channel);
 	bool	isOnChannel(Channel* channel);
 	// addChannel: becomes part of this channel, and channel is part of the Client's list of channels
 	// removeChannel: is removed from this channel, and channel is remove from the client's list of channels
