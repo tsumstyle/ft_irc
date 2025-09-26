@@ -106,7 +106,6 @@ std::string	Channel::getName(){
 	return (_name);
 }
 
-
 std::vector<Client*>	Channel::getUsers() {
 	return (_users);
 }

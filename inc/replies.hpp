@@ -107,4 +107,6 @@ namespace Replies {
 	inline std::string	ERR_CHANOPPRIVSNEEDED(const std::string& channel) {
 		return "471 " + channel + " :You're not channel operator\r\n";
 	}
+
+	//inline std::string	RPL_CHANNELMODEIS(const )
 }

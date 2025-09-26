@@ -11,7 +11,7 @@
 
 
 
- 442     ERR_NOTONCHANNEL
+442     ERR_NOTONCHANNEL
                         "<channel> :You're not on that channel"
 
                 - Returned by the server whenever a client tries to
@@ -41,3 +41,34 @@
 
 473     ERR_INVITEONLYCHAN
                         "<channel> :Cannot join channel (+i)"
+
+482     ERR_CHANOPRIVSNEEDED
+                        "<channel> :You're not channel operator"
+
+                - Any command requiring 'chanop' privileges (such as
+                  MODE messages) must return this error if the client
+                  making the attempt is not a chanop on the specified
+                  channel.
+
+
+// replies
+
+        324     RPL_CHANNELMODEIS
+                        "<channel> <mode> <mode params>"
+
+        331     RPL_NOTOPIC
+                        "<channel> :No topic is set"
+        332     RPL_TOPIC
+                        "<channel> :<topic>"
+
+                - When sending a TOPIC message to determine the
+                  channel topic, one of two replies is sent.  If
+                  the topic is set, RPL_TOPIC is sent back else
+                  RPL_NOTOPIC.
+
+        341     RPL_INVITING
+                        "<channel> <nick>"
+
+                - Returned by the server to indicate that the
+                  attempted INVITE message was successful and is
+                  being passed onto the end client.
