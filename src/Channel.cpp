@@ -110,3 +110,31 @@ std::string	Channel::getName(){
 std::vector<Client*>	Channel::getUsers() {
 	return (_users);
 }
+
+// added for chanop 26.9 -- caro
+bool	Channel::isChannelFull() {
+	if (this->_userLimitSet) {
+		return this->_users.size() >= this->_userLimit;
+	}
+	return false;
+}
+
+bool	Channel::isUserLimitSet() {
+	return this->_userLimitSet;
+}
+
+size_t		Channel::getUserLimit() {
+	return this->_userLimit;
+}
+
+bool	Channel::isReqPassword() {
+	return this->_reqPassword;
+}
+
+bool	Channel::isInviteOnly() {
+	return this->_inviteOnly;
+}
+
+bool	Channel::isTopicRestricted() {
+	return this->_topicRestricted;
+}

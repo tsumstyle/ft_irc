@@ -28,11 +28,11 @@ private:
 	std::string				_localpass;		// password on channel
 
 	// for operator commands:
-	bool					_reqPassword; // false; // if !requirePassword and command "MODE k" -> ask for new password
+	bool					_reqPassword; // false; // if !requirePassword and command "MODE +k" -> ask for new password
 	bool					_inviteOnly; // false;
 	bool					_topicRestricted; // true;
-	bool					_userLimitSet; // false; // if !_userLimitSet and command "MODE l x" -> ser _userLimit = x 
-	int						_userLimit; // 0;
+	bool					_userLimitSet; // false; // if !_userLimitSet and command "MODE +l x" -> ser _userLimit = x 
+	size_t					_userLimit; // 0;
 
 public:
 // constructors
@@ -50,4 +50,12 @@ public:
 	void					broadcast(std::string& msg, Client* sender);
 	std::string				getName();
 	std::vector<Client*>	getUsers();
+
+	// for chanop 26.9 -- caro
+	bool					isChannelFull();
+	bool					isUserLimitSet();
+	size_t					getUserLimit();
+	bool					isReqPassword();
+	bool					isInviteOnly();
+	bool					isTopicRestricted();
 };
