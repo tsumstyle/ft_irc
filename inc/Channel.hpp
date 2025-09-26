@@ -27,6 +27,13 @@ private:
 	std::vector<Client*>	_operators;		// all operators (=moderators) of the channel
 	std::string				_localpass;		// password on channel
 
+	// for operator commands:
+	bool					_reqPassword; // false; // if !requirePassword and command "MODE k" -> ask for new password
+	bool					_inviteOnly; // false;
+	bool					_topicRestricted; // true;
+	bool					_userLimitSet; // false; // if !_userLimitSet and command "MODE l x" -> ser _userLimit = x 
+	int						_userLimit; // 0;
+
 public:
 // constructors
 	Channel();

@@ -40,6 +40,9 @@ void	Server::handleJoin(Client *c, const ParsedCmd &data){
 		if (iter != _channels.end()) {					// if channel exists
 			if (c->isOnChannel(&iter->second))			 // if user is already on channel
 				c->sendMessage(Replies::ERR_USERONCHANNEL(c->getNick(), channel_name));
+			// if channel.userlimitset && channel.full -> ERR_CHANNELISFULL
+			// if channel.inviteOnly -> ERR_INVITEONLYCHAN
+			// if channel.passwordSet -> ask for password -> ok or ERR_PASSWDMISMATCH
 			else {
 				iter->second.addUser(c);
 				c->addChannel(&(iter->second));

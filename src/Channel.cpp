@@ -13,13 +13,23 @@
 #include "../inc/Channel.hpp"
 
 // constructors_operators
-Channel::Channel() : _name("defaultchannel") {}
+Channel::Channel() : _name("defaultchannel"),
+					 _reqPassword(false),
+					 _inviteOnly(false),
+					 _topicRestricted(true),
+					 _userLimitSet(false),
+					 _userLimit(0) {}
 
 Channel::Channel(std::string channel_name) : _name(channel_name) {}
 
 Channel::Channel(const Channel& copy) : _name(copy._name), 
 										_users(copy._users),
-										_operators(copy._operators) {}
+										_operators(copy._operators),
+										_reqPassword(false),
+										_inviteOnly(false),
+										_topicRestricted(true),
+										_userLimitSet(false),
+										_userLimit(0) {}
 
 Channel::~Channel() {}
 
@@ -29,6 +39,11 @@ Channel& Channel::operator=(const Channel& other) {
 		_name = other._name;
 		_users = other._users;
 		_operators = other._operators;
+		_reqPassword = other._reqPassword;
+		_inviteOnly = other._inviteOnly;
+		_topicRestricted = other._topicRestricted;
+		_userLimitSet = other._userLimitSet;
+		_userLimit = other._userLimit;
 	}
 	return *this;
 }
