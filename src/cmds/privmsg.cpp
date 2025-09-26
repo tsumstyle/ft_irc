@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:08:36 by nick              #+#    #+#             */
-/*   Updated: 2025/09/25 16:18:40 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 14:30:54 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void Server::handleDirectMsg(Client *sender, std::string target, std::string msg
 }
 
 void Server::handleChannelMsg(Client *c, std::string target, std::string msg) {
-	Channel *ch = findChannel(target.substr(1));
+	Channel *ch = findChannel(target);
 	if (!ch)
 		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), target));
 	else

@@ -6,12 +6,13 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:24:08 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/16 15:13:53 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 15:04:43 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/utilities.hpp"
 #include "../inc/Client.hpp"
+
 
 int	err_handler(std::string msg) {
 	std::cerr << "Error: " << msg << std::endl;
@@ -36,4 +37,20 @@ void	serverLog(Client* c, const std::string& msg) {
 	std::cout << "[" << getTimeStamp() << "] [SERVER] " << c->getNick() << msg << std::endl;
 }
 
+std::string	toLower(std::string& str) {	
+	std::string	lowered;
+	for (size_t i = 0; i < str.size(); i++)
+		lowered[i] = std::tolower(static_cast<unsigned char>(str[i]));
+	return lowered;
+}
 
+std::vector<std::string>	split(const std::string& str, char delimiter) {
+	std::vector<std::string>	result;
+	std::stringstream			ss(str);
+	std::string					item;
+
+	while (std::getline(ss, item, delimiter)) {
+		result.push_back(item);
+	}
+	return result;
+}

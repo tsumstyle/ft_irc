@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 15:27:04 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/16 14:47:44 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 15:07:11 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,15 @@
 #include <string>
 #include <cctype>
 #include <ctime>
+#include <sstream>
+#include <vector>
 
 class Client;
 
-int 		err_handler(std::string msg);
-bool 		isnum(std::string arg);
-std::string	getTimeStamp();
-void		serverLog(Client* c, const std::string& msg);
+int 						err_handler(std::string msg);
+bool 						isnum(std::string arg);
+std::string					getTimeStamp();
+void						serverLog(Client* c, const std::string& msg);
+std::string					toLower(std::string& str);
+std::vector<std::string>	split(const std::string& str, char delimiter);
 

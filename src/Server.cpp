@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/21 16:00:40 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/26 15:09:57 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,8 +192,10 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		InvalidCmd(c, data);
 }
 
-Channel *Server::findChannel(std::string target){
-	std::map<std::string, Channel>::iterator it = _channels.find(target);
+
+Channel *Server::findChannel(std::string target) {
+	std::string	lowerTarget = toLower(target);
+	std::map<std::string, Channel>::iterator it = _channels.find(lowerTarget);
 	if (it != _channels.end())
 		return &it->second;
 	return NULL;

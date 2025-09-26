@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/25 16:16:39 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 14:13:49 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,12 @@ namespace Replies {
 		return "432 " + badnick + " :Erroneus nickname\r\n";
 	}
 
+	inline std::string ERR_NOTONCHANNEL(const std::string& nick, const std::string& channel) {
+		return "442 " + nick + " " + channel + " : You're not on that channel\r\n";
+	}
+
 	inline std::string	ERR_NOTREGISTERED(const std::string& nick, const std::string& cmd) {
-		return "451 " + nick + cmd + " :You have not registered\r\n";
+		return "451 " + nick + " " + cmd + " :You have not registered\r\n";
 	}
 
 	inline std::string	ERR_USERONCHANNEL(const std::string& nick, const std::string& channel) {

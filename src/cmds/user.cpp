@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/25 15:41:14 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/26 13:06:13 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,4 @@ void	Server::handleUser(Client *c, const ParsedCmd &data) {
 			c->sendMessage(Replies::RPL_YOURHOST(c->getNick()));
 		}
 	}
-	send(c->getSocket(), reply.c_str(), reply.size(), 0);
 }

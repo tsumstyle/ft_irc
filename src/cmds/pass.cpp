@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:12 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/21 15:31:07 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/26 13:13:28 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,15 @@ Behavior:
 void	Server::handlePass(Client *c, const ParsedCmd &data) {
 	std::string reply;
 
-	if (c->getState() != NEW) {
-		reply = "462: You may not reregister\r\n"; // ERR_ALREADYREGISTRED
-		send(c->getSocket(), reply.c_str(), reply.size(), 0);
-		return;
-	}
-	if (data.args.size() < 1) {
-		reply = "461 PASS: Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS
-		send(c->getSocket(), reply.c_str(), reply.size(), 0);
-		return;
-	}
+	if (c->getState() != NEW)
+		reply = Replies::ERR_ALREADYREGISTERED();
+	if (data.args.size() < 1)
+		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PASS");
 	if (data.args[0] == _server_pass) {
 		c->setState(PASS_OK);
 		reply = "Password accepted. Provide NICK and USER.\r\n";
 	} else
-		reply = "464: Password incorrect.\r\n"; // ERR_PASSWDMISMATCH
+		reply = Replies::ERR_PASSWMISMATCH();
 	// TODO: if password is incorrect, client gets disconnected
-	send(c->getSocket(), reply.c_str(), reply.size(), 0);
+	c->sendMessage(reply);
 }
