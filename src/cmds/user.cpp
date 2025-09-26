@@ -32,7 +32,7 @@ void	Server::handleUser(Client *c, const ParsedCmd &data) {
 	if (c->getState() == NEW) 
 		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "USER"));	// TODO: check, i'm not sure
 	else if (data.args.empty())
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS("USER"));
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "USER"));
 //	else if (data.args.size() > 1)
 //		reply = "Error 432: No more than one argument allowed \r\n";
 	else {

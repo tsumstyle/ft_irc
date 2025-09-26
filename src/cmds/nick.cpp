@@ -36,7 +36,7 @@ void	Server::handleNick(Client *c, const ParsedCmd &data) {
 	if (c->getState() == NEW)
 		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "NICK"));	// TODO: check, i'm not sure
 	else if (data.args.empty())
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS("NICK"));
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick() , "NICK"));   // TODO: check that this makes sense. if NICK fails, no getNick() ?
 //	if (data.args.size() > 1)		// check the error code for this one
 //	Error 432 is ERR_ERRONEUSNICKNAME: invalid characters in the nickname (see rules for nickname in our notion page)
 	else if (isNickTaken(data.args[0]))
