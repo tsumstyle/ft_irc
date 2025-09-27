@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 15:09:57 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/27 15:35:46 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,8 +176,8 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 	else if (data.cmd == "NAMES")	//display all nicks in a channel
 		handleNames(c, data);
 //	}
-//	else if (data.cmd == "LIST") { //display list of all channels and details
-		//TODO: handleList(c, data);
+	else if (data.cmd == "LIST") //display list of all channels and details
+		handleList(c);
 //	}
 	else if (data.cmd == "PING")
 		handlePing(c, data);
@@ -191,7 +191,6 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 	else
 		InvalidCmd(c, data);
 }
-
 
 Channel *Server::findChannel(std::string target) {
 	std::string	lowerTarget = toLower(target);

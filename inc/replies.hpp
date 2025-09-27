@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 14:13:49 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/27 15:08:35 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,11 @@ namespace Replies {
 	inline std::string	ERR_CHANOPPRIVSNEEDED(const std::string& channel) {
 		return "471 " + channel + " :You're not channel operator\r\n";
 	}
+
+	inline std::string ERR_BADCHANMASK(const std::string& nick, const std::string& channel) {
+		return "476 " + nick + " " + channel + " :Invalid channel mask\r\n";
+	}
+
 
 	//inline std::string	RPL_CHANNELMODEIS(const )
 }

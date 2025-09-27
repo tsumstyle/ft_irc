@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 15:41:27 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/27 15:32:58 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ public:
 	void		handleChannelMsg(Client *c, std::string target, std::string msg);
 	void		handleDirectMsg(Client *sender, std::string target, std::string msg);
 	void		handlePart(Client *c, const ParsedCmd &data);
+	void		handleList(Client *c);
 // utils
 	Channel*	findChannel(std::string target);
 	Client* 	findClientByNick(const std::string& nick);

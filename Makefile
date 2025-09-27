@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
+#    By: nboer <nboer@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/04 13:11:48 by aroux             #+#    #+#              #
-#    Updated: 2025/09/26 13:24:35 by aroux            ###   ########.fr        #
+#    Updated: 2025/09/27 15:25:58 by nboer            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ SRC 	=	$(SRC_DIR)/main.cpp		\
 			$(SRC_DIR)/cmds/pass.cpp	$(SRC_DIR)/cmds/user.cpp	$(SRC_DIR)/cmds/nick.cpp \
 			$(SRC_DIR)/cmds/join.cpp	$(SRC_DIR)/cmds/quit.cpp	$(SRC_DIR)/cmds/ping.cpp \
 			$(SRC_DIR)/cmds/invalid.cpp $(SRC_DIR)/cmds/privmsg.cpp	$(SRC_DIR)/cmds/names.cpp \
-			$(SRC_DIR)/cmds/part.cpp
+			$(SRC_DIR)/cmds/part.cpp	$(SRC_DIR)/cmds/list.cpp
 			
 OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 

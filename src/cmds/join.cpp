@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:24:54 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 14:29:37 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/27 15:40:51 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	Server::handleJoin(Client *c, const ParsedCmd &data){
 	if (c->getState() != REGISTERED)
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "JOIN"));
 	else if (data.args.empty() || data.args[0][0] != '#')
-		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args.empty() ? "" : data.args[0]));
+		c->sendMessage(Replies::ERR_BADCHANMASK(c->getNick(), data.args.empty() ? "" : data.args[0]));
 	else {
 		std::string	channel_name = data.args[0];
 		std::map<std::string, Channel>::iterator iter = _channels.find(channel_name);	// look for channel in map of channels
@@ -46,18 +46,17 @@ void	Server::handleJoin(Client *c, const ParsedCmd &data){
 			else {
 				iter->second.addUser(c);
 				c->addChannel(&(iter->second));
-				c->sendMessage(":" + c->getNick() + " JOIN #" + channel_name + "\r\n");
-				serverLog(c, " joined channel #" + channel_name);
+				c->sendMessage(":" + c->getNick() + " JOIN " + channel_name + "\r\n");
+				serverLog(c, " joined channel " + channel_name);
 			}
 		}
 		else {
-			Channel	newChannel(channel_name); 			// if channel doesnt exist, create new channel and add user
-			newChannel.addUser(c);
-			newChannel.addOperator(c);
-			_channels[channel_name] = newChannel;		// add it to the server
+			_channels[channel_name] = Channel(channel_name);
+			_channels[channel_name].addUser(c);
+			_channels[channel_name].addOperator(c);
 			c->addChannel(&_channels[channel_name]);
-			c->sendMessage(":" + c->getNick() + " JOIN #" + channel_name + " (new channel created)\r\n");
-			serverLog(c, " created and joined channel #" + channel_name);
-		}	
+			c->sendMessage(":" + c->getNick() + " JOIN " + channel_name + " (new channel created)\r\n");
+			serverLog(c, " created and joined channel " + channel_name);
+		}
 	}
 }
