@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/27 15:35:46 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/28 17:31:51 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,27 @@ bool	Server::isNickTaken(const std::string& nick) {
 	return false;
 }
 
+bool	Server::isValidChar(const char c) {
+	if (std::isalpha(c))
+		return true;
+	const char symbols[] = "[]\\`^{}|_";
+	for (int i = 0; symbols[i]; ++i)
+		if (c == symbols[i])
+			return true;
+	return false;
+}
+
+bool	Server::isValidNick(const std::string& str) {
+	if (str.empty() || str.size() > 9)
+		return false;
+	if (!isValidChar(str[0]))
+		return false;
+	for (size_t i = 1; i < str.length(); ++i)
+		if (!isValidChar(str[i]) && !std::isdigit(str[i]) && str[i] != '-')
+			return false;
+	return true;
+}
+
 void	Server::handleClient(int fd) {		// read from the connection
 	char	buffer[BUFSIZE];
 	ParsedCmd parse_data;
@@ -194,6 +215,7 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 
 Channel *Server::findChannel(std::string target) {
 	std::string	lowerTarget = toLower(target);
+	std::cout << "lowertarget = " << lowerTarget << std::endl;
 	std::map<std::string, Channel>::iterator it = _channels.find(lowerTarget);
 	if (it != _channels.end())
 		return &it->second;

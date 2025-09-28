@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/27 15:32:58 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/28 17:30:11 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ public:
 	void		acceptClient();	// accept a new client and adds to client list
 	void		handleClient(int fd); 	//read from a client
 	bool		isNickTaken(const std::string& nick);
+	bool		isValidNick(const std::string& str);
+	bool		isValidChar(const char c);
+
+
 // CMD handlers:
 	void		handleCmd(Client *c, const ParsedCmd &data);
 	void		handlePass(Client *c, const ParsedCmd &data);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:26:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 15:28:51 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/28 15:31:47 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	Server::handleNick(Client *c, const ParsedCmd &data) {
 //	Error 432 is ERR_ERRONEUSNICKNAME: invalid characters in the nickname (see rules for nickname in our notion page)
 	else if (isNickTaken(data.args[0]))
 		c->sendMessage(Replies::ERR_NICKNAMEINUSE(c->getNick()));
+	else if (!isValidNick(data.args[0]))
+		c->sendMessage(Replies::ERR_ERRONEUSNICKNAME(c->getNick()));
 	else {
 		c->setNick(data.args[0]);
 		if (c->getState() == USERNAME_OK) {

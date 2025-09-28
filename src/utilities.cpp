@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:24:08 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/26 15:04:43 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/28 13:50:42 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void	serverLog(Client* c, const std::string& msg) {
 	std::cout << "[" << getTimeStamp() << "] [SERVER] " << c->getNick() << msg << std::endl;
 }
 
-std::string	toLower(std::string& str) {	
-	std::string	lowered;
-	for (size_t i = 0; i < str.size(); i++)
+std::string toLower(const std::string& str) {
+	std::string lowered = str;
+	for (size_t i = (str[0] == '#' ? 1 : 0); i < str.size(); i++)
 		lowered[i] = std::tolower(static_cast<unsigned char>(str[i]));
 	return lowered;
 }
