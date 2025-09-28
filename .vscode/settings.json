@@ -90,6 +90,9 @@
 		"latch": "cpp",
 		"syncstream": "cpp",
 		"expected": "cpp",
-		"spanstream": "cpp"
+		"spanstream": "cpp",
+		"strstream": "cpp",
+		"format": "cpp",
+		"stdfloat": "cpp"
 	}
 }

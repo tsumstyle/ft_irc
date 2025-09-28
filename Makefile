@@ -35,7 +35,7 @@ SRC 	=	$(SRC_DIR)/main.cpp		\
 			$(SRC_DIR)/cmds/pass.cpp	$(SRC_DIR)/cmds/user.cpp	$(SRC_DIR)/cmds/nick.cpp \
 			$(SRC_DIR)/cmds/join.cpp	$(SRC_DIR)/cmds/part.cpp	$(SRC_DIR)/cmds/quit.cpp \
 			$(SRC_DIR)/cmds/invalid.cpp $(SRC_DIR)/cmds/privmsg.cpp	$(SRC_DIR)/cmds/names.cpp \
-			$(SRC_DIR)/cmds/ping.cpp 	$(SRC_DIR)/cmds/list.cpp
+			$(SRC_DIR)/cmds/ping.cpp 	$(SRC_DIR)/cmds/list.cpp	$(SRC_DIR)/cmds/mode.cpp
 			
 OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 

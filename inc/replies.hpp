@@ -112,15 +112,15 @@ namespace Replies {
 		return "467 " + channel + " :Channel key already set\r\n";
 	}
 
-	inline std::string	ERR_CHANNELISFULL(const std::string& channel) {
+	inline std::string	ERR_CHANNELISFULL(const std::string& channel) { // fix number
 		return "471 " + channel + " :Cannot join channel (+l)\r\n";
 	}
 
-	inline std::string	ERR_INVITEONLYCHAN(const std::string& channel) {
+	inline std::string	ERR_INVITEONLYCHAN(const std::string& channel) { // fix number
 		return "471 " + channel + " :Cannot join channel (+i)\r\n";
 	}
 
-	inline std::string	ERR_CHANOPPRIVSNEEDED(const std::string& channel) {
+	inline std::string	ERR_CHANOPPRIVSNEEDED(const std::string& channel) { // fix number
 		return "471 " + channel + " :You're not channel operator\r\n";
 	}
 

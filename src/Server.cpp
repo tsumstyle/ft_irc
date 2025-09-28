@@ -187,13 +187,9 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		handleList(c);
 	else if (data.cmd == "PING")
 		handlePing(c, data);
-
-// 3. operator commands (TODO)
-//		KICK, 
-//		INVITE, 
-//		TOPIC
-//		MODE (i, t, k, o, l): change specific things about channel
-
+// 3. operator commands (TODO) MODE, INVITE, KICK, TOPIC
+	else if (data.cmd == "MODE")
+		handleMode(c, data);
 	else
 		InvalidCmd(c, data);
 }
