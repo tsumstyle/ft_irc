@@ -2,34 +2,6 @@
 #include "../../inc/Channel.hpp"
 #include "../../inc/replies.hpp"
 
-bool	valid_prefix(const std::string& cmd) {
-	if (cmd[0] != '-' && cmd[0] != '+')
-		return false;
-	for (size_t i = 1; i < cmd.size(); i++) {
-		if (cmd[i] == '-' || cmd[i] == '+')
-			return false; // if theres another one
-	}
-	return true;
-}
-
-bool	is_in_str(const char c, const std::string& str) {
-	for (size_t i = 0; i < str.size(); i++) {
-		if (str[i] == c)
-			return true;
-	}
-	return false;
-}
-
-bool	valid_chars(const std::string& options) {
-	for (size_t i = 1; i < options.size(); i++) {
-		if (!is_in_str(options[i], "itokl"))
-			return false; // not of valid chars
-		if (is_in_str(options[i], options.substr(i + 1, options.size() - 1)))
-			return false; // if its repeated?
-	}
-	return true;
-}
-
 void	Server::handleMode(Client *c, const ParsedCmd &data) {
 	// - at least <channel> and option param. if not: ERR_NEEDMOREPARAMS
 	// - user is on the channel. if not: ERR_NOTONCHANNEL
