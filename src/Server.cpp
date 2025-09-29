@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 16:16:39 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 16:26:38 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,15 +231,17 @@ Client* Server::findClientByNick(const std::string& nick) {
 void	Server::cleanupDisconnectedClients() {
 	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end();) {
 		if (it->second->getState() == DISCONNECTED) {
-			close(it->first);
+			std::map<int, Client*>::iterator to_erase = it;
+			++it;
+			close(to_erase->first);
 			for (size_t i = 0; i < _fds.size(); i++) {
-				if (_fds[i].fd == it->first) {
+				if (_fds[i].fd == to_erase->first) {
 					_fds[i].fd = -1;
 					break;
 				}
 			}
-			delete it->second;
-			_connected.erase(++it);		// advance the iterator before erasing it
+			delete to_erase->second;
+			_connected.erase(to_erase);	
 		}
 		else
 			it++;
