@@ -50,6 +50,8 @@ public:
 	void					broadcast(const std::string& msg, Client* sender);
 	std::string				getName();
 	std::vector<Client*>	getUsers();
+	Client*					findUser(const std::string& name);
+	bool					isOperator(const Client* name);
 
 	// for chanop 26.9 -- caro
 	bool					isChannelFull();

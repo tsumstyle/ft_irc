@@ -108,6 +108,23 @@ std::vector<Client*>	Channel::getUsers() {
 	return (_users);
 }
 
+// added 29.9 -- caro
+Client*	Channel::findUser(const std::string& name) {
+	for (size_t i = 0; i < this->_users.size(); i++) {
+		if (this->_users[i]->getNick() == name)
+			return (this->_users[i]);
+	}
+	return (NULL);
+}
+
+bool	Channel::isOperator(const Client* name) {
+	for (size_t i = 0; i < this->_operators.size(); i++) {
+		if (this->_operators[i] == name)
+			return true;
+	}
+	return false;
+}
+
 // added for chanop 26.9 -- caro
 bool	Channel::isChannelFull() {
 	if (this->_userLimitSet) {
@@ -134,4 +151,21 @@ bool	Channel::isInviteOnly() {
 
 bool	Channel::isTopicRestricted() {
 	return this->_topicRestricted;
+}
+
+// added 29.9 -- caro
+void	Channel::setUserLimitSet(bool desired) {
+	this->_userLimitSet = desired;
+}
+
+void	Channel::setReqPassword(bool desired) {
+	this->_reqPassword = desired;
+}
+
+void	Channel::setTopicRestricted(bool desired) {
+	this->_topicRestricted = desired;
+}
+
+void	Channel::setInviteOnly(bool desired) {
+	this->_inviteOnly = desired;
 }

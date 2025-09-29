@@ -35,6 +35,7 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 	// - user is on the channel. if not: ERR_NOTONCHANNEL
 	// - user has chanop privileges. if not: ERR_CHANOPRIVSNEEDED
 	Channel *chan = findChannel(data.args[1]);
+
 	if (!c) { return; } // for compilation
 	if (!chan) {
 		// no such channel
@@ -42,26 +43,35 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		return ;
 	}
 	if (data.args[2] == "+i") {
+		// too many args?
 		chan->setInviteOnly(true);
 	}
 	else if (data.args[2] == "-i") {
+		// too many args?
 		chan->setInviteOnly(false);
 	}
 	else if (data.args[2] == "+t") {
+		// too many args?
 		chan->setTopicRestricted(true);
 	}
 	else if (data.args[2] == "-t") {
+		// too many args?
 		chan->setTopicRestricted(false);
 	}
 	else if (data.args[2] == "+o") {
 		// - must be used /MODE <channel> +o <target>. if not: ERR_NEEDMOREPARAMS
 		// - check if target is part of channel. if not: ?
-		// - add target to list of chanops
+		Client* target = chan->findUser(data.args[3]);
+		if (!target || chan->isOperator(target))
+			return ;
+		chan->addOperator(target);
 	}
 	else if (data.args[2] == "-o") {
 		// - must be used /MODE <channel> -o <target>. if not: ERR_NEEDMOREPARAMS
-		// - check if target is part of channel. if not: ?
-		// - remove target from list of chanops
+		Client* target = chan->findUser(data.args[3]);
+		if (!target || !chan->isOperator(target))
+			return ;
+		chan->removeOperator(target);
 	}
 	else if (data.args[2] == "+k") {
 		// - must be used /MODE <channel> +k <passwd>. if not: ERR_NEEDMOREPARAMS
