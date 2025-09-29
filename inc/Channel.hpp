@@ -58,12 +58,14 @@ public:
 	bool					isUserLimitSet();
 	size_t					getUserLimit();
 	bool					isReqPassword();
+	std::string				getLocalPass();
 	bool					isInviteOnly();
 	bool					isTopicRestricted();
 
 	// for MODE - setters. 29.9 -- caro
 	void					setUserLimitSet(bool desired);
 	void					setReqPassword(bool desired);
+	void					setLocalPass(const std::string& pass);
 	void					setTopicRestricted(bool desired);
 	void					setInviteOnly(bool desired);
 };

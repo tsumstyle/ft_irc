@@ -14,17 +14,25 @@
 
 // constructors_operators
 Channel::Channel() : _name("defaultchannel"),
+					 _localpass(""),
 					 _reqPassword(false),
 					 _inviteOnly(false),
 					 _topicRestricted(true),
 					 _userLimitSet(false),
 					 _userLimit(0) {}
 
-Channel::Channel(std::string channel_name) : _name(channel_name) {}
+Channel::Channel(std::string channel_name) : _name(channel_name),
+											 _localpass(""),
+											 _reqPassword(false),
+											 _inviteOnly(false),
+											 _topicRestricted(true),
+											 _userLimitSet(false),
+											 _userLimit(0) {}
 
 Channel::Channel(const Channel& copy) : _name(copy._name), 
 										_users(copy._users),
 										_operators(copy._operators),
+										_localpass(copy._localpass),
 										_reqPassword(false),
 										_inviteOnly(false),
 										_topicRestricted(true),
@@ -145,6 +153,10 @@ bool	Channel::isReqPassword() {
 	return this->_reqPassword;
 }
 
+std::string	Channel::getLocalPass() {
+	return this->_localpass;
+}
+
 bool	Channel::isInviteOnly() {
 	return this->_inviteOnly;
 }
@@ -160,6 +172,10 @@ void	Channel::setUserLimitSet(bool desired) {
 
 void	Channel::setReqPassword(bool desired) {
 	this->_reqPassword = desired;
+}
+
+void	Channel::setLocalPass(const std::string& pass) {
+	this->_localpass = pass;
 }
 
 void	Channel::setTopicRestricted(bool desired) {

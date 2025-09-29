@@ -74,13 +74,20 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		chan->removeOperator(target);
 	}
 	else if (data.args[2] == "+k") {
-		// - must be used /MODE <channel> +k <passwd>. if not: ERR_NEEDMOREPARAMS
-		// - if !isReqPassword() -> set to true and _localpass = <passwd>
-		// - if isReqPassword() -> leave true and set _localpass = <passwd>
+		// if more than 4 params >> ignore
+		if (data.args.size() == 4) {
+			chan->setLocalPass(data.args[3]);
+			chan->setReqPassword(true);
+		}
+		else if (data.args.size() == 3 && chan->getLocalPass() != "")
+			chan->setReqPassword(true);
+		else if (data.args.size() == 3 && chan->getLocalPass() == "")
+			// NEEDMOREPARAMS
+		return ;
 	}
 	else if (data.args[2] == "-k") {
-		// - if !isReqPasswd() -> ignore
-		// - if isReqPasswd() -> set to false, delete _localpass?
+		// if more than 3 params >> ignore
+		chan->setReqPassword(false);
 	}
 	else if (data.args[2] == "+l") {
 		// - must be used /MODE <channel> +l <limit>. if not: ERR_NEEDMOREPARAMS
