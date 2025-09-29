@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 14:58:50 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 15:04:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ PART with reason
 PART from channel you're not in */
 
 void	Server::handlePart(Client *c, const ParsedCmd &data) {
-	std::string reply;
 	if (c->getState() != REGISTERED) {
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "PART"));
 		return ;
@@ -31,7 +30,7 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 	}
 	std::string	reason;
 	if (data.args.size() > 1 && data.lastTokenHasColon) {
-		reason = data.args[1];											// TODO: Check with Nick regarding parsing and removing the ":"
+		reason = data.args[1];			
 		for (size_t	i = 2; i < data.args.size(); i++)							// if there are more args. append them to the reason
 			reason += " " + data.args[i];
 	}
