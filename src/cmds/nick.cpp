@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:26:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/28 15:31:47 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 16:32:17 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ Behavior:
    - Logs the nickname assignment on the server.
 */
 void	Server::handleNick(Client *c, const ParsedCmd &data) {
-	std::string reply;
-	
 	if (c->getState() == NEW)
-		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "NICK"));	// TODO: check, i'm not sure
+		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "NICK"));
 	else if (data.args.empty())
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick() , "NICK"));   // TODO: check that this makes sense. if NICK fails, no getNick() ?
 //	if (data.args.size() > 1)		// check the error code for this one

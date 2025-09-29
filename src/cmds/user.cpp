@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 13:06:13 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 16:32:25 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ Behavior:
  1609A: I changed most of the NICK command but not this one yet. It should follow the same structure  */
    
 void	Server::handleUser(Client *c, const ParsedCmd &data) {
-	std::string reply;
-
 	if (c->getState() == NEW) 
 		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "USER"));	// TODO: check, i'm not sure
 	else if (data.args.empty())
