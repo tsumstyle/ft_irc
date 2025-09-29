@@ -64,6 +64,7 @@ public:
 
 	// for MODE - setters. 29.9 -- caro
 	void					setUserLimitSet(bool desired);
+	void					setUserLimit(const std::string& lim);
 	void					setReqPassword(bool desired);
 	void					setLocalPass(const std::string& pass);
 	void					setTopicRestricted(bool desired);

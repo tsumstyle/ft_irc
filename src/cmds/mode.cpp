@@ -90,13 +90,20 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		chan->setReqPassword(false);
 	}
 	else if (data.args[2] == "+l") {
-		// - must be used /MODE <channel> +l <limit>. if not: ERR_NEEDMOREPARAMS
-		// - if !isUserLimitSet() -> set to true and _userLimit = <limit>
-		// - if already true -> ignore
+		// if more than 4 params >> ignore
+		if (data.args.size() == 4) {
+			chan->setUserLimit(data.args[3]);
+			chan->setUserLimitSet(true);
+		}
+		else if (data.args.size() == 3 && chan->getUserLimit() > 0)
+			chan->setUserLimitSet(true);
+		else if (data.args.size() == 3 && chan->getUserLimit() == 0)
+			// NEEDMOREPARAMS
+		return ;
 	}
 	else if (data.args[2] == "-l") {
-		// - if already false -> ignore
-		// - if isUserLimitSet() -> set to false
+		// if more than 3 params >> ignore
+		chan->setUserLimitSet(false);
 	}
 	return;
 }

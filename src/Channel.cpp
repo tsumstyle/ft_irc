@@ -170,6 +170,11 @@ void	Channel::setUserLimitSet(bool desired) {
 	this->_userLimitSet = desired;
 }
 
+void	Channel::setUserLimit(const std::string& lim) {
+	this->_userLimit = atoi(lim.c_str()); // is this the best way?
+	// check number is valid, return 0 on fail?
+}
+
 void	Channel::setReqPassword(bool desired) {
 	this->_reqPassword = desired;
 }
