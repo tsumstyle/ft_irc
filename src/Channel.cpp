@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/21 17:19:51 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 13:13:29 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ Channel& Channel::operator=(const Channel& other) {
 bool	Channel::hasUser(Client* user) {
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (user == _users[i]) {
-			err_handler("Client is already in the channel");
+			//err_handler("Client is already in the channel");		// TODO: This should go and be replace by an error code where the function is called
 			return true; 
 		}
 	}
@@ -63,7 +63,7 @@ void	Channel::addUser(Client* user) {
 	if (!hasUser(user))
 		_users.push_back(user);
 	else
-		err_handler("User already on channel");
+		err_handler("User already on channel"); 		// TODO: This should go and be replace by an error code where the function is called
 }
 
 void	Channel::removeUser(Client* user) {
@@ -93,12 +93,10 @@ void	Channel::removeOperator(Client* user) {
 	}
 }
 
-void	Channel::broadcast(std::string& msg, Client* sender) {
+void	Channel::broadcast(const std::string& msg, Client* sender) {
 	for (size_t i = 0; i < _users.size(); i++) {
-		if (_users[i] != sender) {
-			int	fd = _users[i]->getSocket();
-			send(fd, msg.c_str(), msg.size(), 0);
-		}
+		if (_users[i] != sender)
+			_users[i]->sendMessage(msg);
 	}
 }
 

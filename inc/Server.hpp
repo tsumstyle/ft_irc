@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/28 17:30:11 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 14:30:50 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@
 #include "Channel.hpp"
 #include "utilities.hpp"
 #include "parser.hpp"
+
+#ifndef	SERVER_NAME
+	#define SERVER_NAME "InstantRegretChat"
+#endif
 
 struct ParsedCmd;
 
@@ -65,11 +69,13 @@ public:
 	void		handleUser(Client *c, const ParsedCmd &data);
 	void		handlePing(Client *c, const ParsedCmd &data);
 	void		handleJoin(Client *c, const ParsedCmd &data);
+	void		handleJoinOneChannel(Client *c, const std::string& channel_name, const std::string& /* key */);
 	void		handlePrivMsg(Client *c, const ParsedCmd &data);
 	void		handleNames(Client *c, const ParsedCmd &data);
 	void		handleChannelMsg(Client *c, std::string target, std::string msg);
 	void		handleDirectMsg(Client *sender, std::string target, std::string msg);
 	void		handlePart(Client *c, const ParsedCmd &data);
+	void		partFromChannel(Client* c, Channel* channel, const std::string& reason);
 	void		handleList(Client *c);
 // utils
 	Channel*	findChannel(std::string target);

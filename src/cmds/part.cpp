@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 15:43:47 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 14:37:48 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 		return ;
 	}
 	std::string	reason;
-	if (data.args.size() > 1 && data.args[1][0] == ':') {
-		reason = data.args[1].substr(1);
+	if (data.args.size() > 1) {
+		reason = data.args[1];											// TODO: Check with Nick regarding parsing and removing the ":"
 		for (size_t	i = 2; i < data.args.size(); i++)							// if there are more args. append them to the reason
 			reason += " " + data.args[i];
 	}
@@ -57,21 +57,24 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 	}
 // process valid channels
 	for (size_t j = 0; j < channelsToPart.size(); j++) {
-		Channel* channel = channelsToPart[j];
-		std::string reply = c->getNick() + "!" + c->getUser() + "@host" + " PART " + channel->getName();	// replace @host part with getSource() function
-		if (!reason.empty()) 
-			reply += " :" + reason;
-		channel->broadcast(reply, NULL);
-		channel->removeUser(c);
-		// TODO:  Remove operator status: If client was operator, remove from operators list
-		// TODO:  Clean invitations: Remove client from channel's invitation list
-		c->removeChannel(channel);
-		// TODO: delete channel if empty
-		
+		partFromChannel(c, channelsToPart[j], reason);
 	}			
 }
 
-
+void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason) {
+		std::string reply = ":" + c->getNick() + "!" + c->getUser() + "@" + SERVER_NAME + " PART " + channel->getName();	// replace @host part with getSource() function
+		if (!reason.empty()) 
+			reply += " :" + reason;
+		reply += "\r\n";
+		channel->broadcast(reply, NULL);
+		channel->removeUser(c);
+		channel->removeOperator(c);
+		// TODO:  Clean invitations: Remove client from channel's invitation list
+		c->removeChannel(channel);
+		if (channel->getUsers().empty()) {
+			_channels.erase(channel->getName());
+		}	
+}
 
 /* Basic Functionality
     Purpose: Remove a client from one or more channels

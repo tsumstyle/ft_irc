@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/26 15:40:15 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 13:11:56 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	Client::getSocket() const { return _socket; }
 const std::string&	Client::getNick() const { return _nick; }
 const std::string&	Client::getUser() const { return _user; }
 clientState	Client::getState() const { return _state; }
+std::string	Client::getSource() const { return _nick + "!" + _user + "@" + SERVER_NAME; }
 
 // setters
 void	Client::setNick(const std::string& nick) { _nick = nick; }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:24:54 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/27 15:40:51 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 13:27:13 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,59 @@ Behavior:
    - Sends JOIN message to client and optionally to all users in the channel.
    - Logs the channel join or creation on the server.
  */
+
+// 29.9 Alex: updated to handle multiple channels
 void	Server::handleJoin(Client *c, const ParsedCmd &data){
-	std::string reply;
-	if (c->getState() != REGISTERED)
+	if (c->getState() != REGISTERED) {
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "JOIN"));
-	else if (data.args.empty() || data.args[0][0] != '#')
-		c->sendMessage(Replies::ERR_BADCHANMASK(c->getNick(), data.args.empty() ? "" : data.args[0]));
+		return;
+	}
+	else if (data.args.empty()) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "JOIN"));
+		return ;
+	}
+	std::vector<std::string>	channels = split(data.args[0], ',');
+	std::vector<std::string>	keys;
+	if (data.args.size() > 1) {
+		keys = split(data.args[1], ',');
+	}
+	for (size_t i = 0; i < channels.size(); i++) {
+		std::string	channel_name = channels[i];
+		if (channel_name.empty() || channel_name[0] != '#') {
+			c->sendMessage(Replies::ERR_BADCHANMASK(c->getNick(), channel_name));
+			continue;
+		}
+		std::string	key = (i < keys.size()) ? keys[i] : "";
+		handleJoinOneChannel(c, channel_name, key);
+	}
+}
+
+void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, const std::string& /* key */) {
+	std::map<std::string, Channel>::iterator iter = _channels.find(channel_name);	// look for channel in map of channels
+	if (iter != _channels.end()) {					// if channel exists
+		Channel& channel = iter->second;
+		if (c->isOnChannel(&channel))	{
+			c->sendMessage(Replies::ERR_USERONCHANNEL(c->getNick(), channel_name));
+			return;
+		}
+		// if channel.userlimitset && channel.full -> ERR_CHANNELISFULL
+		// if channel.inviteOnly -> ERR_INVITEONLYCHAN
+		// if channel.passwordSet -> ask for password -> ok or ERR_PASSWDMISMATCH
+
+		// all checks passed, add use to channel:
+		channel.addUser(c);
+		c->addChannel(&channel);
+		// TODO: remove from invite list if they were invited
+		channel.broadcast(":" + c->getSource() + " JOIN " + channel_name + "\r\n", NULL);
+		serverLog(c, " joined channel " + channel_name);
+	}
 	else {
-		std::string	channel_name = data.args[0];
-		std::map<std::string, Channel>::iterator iter = _channels.find(channel_name);	// look for channel in map of channels
-		if (iter != _channels.end()) {					// if channel exists
-			if (c->isOnChannel(&iter->second))			 // if user is already on channel
-				c->sendMessage(Replies::ERR_USERONCHANNEL(c->getNick(), channel_name));
-			// if channel.userlimitset && channel.full -> ERR_CHANNELISFULL
-			// if channel.inviteOnly -> ERR_INVITEONLYCHAN
-			// if channel.passwordSet -> ask for password -> ok or ERR_PASSWDMISMATCH
-			else {
-				iter->second.addUser(c);
-				c->addChannel(&(iter->second));
-				c->sendMessage(":" + c->getNick() + " JOIN " + channel_name + "\r\n");
-				serverLog(c, " joined channel " + channel_name);
-			}
-		}
-		else {
-			_channels[channel_name] = Channel(channel_name);
-			_channels[channel_name].addUser(c);
-			_channels[channel_name].addOperator(c);
-			c->addChannel(&_channels[channel_name]);
-			c->sendMessage(":" + c->getNick() + " JOIN " + channel_name + " (new channel created)\r\n");
-			serverLog(c, " created and joined channel " + channel_name);
-		}
+		_channels[channel_name] = Channel(channel_name);
+		Channel& newChannel = _channels[channel_name];
+		newChannel.addUser(c);
+		newChannel.addOperator(c);
+		c->addChannel(&newChannel);
+		c->sendMessage(":" + c->getSource() + " JOIN " + channel_name + " (new channel created)\r\n");
+		serverLog(c, " created and joined channel " + channel_name);
 	}
 }

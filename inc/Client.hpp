@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/26 15:36:31 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 13:11:25 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 #include <vector>
 #include <algorithm>
 #include "Channel.hpp"
+
+#ifndef	SERVER_NAME
+	#define SERVER_NAME "InstantRegretChat"
+#endif
 
 enum	clientState {
 	NEW,			// just accepted by server, no PASS, NICK or USER yet
@@ -52,6 +56,7 @@ public:
 	const std::string&	getNick() const;
 	const std::string&	getUser() const;
 	clientState			getState() const;
+	std::string			getSource() const;
 	void				setNick(const std::string& nick);
 	void				setUser(const std::string& user);
 	void				setState(clientState state);

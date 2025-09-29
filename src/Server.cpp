@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/28 17:31:51 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 12:30:11 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,9 +188,9 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		handleJoin(c, data);
 	else if (data.cmd == "PRIVMSG") 	// send a message to another user, or to a whole channel
 		handlePrivMsg(c, data);
-//	else if (data.cmd == "PART") {		// quit one channel
-		// TODO: handlePart(c, data);
-//	}
+	else if (data.cmd == "PART") 		// quit one channel
+		handlePart(c, data);
+//	
 //	else if (data.cmd == "QUIT") {		// quit server
 		//TODO: handleQuit(c, data);
 //	}
@@ -215,7 +215,7 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 
 Channel *Server::findChannel(std::string target) {
 	std::string	lowerTarget = toLower(target);
-	std::cout << "lowertarget = " << lowerTarget << std::endl;
+	//std::cout << "lowertarget = " << lowerTarget << std::endl; //TODO: remove when no debugging needed anymore
 	std::map<std::string, Channel>::iterator it = _channels.find(lowerTarget);
 	if (it != _channels.end())
 		return &it->second;

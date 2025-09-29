@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/28 15:28:53 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 12:35:04 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+#ifndef	SERVER_NAME
+	#define SERVER_NAME "InstantRegretChat"
+#endif
+
 /* Replies from server to client (confirmation or error message) when client inputs command 
 	follow the IRC reply code (eg: ERR_ALREADYREGISTERED, RPL_JOIN) and format.
 	We can add color to it to make it cute */
@@ -28,7 +32,7 @@ namespace Replies {
 	}
 
 	inline std::string	RPL_YOURHOST(const std::string& nick) {
-		const std::string	serverName = "InstantRegretChat";
+		const std::string	serverName = SERVER_NAME;
 		const std::string	serverVersion = "ft_irc_1.0";
 		return ":" + serverName + " 002 " + nick + " :Your host is " + serverName +
 		", running version " + serverVersion + "\r\n";
@@ -40,7 +44,7 @@ namespace Replies {
 
 	inline std::string RPL_NAMES(Client *c, const std::string& ch, const std::string& users){
 		std::string reply;
-		const std::string	serverName = "InstantRegretChat";
+		const std::string	serverName = SERVER_NAME; 		// 29.9Alex: added that so we don't hardcode it individually everywhere (it's defined in Server.hpp)
 		reply = ":" + serverName + " 353 " + c->getNick() + " = " + ch + " :" + users + "\r\n";
 		reply += ":" + serverName + " 366 " + c->getNick() + " " + ch + " :End of /NAMES list.\r\n";
 		return reply;
@@ -76,7 +80,7 @@ namespace Replies {
 	}
 
 	inline std::string	ERR_USERONCHANNEL(const std::string& nick, const std::string& channel) {
-		return "443 " + nick + " #" + channel + " :is already on channel\r\n";
+		return "443 " + nick + " " + channel + " :is already on channel\r\n";
 	}
 
 	inline std::string	ERR_NEEDMOREPARAMS(const std::string& nick, const std::string& cmd) {
