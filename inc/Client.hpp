@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/29 13:11:25 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 15:25:27 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ public:
 	Client& operator=(const Client& other);
 	
 // getters and setters
-	int					getSocket() const;
-	const std::string&	getNick() const;
-	const std::string&	getUser() const;
-	clientState			getState() const;
-	std::string			getSource() const;
+	int						getSocket() const;
+	const std::string&		getNick() const;
+	const std::string&		getUser() const;
+	clientState				getState() const;
+	std::string				getSource() const;
+	std::vector<Channel*>	getChannels() const;
 	void				setNick(const std::string& nick);
 	void				setUser(const std::string& user);
 	void				setState(clientState state);

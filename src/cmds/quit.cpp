@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:16 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/16 15:33:37 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 15:52:59 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,21 @@ Behavior:
   - Disconnects the client from the server.
   - Removes client from all joined channels.
   - Sends PART/QUIT messages to other users in shared channels.
-  - Closes client socket and cleans up resources.
+  - Sets client to disconnected; cleanup of resources will happen in the main server loop
   - Logs the client disconnection on the server.
 */
+
+void	Server::handleQuit(Client *c, const ParsedCmd &data) {
+	std::string	reason = "Client quit";
+	if (data.args.size() > 0 && data.lastTokenHasColon) {
+		reason = data.args[0];			
+		for (size_t	i = 1; i < data.args.size(); i++)							
+			reason += " " + data.args[i];
+	}
+	std::vector<Channel*>	channels = c->getChannels();
+	for (size_t i = 0; i < channels.size(); i++) {
+		partFromChannel(c, channels[i], reason);
+	}
+	c->setState(DISCONNECTED);
+	serverLog(c, " quit: " + reason);
+}

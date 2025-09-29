@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 14:30:50 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 15:53:42 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,14 @@ public:
 	void		handleChannelMsg(Client *c, std::string target, std::string msg);
 	void		handleDirectMsg(Client *sender, std::string target, std::string msg);
 	void		handlePart(Client *c, const ParsedCmd &data);
+	void		handleQuit(Client *c, const ParsedCmd &data);
 	void		partFromChannel(Client* c, Channel* channel, const std::string& reason);
 	void		handleList(Client *c);
+
 // utils
 	Channel*	findChannel(std::string target);
 	Client* 	findClientByNick(const std::string& nick);
+	void		cleanupDisconnectedClients();
 
 
 	// 	TODO: other main cmds

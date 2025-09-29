@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 12:30:11 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 16:16:39 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ void	Server::start() {
 void	Server::run() {
 	while (true) {
 		int	activity = poll(_fds.data(), _fds.size(), -1); // poll() blocks until any of these sockets has an event (new connection, incoming data, etc.), and then you check the .revents field of each pollfd.	
-		(void)activity; 	// will use it later but for now just silence the compile error
+		if (activity == -1) {
+			std::cerr << "Error: poll system call failed" << std::endl;
+			break;
+		}
 		// iterate through all fds:
 		for (size_t i = 0; i < _fds.size(); i++)	{
 			if (_fds[i].fd == -1)
@@ -100,7 +103,9 @@ void	Server::run() {
 				else
 					handleClient(_fds[i].fd);
 			}
+			// TODO: handle other events like errors: _fds[i].revents & (POLLERR | POLLHUP | POLLNVAL
 		}
+		cleanupDisconnectedClients();
 	}
 	close(_server_socket);
 }
@@ -158,10 +163,7 @@ void	Server::handleClient(int fd) {		// read from the connection
 	
 	if (bytes_read <= 0)	{
 		std::cout << "Client disconnected: fd " << fd << std::endl;
-		close(fd);
-		fd = -1; // mark socket as closed
-		delete client;
-		_connected.erase(fd);
+		client->setState(DISCONNECTED); 	// mark for cleanup
 	}
 	else {
 		buffer[bytes_read] = '\0';
@@ -190,16 +192,12 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		handlePrivMsg(c, data);
 	else if (data.cmd == "PART") 		// quit one channel
 		handlePart(c, data);
-//	
-//	else if (data.cmd == "QUIT") {		// quit server
-		//TODO: handleQuit(c, data);
-//	}
+	else if (data.cmd == "QUIT")		// quit server
+		handleQuit(c, data);
 	else if (data.cmd == "NAMES")	//display all nicks in a channel
 		handleNames(c, data);
-//	}
 	else if (data.cmd == "LIST") //display list of all channels and details
 		handleList(c);
-//	}
 	else if (data.cmd == "PING")
 		handlePing(c, data);
 
@@ -228,4 +226,22 @@ Client* Server::findClientByNick(const std::string& nick) {
 			return it->second;
 	}
 	return NULL;
+}
+
+void	Server::cleanupDisconnectedClients() {
+	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end();) {
+		if (it->second->getState() == DISCONNECTED) {
+			close(it->first);
+			for (size_t i = 0; i < _fds.size(); i++) {
+				if (_fds[i].fd == it->first) {
+					_fds[i].fd = -1;
+					break;
+				}
+			}
+			delete it->second;
+			_connected.erase(++it);		// advance the iterator before erasing it
+		}
+		else
+			it++;
+	}
 }

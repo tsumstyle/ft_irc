@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 15:04:19 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 15:23:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 }
 
 void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason) {
-		std::string reply = ":" + c->getNick() + "!" + c->getUser() + "@" + SERVER_NAME + " PART " + channel->getName();	// replace @host part with getSource() function
+		std::string reply = ":" + c->getSource() + " PART " + channel->getName();	// replace @host part with getSource() function
 		if (!reason.empty()) 
 			reply += " :" + reason;
 		reply += "\r\n";
