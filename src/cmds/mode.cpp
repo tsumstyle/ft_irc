@@ -42,20 +42,16 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		return ;
 	}
 	if (data.args[2] == "+i") {
-		// - if !isInviteOnly() -> set to true
-		//- if already true -> ignore
+		chan->setInviteOnly(true);
 	}
 	else if (data.args[2] == "-i") {
-		// - if isInviteOnly() -> set to false
-		// - if already false, ignore
+		chan->setInviteOnly(false);
 	}
 	else if (data.args[2] == "+t") {
-		// - if !isTopicRestricted() -> set to true
-		// - if already true -> ignore
+		chan->setTopicRestricted(true);
 	}
 	else if (data.args[2] == "-t") {
-		// - if isTopicRestricted() -> set to false
-		// - if already false -> ignore
+		chan->setTopicRestricted(false);
 	}
 	else if (data.args[2] == "+o") {
 		// - must be used /MODE <channel> +o <target>. if not: ERR_NEEDMOREPARAMS
