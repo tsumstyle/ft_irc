@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:47:02 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/27 14:34:47 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 14:58:12 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ ParsedCmd	parseMsg(const std::string& raw) {
 	ParsedCmd	data;
 	std::string token;
 	std::istringstream iss(raw);
+	data.lastTokenHasColon = false;
 
 	if (!raw.empty() && raw[0] == ':') {
 			iss >> token;
@@ -34,6 +35,7 @@ ParsedCmd	parseMsg(const std::string& raw) {
 		if (!token.empty() && token[0] == ':') {
 			std::string rest_line;
 			std::getline(iss, rest_line);
+			data.lastTokenHasColon = true;
 			data.args.push_back(token.substr(1) + rest_line);
 			break;
 		}

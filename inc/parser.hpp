@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:51:25 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/14 14:47:48 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/29 14:56:22 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ struct ParsedCmd{
 	std::string					cmd;
 	std::vector<std::string>	args;
 	std::string					prefix;
+	bool						lastTokenHasColon;
 };
 
 ParsedCmd	parseMsg(const std::string& raw);

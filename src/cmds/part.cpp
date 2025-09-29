@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 14:37:48 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/29 14:58:50 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 		return ;
 	}
 	std::string	reason;
-	if (data.args.size() > 1) {
+	if (data.args.size() > 1 && data.lastTokenHasColon) {
 		reason = data.args[1];											// TODO: Check with Nick regarding parsing and removing the ":"
 		for (size_t	i = 2; i < data.args.size(); i++)							// if there are more args. append them to the reason
 			reason += " " + data.args[i];
