@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 15:53:42 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 17:22:45 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ public:
 	bool		isNickTaken(const std::string& nick);
 	bool		isValidNick(const std::string& str);
 	bool		isValidChar(const char c);
+	bool		isValidUsername(const std::string& username);
 
 
 // CMD handlers:
@@ -83,6 +84,7 @@ public:
 	Channel*	findChannel(std::string target);
 	Client* 	findClientByNick(const std::string& nick);
 	void		cleanupDisconnectedClients();
+	void		cleanupEmptyChannels();
 
 
 	// 	TODO: other main cmds

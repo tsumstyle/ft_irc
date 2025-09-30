@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:26:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 16:32:17 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 16:11:58 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ Behavior:
 */
 void	Server::handleNick(Client *c, const ParsedCmd &data) {
 	if (c->getState() == NEW)
-		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "NICK"));
+		c->sendMessage(Replies::ERR_NOTREGISTERED("*", "NICK"));
 	else if (data.args.empty())
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick() , "NICK"));   // TODO: check that this makes sense. if NICK fails, no getNick() ?
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS("*", "NICK"));   // TODO: check that this makes sense. if NICK fails, no getNick() ?
 //	if (data.args.size() > 1)		// check the error code for this one
 //	Error 432 is ERR_ERRONEUSNICKNAME: invalid characters in the nickname (see rules for nickname in our notion page)
 	else if (isNickTaken(data.args[0]))
 		c->sendMessage(Replies::ERR_NICKNAMEINUSE(c->getNick()));
 	else if (!isValidNick(data.args[0]))
-		c->sendMessage(Replies::ERR_ERRONEUSNICKNAME(c->getNick()));
+		c->sendMessage(Replies::ERR_ERRONEUSNICKNAME(data.args[0]));
 	else {
 		c->setNick(data.args[0]);
 		if (c->getState() == USERNAME_OK) {

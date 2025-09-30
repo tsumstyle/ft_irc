@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 16:26:38 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 17:22:51 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,22 @@ Server::Server(const Server& copy) : _port(copy._port),
 									 _fds(copy._fds),
 									 _connected(copy._connected) {}
 
-Server::~Server() {}
+Server::~Server() {
+// close client sockets and delete Client objects
+	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); ++it) {
+		close (it->first);
+		delete it->second;
+	}
+	_connected.clear();
+// close server socket
+	if (_server_socket != -1) {
+		close(_server_socket);
+		_server_socket = -1;
+	}
+// clear other containers
+	_fds.clear();
+	_channels.clear();
+}
 
 //assigment operator
 Server&	Server::operator=(const Server& other) {
@@ -106,6 +121,7 @@ void	Server::run() {
 			// TODO: handle other events like errors: _fds[i].revents & (POLLERR | POLLHUP | POLLNVAL
 		}
 		cleanupDisconnectedClients();
+		cleanupEmptyChannels();
 	}
 	close(_server_socket);
 }
@@ -124,35 +140,6 @@ void	Server::acceptClient() {
 	_fds.push_back(client_poll);
 // instantiate Client object and add it to the _connected map
 	_connected[client_socket] = new Client(client_socket); // dont forget to DELETE against memleaks
-}
-
-bool	Server::isNickTaken(const std::string& nick) {
-	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); it++) {
-		if (it->second && it->second->getNick() == nick)
-			return true;
-	}
-	return false;
-}
-
-bool	Server::isValidChar(const char c) {
-	if (std::isalpha(c))
-		return true;
-	const char symbols[] = "[]\\`^{}|_";
-	for (int i = 0; symbols[i]; ++i)
-		if (c == symbols[i])
-			return true;
-	return false;
-}
-
-bool	Server::isValidNick(const std::string& str) {
-	if (str.empty() || str.size() > 9)
-		return false;
-	if (!isValidChar(str[0]))
-		return false;
-	for (size_t i = 1; i < str.length(); ++i)
-		if (!isValidChar(str[i]) && !std::isdigit(str[i]) && str[i] != '-')
-			return false;
-	return true;
 }
 
 void	Server::handleClient(int fd) {		// read from the connection
@@ -211,6 +198,46 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		InvalidCmd(c, data);
 }
 
+bool	Server::isNickTaken(const std::string& nick) {
+	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); it++) {
+		if (it->second && it->second->getNick() == nick)
+			return true;
+	}
+	return false;
+}
+
+bool	Server::isValidChar(const char c) {
+	if (std::isalpha(c))
+		return true;
+	const char symbols[] = "[]\\`^{}|_";
+	for (int i = 0; symbols[i]; ++i)
+		if (c == symbols[i])
+			return true;
+	return false;
+}
+
+bool	Server::isValidNick(const std::string& str) {
+	if (str.empty() || str.size() > 9)
+		return false;
+	if (!isValidChar(str[0]))
+		return false;
+	for (size_t i = 1; i < str.length(); ++i)
+		if (!isValidChar(str[i]) && !std::isdigit(str[i]) && str[i] != '-')
+			return false;
+	return true;
+}
+
+bool Server::isValidUsername(const std::string& username) {
+	if (username.empty() || username.length() > 12)
+		return false;
+	for (size_t i = 0; i < username.length(); i++) {
+		char c = username[i];
+		if (!std::isalnum(c) && c != '-' && c != '_')
+			return false;
+	}
+	return true;
+}
+
 Channel *Server::findChannel(std::string target) {
 	std::string	lowerTarget = toLower(target);
 	//std::cout << "lowertarget = " << lowerTarget << std::endl; //TODO: remove when no debugging needed anymore
@@ -245,5 +272,16 @@ void	Server::cleanupDisconnectedClients() {
 		}
 		else
 			it++;
+	}
+}
+
+void	Server::cleanupEmptyChannels() {
+	for (std::map<std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ) {
+		if (it->second.getUsers().empty()) {
+			std::cout << "Removing empty channel: " << it->first << std::endl;
+			_channels.erase(it++);
+		}
+		else
+			++it;
 	}
 }

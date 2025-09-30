@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:12 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/27 14:38:29 by nboer            ###   ########.fr       */
+/*   Updated: 2025/09/30 16:13:37 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,20 @@ Behavior:
    
 void	Server::handlePass(Client *c, const ParsedCmd &data) {
 	std::string reply;
-
-	if (c->getState() != NEW)
-		reply = Replies::ERR_ALREADYREGISTERED();
-	if (data.args.size() < 1)
-		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PASS");
-	else if (data.args[0] == _server_pass) {
+	if (c->getState() != NEW) {
+		c->sendMessage(Replies::ERR_ALREADYREGISTERED());
+		return ;
+	}
+	if (data.args.size() < 1) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS("*", "PASS"));
+		return ;
+	}
+	if (data.args[0] == _server_pass) {
 		c->setState(PASS_OK);
-		reply = "Password accepted. Provide NICK and USER.\r\n";
-	} else
-		reply = Replies::ERR_PASSWMISMATCH();
-	// TODO: if password is incorrect, client gets disconnected
-	c->sendMessage(reply);
+		c->sendMessage("Password accepted. Provide NICK and USER.\r\n");
+	}
+	else {
+		c->sendMessage(Replies::ERR_PASSWMISMATCH());
+		c->setState(DISCONNECTED);
+	}
 }

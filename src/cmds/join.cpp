@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:24:54 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 13:27:13 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 16:07:58 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@ Behavior:
 
 // 29.9 Alex: updated to handle multiple channels
 void	Server::handleJoin(Client *c, const ParsedCmd &data){
+	std::string nick = c->getNick().empty() ? "*" : c->getNick();
 	if (c->getState() != REGISTERED) {
-		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "JOIN"));
+		c->sendMessage(Replies::ERR_NOTREGISTERED(nick, "JOIN"));
 		return;
 	}
-	else if (data.args.empty()) {
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "JOIN"));
+	if (data.args.empty()) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(nick, "JOIN"));
 		return ;
 	}
 	std::vector<std::string>	channels = split(data.args[0], ',');
@@ -47,7 +48,7 @@ void	Server::handleJoin(Client *c, const ParsedCmd &data){
 	for (size_t i = 0; i < channels.size(); i++) {
 		std::string	channel_name = channels[i];
 		if (channel_name.empty() || channel_name[0] != '#') {
-			c->sendMessage(Replies::ERR_BADCHANMASK(c->getNick(), channel_name));
+			c->sendMessage(Replies::ERR_BADCHANMASK(nick, channel_name));
 			continue;
 		}
 		std::string	key = (i < keys.size()) ? keys[i] : "";

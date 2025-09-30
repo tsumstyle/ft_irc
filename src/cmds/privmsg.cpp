@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:08:36 by nick              #+#    #+#             */
-/*   Updated: 2025/09/26 14:30:54 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 16:14:48 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,13 @@ void Server::handleChannelMsg(Client *c, std::string target, std::string msg) {
 }
 
 void Server::handlePrivMsg(Client *c, const ParsedCmd &data) {
-	if (data.args.size() < 2) {
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PRIVMSG"));
+	std::string nick = c->getNick().empty() ? "*" : c->getNick();
+	if (c->getState() != REGISTERED) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(nick, "PART"));
+		return ;
+	}
+	if (data.args.empty() || data.args.size() < 2) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(nick, "PRIVMSG"));
 		return;
 	}
 	std::string target = data.args[0];

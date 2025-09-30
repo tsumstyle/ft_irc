@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 12:35:04 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 15:48:32 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,16 @@ namespace Replies {
 		return "403 " + nick + " " + channel + " :No such channel \r\n";
 	}
 
+	inline std::string	ERR_ERRONEUSNICKNAME(const std::string& badnick) {
+		return "432 " + badnick + " :Erroneus nickname\r\n";
+	}
+
 	inline std::string	ERR_NICKNAMEINUSE(const std::string& nick) {
 		return "433 " + nick + " :Nickname is already in use\r\n";
 	}
 
-	inline std::string	ERR_ERRONEUSNICKNAME(const std::string& badnick) {
-		return "432 " + badnick + " :Erroneus nickname\r\n";
+	inline std::string	ERR_ERRONEUSUSERNAME(const std::string& baduser) {
+		return "434 " + baduser + " :Erroneus username\r\n";
 	}
 
 	inline std::string ERR_NOTONCHANNEL(const std::string& nick, const std::string& channel) {

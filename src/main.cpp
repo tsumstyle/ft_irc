@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 13:22:32 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/15 14:52:00 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 17:23:30 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,26 @@
 //Client join: telnet 127.0.0.1 8080
 
 int	main(int argc, char **argv)	{
-	int port;
+	if (argc != 3)
+		return err_handler("Usage:  ./ircserv <port> <password>");
+	if (!isnum(argv[1]))
+		return err_handler("Port must be a number");
+	int port = std::atoi(argv[1]);
+	if (port < 1 || port > 65535)
+		return err_handler("Port must be between 1-65535");
 	
-	if ((argc == 3) && isnum(argv[1])) {
-		port = std::atoi(argv[1]);
-		std::string	password = argv[2];
+	std::string	password = argv[2];
+	if (password.empty())
+		return err_handler("Password cannot be empty");
 	
+	try {
 		Server	irc(port, password);
 		irc.start(); 
 		irc.run();
+	} catch (const std::exception& e) {
+		std::cerr << "Server error: " << e.what() << std::endl;
+		return 1;
 	}
-	else
-		return err_handler("Invalid input, use: ./ircserv <port> <password>\n");
-	// other stuff for the argument check?
-//		- Port must be in the range 1-65535.
-//		- atoi must not fail
-//		- password cannot be empty
 	
 	return 0;
 }

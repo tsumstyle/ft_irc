@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 16:32:25 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 16:02:46 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,39 @@ Behavior:
    - Updates client state:
        - If NICK_OK, client becomes REGISTERED → send welcome messages.
        - Otherwise, state becomes USERNAME_OK (waiting for NICK command).
-   - Logs the username assignment on the server. 
+   - Logs the username assignment on the server. */
    
- 1609A: I changed most of the NICK command but not this one yet. It should follow the same structure  */
-   
+
 void	Server::handleUser(Client *c, const ParsedCmd &data) {
-	if (c->getState() == NEW) 
-		c->sendMessage(Replies::ERR_NOTREGISTERED("client", "USER"));	// TODO: check, i'm not sure
-	else if (data.args.empty())
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "USER"));
-//	else if (data.args.size() > 1)
-//		reply = "Error 432: No more than one argument allowed \r\n";
+	std::string nick = c->getNick().empty() ? "*" : c->getNick();
+	if (c->getState() == NEW) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(nick, "USER"));	// TODO: check, i'm not sure
+		return ;
+	}
+	if (c->getState() == REGISTERED) {
+		c->sendMessage(Replies::ERR_ALREADYREGISTERED());	// TODO: check, i'm not sure
+		return ;
+	}
+	if (data.args.empty() || data.args.size() < 4) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(nick, "USER"));
+		return ;
+	}
+	std::string	username = data.args[0];
+	std::string realname = data.args[3];
+	if (!isValidUsername(username))
+		c->sendMessage(Replies::ERR_ERRONEUSUSERNAME(username));
 	else {
-		c->setUser(data.args[0]);
+		c->setUser(username);
 		if (c->getState() == NICK_OK) {
 			c->setState(REGISTERED);
 			serverLog(c, " is fully registered");
-			c->sendMessage(Replies::RPL_WELCOME(c->getNick(), c->getUser()));		
+			c->sendMessage(Replies::RPL_WELCOME(nick, username));		
 		}
 		else {
 			c->setState(USERNAME_OK);
-			serverLog(c, " set nickname to '" + c->getNick() + "'");
-			c->sendMessage(Replies::RPL_YOURHOST(c->getNick()));
+			serverLog(c, " set username to '" + username + "'");
+			c->sendMessage(Replies::RPL_YOURHOST(nick));
 		}
 	}
 }
+
