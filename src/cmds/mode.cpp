@@ -2,18 +2,27 @@
 #include "../../inc/Channel.hpp"
 #include "../../inc/replies.hpp"
 
-void	Server::handleMode(Client *c, const ParsedCmd &data) {
-	// - at least <channel> and option param. if not: ERR_NEEDMOREPARAMS
-	// - user is on the channel. if not: ERR_NOTONCHANNEL
-	// - user has chanop privileges. if not: ERR_CHANOPRIVSNEEDED
-	Channel *chan = findChannel(data.args[1]);
 
-	if (!c) { return; } // for compilation
-	if (!chan) {
-		// no such channel
-		std::cout << "BAD INPUT: no such channel\n";
-		return ;
+
+void	Server::handleMode(Client *c, const ParsedCmd &data) {
+
+	std::string	reply;
+	if (data.args.size() < 3) {
+		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
 	}
+	
+	Channel *chan = findChannel(data.args[1]);
+	if (!chan) {
+		reply = Replies::ERR_NOSUCHCHANNEL(c->getNick(), chan->getName());
+	}
+	else if (!chan->findUser(c->getNick())) {
+		reply = Replies::ERR_NOTONCHANNEL(chan->getName());
+	}
+	else if (!chan->isOperator(c)) {
+		reply = Replies::ERR_CHANOPRIVSNEEDED(chan->getName());
+	}
+
+
 	if (data.args[2] == "+i") {
 		// too many args?
 		chan->setInviteOnly(true);
@@ -46,15 +55,16 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		chan->removeOperator(target);
 	}
 	else if (data.args[2] == "+k") {
-		// if more than 4 params >> ignore
-		if (data.args.size() == 4) {
+		if (data.args.size() < 4) {
+			reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
+		}
+		if (!chan->isReqPassword()) {
 			chan->setLocalPass(data.args[3]);
 			chan->setReqPassword(true);
 		}
-		else if (data.args.size() == 3 && chan->getLocalPass() != "")
-			chan->setReqPassword(true);
-		else if (data.args.size() == 3 && chan->getLocalPass() == "")
-			// NEEDMOREPARAMS
+		else if (chan->isReqPassword()) {
+			reply = Replies::ERR_KEYSET(chan->getName());
+		}
 		return ;
 	}
 	else if (data.args[2] == "-k") {
@@ -76,6 +86,9 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 	else if (data.args[2] == "-l") {
 		// if more than 3 params >> ignore
 		chan->setUserLimitSet(false);
+	}
+	else {
+		// unknown command
 	}
 	return;
 }
@@ -143,3 +156,4 @@ MODE:
 	- if isUserLimitSet() -> set to false
 
  */
+

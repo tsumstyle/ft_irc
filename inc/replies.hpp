@@ -120,7 +120,7 @@ namespace Replies {
 		return "471 " + channel + " :Cannot join channel (+i)\r\n";
 	}
 
-	inline std::string	ERR_CHANOPPRIVSNEEDED(const std::string& channel) { // fix number
+	inline std::string	ERR_CHANOPRIVSNEEDED(const std::string& channel) { // fix number
 		return "471 " + channel + " :You're not channel operator\r\n";
 	}
 
