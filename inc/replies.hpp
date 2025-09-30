@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 15:48:32 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 17:41:12 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,15 @@ namespace Replies {
 
 // error replies
 	inline std::string	ERR_NOSUCHNICK(const std::string& nick, const std::string& target) {
-		return "401 " + nick + " " + target + " :No such nickname \r\n";
+		return "401 " + nick + " " + target + " :No such nickname\r\n";
 	}
 
 	inline std::string	ERR_NOSUCHCHANNEL(const std::string& nick, const std::string& channel) {
-		return "403 " + nick + " " + channel + " :No such channel \r\n";
+		return "403 " + nick + " " + channel + " :No such channel\r\n";
+	}
+
+	inline std::string	ERR_UNKNOWNCOMMAND(const std::string& nick, const std::string& cmd) {
+		return "421 " + nick + " " + cmd + " :Unknown command\r\n";
 	}
 
 	inline std::string	ERR_ERRONEUSNICKNAME(const std::string& badnick) {

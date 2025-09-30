@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 16:28:56 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 14:58:28 by aroux            ###   ########.fr       */
+/*   Updated: 2025/09/30 17:40:55 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../../inc/replies.hpp"
 
 void Server::InvalidCmd(Client *c, const ParsedCmd &data) {
-	std::string token = data.cmd;
-	std::string reply = "Invalid command: " + token + "\r\n";
-	c->sendMessage(reply);	
+	if (data.cmd.empty())
+		return;
+	c->sendMessage(Replies::ERR_UNKNOWNCOMMAND(c->getNick(), data.cmd));	
 }
