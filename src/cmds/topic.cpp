@@ -1,3 +1,7 @@
+#include "../../inc/Server.hpp"
+#include "../../inc/Channel.hpp"
+#include "../../inc/replies.hpp"
+
 /*
 TOPIC:
 	1) - /TOPIC <channel> 
