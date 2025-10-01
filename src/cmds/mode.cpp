@@ -11,6 +11,7 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
 	}
 	
+	// checking channel and privileges
 	Channel *chan = findChannel(data.args[1]);
 	if (!chan) {
 		reply = Replies::ERR_NOSUCHCHANNEL(c->getNick(), chan->getName());
@@ -22,37 +23,50 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		reply = Replies::ERR_CHANOPRIVSNEEDED(chan->getName());
 	}
 
-
+	// actual things
 	if (data.args[2] == "+i") {
-		// too many args?
-		chan->setInviteOnly(true);
+		if (data.args.size() == 3) {
+			chan->setInviteOnly(true);
+			reply = "Channel set to invite only\r\n";
+		}
 	}
 	else if (data.args[2] == "-i") {
-		// too many args?
-		chan->setInviteOnly(false);
+		if (data.args.size() == 3) {
+			chan->setInviteOnly(false);
+			reply = "Channel no longer invite only\r\n";
+		}
 	}
 	else if (data.args[2] == "+t") {
-		// too many args?
-		chan->setTopicRestricted(true);
+		if (data.args.size() == 3) {
+			chan->setTopicRestricted(true);
+			reply = "TOPIC restricted to channel operators\r\n";
+		}
 	}
 	else if (data.args[2] == "-t") {
-		// too many args?
-		chan->setTopicRestricted(false);
+		if (data.args.size() == 3) {
+			chan->setTopicRestricted(false);
+			reply = "TOPIC no longer restricted to channel operators\r\n";
+		}
 	}
 	else if (data.args[2] == "+o") {
-		// - must be used /MODE <channel> +o <target>. if not: ERR_NEEDMOREPARAMS
-		// - check if target is part of channel. if not: ?
+		if (data.args.size() < 4) {
+			reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
+		}
 		Client* target = chan->findUser(data.args[3]);
-		if (!target || chan->isOperator(target))
-			return ;
-		chan->addOperator(target);
+		if (target && !chan->isOperator(target)) {
+			chan->addOperator(target);
+			reply = "Added " + target->getNick() + " as an operator\r\n";
+		}
 	}
 	else if (data.args[2] == "-o") {
-		// - must be used /MODE <channel> -o <target>. if not: ERR_NEEDMOREPARAMS
+		if (data.args.size() < 4) {
+			reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
+		}
 		Client* target = chan->findUser(data.args[3]);
-		if (!target || !chan->isOperator(target))
-			return ;
-		chan->removeOperator(target);
+		if (target && chan->isOperator(target)) {
+			chan->removeOperator(target);
+			reply = "Removed " + target->getNick() + " as an operator\r\n";
+		}
 	}
 	else if (data.args[2] == "+k") {
 		if (data.args.size() < 4) {
@@ -61,35 +75,41 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		if (!chan->isReqPassword()) {
 			chan->setLocalPass(data.args[3]);
 			chan->setReqPassword(true);
+			reply = "Password is now required\r\n";
 		}
 		else if (chan->isReqPassword()) {
 			reply = Replies::ERR_KEYSET(chan->getName());
 		}
-		return ;
 	}
 	else if (data.args[2] == "-k") {
-		// if more than 3 params >> ignore
-		chan->setReqPassword(false);
+		if (data.args.size() == 3) {
+			chan->setReqPassword(false);
+			reply = "Password no longer required\r\n";
+		}
 	}
 	else if (data.args[2] == "+l") {
-		// if more than 4 params >> ignore
-		if (data.args.size() == 4) {
+		if (data.args.size() < 4) {
+			reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
+		}
+		if (!chan->isUserLimitSet()) {
 			chan->setUserLimit(data.args[3]);
 			chan->setUserLimitSet(true);
+			reply = "User limit set to " + data.args[3] + "\r\n";
 		}
-		else if (data.args.size() == 3 && chan->getUserLimit() > 0)
-			chan->setUserLimitSet(true);
-		else if (data.args.size() == 3 && chan->getUserLimit() == 0)
-			// NEEDMOREPARAMS
-		return ;
+		else if (chan->isUserLimitSet()) {
+			reply = "User limit is already set\r\n";
+		}
 	}
 	else if (data.args[2] == "-l") {
-		// if more than 3 params >> ignore
-		chan->setUserLimitSet(false);
+		if (data.args.size() == 3) {
+			chan->setUserLimitSet(false);
+			reply = "User limit removed\r\n";
+		}
 	}
 	else {
-		// unknown command
+		reply = "Unknown MODE command\r\n";
 	}
+	c->sendMessage(reply);
 	return;
 }
 
