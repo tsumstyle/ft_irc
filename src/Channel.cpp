@@ -14,22 +14,32 @@
 
 // constructors_operators
 Channel::Channel() : _name("defaultchannel"),
+					 _localpass(""),
 					 _reqPassword(false),
 					 _inviteOnly(false),
 					 _topicRestricted(true),
 					 _userLimitSet(false),
 					 _userLimit(0) {}
 
-Channel::Channel(std::string channel_name) : _name(channel_name) {}
+Channel::Channel(std::string channel_name) : _name(channel_name),
+											 _localpass(""),
+											 _reqPassword(false),
+											 _inviteOnly(false),
+											 _topicRestricted(true),
+											 _topic(""),
+											 _userLimitSet(false),
+											 _userLimit(0) {}
 
 Channel::Channel(const Channel& copy) : _name(copy._name), 
 										_users(copy._users),
 										_operators(copy._operators),
-										_reqPassword(false),
-										_inviteOnly(false),
-										_topicRestricted(true),
-										_userLimitSet(false),
-										_userLimit(0) {}
+										_localpass(copy._localpass),
+										_reqPassword(copy._reqPassword),
+										_inviteOnly(copy._inviteOnly),
+										_topicRestricted(copy._topicRestricted),
+										_topic(copy._topic),
+										_userLimitSet(copy._userLimitSet),
+										_userLimit(copy._userLimit) {}
 
 Channel::~Channel() {}
 
@@ -39,9 +49,11 @@ Channel& Channel::operator=(const Channel& other) {
 		_name = other._name;
 		_users = other._users;
 		_operators = other._operators;
+		_localpass = other._localpass;
 		_reqPassword = other._reqPassword;
 		_inviteOnly = other._inviteOnly;
 		_topicRestricted = other._topicRestricted;
+		_topic = other._topic;
 		_userLimitSet = other._userLimitSet;
 		_userLimit = other._userLimit;
 	}
@@ -108,6 +120,23 @@ std::vector<Client*>	Channel::getUsers() {
 	return (_users);
 }
 
+// added 29.9 -- caro
+Client*	Channel::findUser(const std::string& name) {
+	for (size_t i = 0; i < this->_users.size(); i++) {
+		if (this->_users[i]->getNick() == name)
+			return (this->_users[i]);
+	}
+	return (NULL);
+}
+
+bool	Channel::isOperator(const Client* name) {
+	for (size_t i = 0; i < this->_operators.size(); i++) {
+		if (this->_operators[i] == name)
+			return true;
+	}
+	return false;
+}
+
 // added for chanop 26.9 -- caro
 bool	Channel::isChannelFull() {
 	if (this->_userLimitSet) {
@@ -128,10 +157,48 @@ bool	Channel::isReqPassword() {
 	return this->_reqPassword;
 }
 
+std::string	Channel::getLocalPass() {
+	return this->_localpass;
+}
+
 bool	Channel::isInviteOnly() {
 	return this->_inviteOnly;
 }
 
 bool	Channel::isTopicRestricted() {
 	return this->_topicRestricted;
+}
+
+std::string	Channel::getTopic() {
+	return this->_topic;
+}
+
+// added 29.9 -- caro
+void	Channel::setUserLimitSet(bool desired) {
+	this->_userLimitSet = desired;
+}
+
+void	Channel::setUserLimit(const std::string& lim) {
+	this->_userLimit = atoi(lim.c_str()); // is this the best way?
+	// check number is valid, return 0 on fail?
+}
+
+void	Channel::setReqPassword(bool desired) {
+	this->_reqPassword = desired;
+}
+
+void	Channel::setLocalPass(const std::string& pass) {
+	this->_localpass = pass;
+}
+
+void	Channel::setTopicRestricted(bool desired) {
+	this->_topicRestricted = desired;
+}
+
+void	Channel::setTopic(const std::string& topic) {
+	this->_topic = topic;
+}
+
+void	Channel::setInviteOnly(bool desired) {
+	this->_inviteOnly = desired;
 }

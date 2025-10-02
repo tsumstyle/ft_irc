@@ -1,3 +1,7 @@
+#include "../../inc/Server.hpp"
+#include "../../inc/Channel.hpp"
+#include "../../inc/replies.hpp"
+
 /*
 KICK:
 	- kicks a user from a channel
@@ -10,3 +14,45 @@ KICK:
 	- if target not on channel -> ignore
 	- if target on channel -> remove from channel members. msg with comments
 */
+
+// void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason)
+
+void	Server::handleKick(Client *c, const ParsedCmd &data) {
+	// data.cmd = KICK
+	// data.args = <channel> <target> [<reason>]
+	if (data.args.size() < 2) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
+		return ;
+	}
+	Channel *chan = findChannel(data.args[0]);
+	if (!chan) {
+		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[0]));
+		return ;
+	}
+	if (!chan->isOperator(c)) {
+		c->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(chan->getName()));
+		return ;
+	}
+	Client *victim = chan->findUser(data.args[1]);
+	if (!victim) {
+		c->sendMessage(Replies::ERR_NOSUCHNICK(c->getNick(), data.args[1])); /// change
+		return ;
+	}
+	std::string reason = "";
+	if (data.args.size() > 2) {
+		for (size_t i = 2; i < data.args.size(); i++) {
+			if (i != 2)
+				reason += " ";
+			reason += data.args[i];
+		}
+	}
+	partFromChannel(victim, chan, reason);
+
+	// here some placeholder messages
+	c->sendMessage("User " + victim->getNick() + " kicked from channel " + chan->getName() + " >:)\r\n"); ///// change
+	
+	std::string explanation = "You've been kicked from " + chan->getName();
+	if (reason != "")
+		explanation += ". Reason given: " + reason;
+	victim->sendMessage(explanation);
+}

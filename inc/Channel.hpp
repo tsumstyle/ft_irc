@@ -31,6 +31,7 @@ private:
 	bool					_reqPassword; // false; // if !requirePassword and command "MODE +k" -> ask for new password
 	bool					_inviteOnly; // false;
 	bool					_topicRestricted; // true;
+	std::string				_topic;
 	bool					_userLimitSet; // false; // if !_userLimitSet and command "MODE +l x" -> ser _userLimit = x 
 	size_t					_userLimit; // 0;
 
@@ -50,12 +51,25 @@ public:
 	void					broadcast(const std::string& msg, Client* sender);
 	std::string				getName();
 	std::vector<Client*>	getUsers();
+	Client*					findUser(const std::string& name);
+	bool					isOperator(const Client* name);
 
 	// for chanop 26.9 -- caro
 	bool					isChannelFull();
 	bool					isUserLimitSet();
 	size_t					getUserLimit();
 	bool					isReqPassword();
+	std::string				getLocalPass();
 	bool					isInviteOnly();
 	bool					isTopicRestricted();
+	std::string				getTopic();
+
+	// for MODE - setters. 29.9 -- caro
+	void					setUserLimitSet(bool desired);
+	void					setUserLimit(const std::string& lim);
+	void					setReqPassword(bool desired);
+	void					setLocalPass(const std::string& pass);
+	void					setTopicRestricted(bool desired);
+	void					setTopic(const std::string& topic);
+	void					setInviteOnly(bool desired);
 };
