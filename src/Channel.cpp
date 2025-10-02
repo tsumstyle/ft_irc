@@ -26,6 +26,7 @@ Channel::Channel(std::string channel_name) : _name(channel_name),
 											 _reqPassword(false),
 											 _inviteOnly(false),
 											 _topicRestricted(true),
+											 _topic(""),
 											 _userLimitSet(false),
 											 _userLimit(0) {}
 
@@ -33,11 +34,12 @@ Channel::Channel(const Channel& copy) : _name(copy._name),
 										_users(copy._users),
 										_operators(copy._operators),
 										_localpass(copy._localpass),
-										_reqPassword(false),
-										_inviteOnly(false),
-										_topicRestricted(true),
-										_userLimitSet(false),
-										_userLimit(0) {}
+										_reqPassword(copy._reqPassword),
+										_inviteOnly(copy._inviteOnly),
+										_topicRestricted(copy._topicRestricted),
+										_topic(copy._topic),
+										_userLimitSet(copy._userLimitSet),
+										_userLimit(copy._userLimit) {}
 
 Channel::~Channel() {}
 
@@ -47,9 +49,11 @@ Channel& Channel::operator=(const Channel& other) {
 		_name = other._name;
 		_users = other._users;
 		_operators = other._operators;
+		_localpass = other._localpass;
 		_reqPassword = other._reqPassword;
 		_inviteOnly = other._inviteOnly;
 		_topicRestricted = other._topicRestricted;
+		_topic = other._topic;
 		_userLimitSet = other._userLimitSet;
 		_userLimit = other._userLimit;
 	}
@@ -165,6 +169,10 @@ bool	Channel::isTopicRestricted() {
 	return this->_topicRestricted;
 }
 
+std::string	Channel::getTopic() {
+	return this->_topic;
+}
+
 // added 29.9 -- caro
 void	Channel::setUserLimitSet(bool desired) {
 	this->_userLimitSet = desired;
@@ -185,6 +193,10 @@ void	Channel::setLocalPass(const std::string& pass) {
 
 void	Channel::setTopicRestricted(bool desired) {
 	this->_topicRestricted = desired;
+}
+
+void	Channel::setTopic(const std::string& topic) {
+	this->_topic = topic;
 }
 
 void	Channel::setInviteOnly(bool desired) {

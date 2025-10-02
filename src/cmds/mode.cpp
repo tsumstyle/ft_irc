@@ -106,6 +106,11 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 	return (reply);
 }
 
+// std::string	Server::handleMode_user(Client *c, const ParsedCmd &data) {
+// 	// MODE <user> <option> <param>
+// 	// reading the subject im not sure this needs to be done at all.
+// 	// rather think not
+// }
 
 void	Server::handleMode(Client *c, const ParsedCmd &data) {
 
@@ -113,10 +118,12 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 	if (data.args.size() < 3) {
 		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
 	}
-	
 	if (data.args[0][0] == '#') {
 		reply = handleMode_channel(c, data);
 	}
+	// else {
+	// 	reply = handleMode_user(c, data);
+	// }
 	c->sendMessage(reply);
 	return;
 }

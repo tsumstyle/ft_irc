@@ -54,6 +54,24 @@ namespace Replies {
 		return ":" + sender + " PRIVMSG " + target + " :" + msg + "\r\n"; 
 	}
 
+	inline std::string	RPL_TOPIC(Channel *channel) {
+		return channel->getName() + " :" + channel->getTopic() + "\r\n";
+	}
+
+	inline std::string	RPL_NOTOPIC(Channel *channel) {
+		return channel->getName() + " :No topic is set\r\n";
+	}
+	/*
+	    331     RPL_NOTOPIC
+                        "<channel> :No topic is set"
+        332     RPL_TOPIC
+                        "<channel> :<topic>"
+
+                - When sending a TOPIC message to determine the
+                  channel topic, one of two replies is sent.  If
+                  the topic is set, RPL_TOPIC is sent back else
+                  RPL_NOTOPIC.*/
+
 // error replies
 	inline std::string	ERR_NOSUCHNICK(const std::string& nick, const std::string& target) {
 		return "401 " + nick + " " + target + " :No such nickname\r\n";

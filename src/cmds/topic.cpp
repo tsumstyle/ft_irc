@@ -11,13 +11,42 @@ TOPIC:
 
 	2) check:
 	if channel.isTopicRestricted {
-		if client.isChanOp() {
+		if (channel.topicRestricted && !chanop)
+			-> privileges needed
+		else
 			-> change topic
-		}
+*/
+
+void	Server::handleTopic(Client *c, const ParsedCmd &data) {
+	std::string	reply;
+	if (data.args.size() < 1)
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
+
+	Channel *chan = findChannel(data.args[0]);
+	if (!chan) {
+		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[0]));
+		return ;
+	}
+	if (data.args.size() == 1) {
+		if (chan->getTopic() == "")
+			c->sendMessage(Replies::RPL_NOTOPIC(chan));
+		else
+			c->sendMessage(Replies::RPL_TOPIC(chan));
+		return ;
+	}
+	if (chan->isTopicRestricted() && !chan->isOperator(c)) {
+		c->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(chan->getName()));
+		return ;
+	}
+	std::string	new_topic = "";
+	for (size_t i = 1; i < data.args.size(); i++) {
+		if (i == 1)
+			new_topic += data.args[i];
 		else {
-			-> ERR_CHANOPRIVSNEEDED
+			new_topic += " ";
+			new_topic += data.args[i];
 		}
 	}
-	else
-		-> change topic
-*/
+	chan->setTopic(new_topic);
+	c->sendMessage("Topic changed"); //// change
+}
