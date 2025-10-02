@@ -2,16 +2,9 @@
 #include "../../inc/Channel.hpp"
 #include "../../inc/replies.hpp"
 
-void	Server::handleMode(Client *c, const ParsedCmd &data) {
-
-	std::string	reply;
-	if (data.args.size() < 3) {
-		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
-	}
-	
-	// checking channel and privileges
+std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
+	std::string reply;
 	Channel *chan = findChannel(data.args[0]);
-
 	if (!chan) {
 		std::cout << "!chan\n";
 		reply = Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[0]);
@@ -109,6 +102,20 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		else {
 			reply = "Unknown MODE command\r\n";
 		}
+	}
+	return (reply);
+}
+
+
+void	Server::handleMode(Client *c, const ParsedCmd &data) {
+
+	std::string	reply;
+	if (data.args.size() < 3) {
+		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
+	}
+	
+	if (data.args[0][0] == '#') {
+		reply = handleMode_channel(c, data);
 	}
 	c->sendMessage(reply);
 	return;

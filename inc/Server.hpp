@@ -80,6 +80,8 @@ public:
 	void		partFromChannel(Client* c, Channel* channel, const std::string& reason);
 	void		handleList(Client *c);
 	void		handleMode(Client *c, const ParsedCmd &data);
+	std::string		handleMode_channel(Client *c, const ParsedCmd &data);
+	void		handleMode_user(Client *c, const ParsedCmd &data, std::string &reply);
 	void		handleTopic(Client *c, const ParsedCmd &data);
 	void		handleKick(Client *c, const ParsedCmd &data);
 	void		handleInvite(Client *c, const ParsedCmd &data);
