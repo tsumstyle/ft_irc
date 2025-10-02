@@ -40,12 +40,9 @@ void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 	}
 	std::string	new_topic = "";
 	for (size_t i = 1; i < data.args.size(); i++) {
-		if (i == 1)
-			new_topic += data.args[i];
-		else {
+		if (i != 1)
 			new_topic += " ";
-			new_topic += data.args[i];
-		}
+		new_topic += data.args[i];
 	}
 	chan->setTopic(new_topic);
 	c->sendMessage("Topic changed"); //// change

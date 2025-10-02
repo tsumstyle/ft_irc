@@ -190,6 +190,10 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 // 3. operator commands (TODO) MODE, INVITE, KICK, TOPIC
 	else if (data.cmd == "MODE")
 		handleMode(c, data);
+	else if (data.cmd == "TOPIC")
+		handleTopic(c, data);
+	else if (data.cmd == "KICK")
+		handleKick(c, data);
 	else
 		InvalidCmd(c, data);
 }
