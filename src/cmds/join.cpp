@@ -55,18 +55,31 @@ void	Server::handleJoin(Client *c, const ParsedCmd &data){
 	}
 }
 
-void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, const std::string& /* key */) {
+void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, const std::string& key) {
 	std::map<std::string, Channel>::iterator iter = _channels.find(channel_name);	// look for channel in map of channels
 	if (iter != _channels.end()) {					// if channel exists
 		Channel& channel = iter->second;
 		if (c->isOnChannel(&channel))	{
 			c->sendMessage(Replies::ERR_USERONCHANNEL(c->getNick(), channel_name));
-			return;
+			return ;
 		}
 		// if channel.userlimitset && channel.full -> ERR_CHANNELISFULL
-		// if channel.inviteOnly -> ERR_INVITEONLYCHAN
+		else if (channel.isUserLimitSet() && channel.isChannelFull()) {
+			c->sendMessage(Replies::ERR_CHANNELISFULL(channel.getName()));
+			return ;
+		}
+		// if channel.inviteOnly && !in_invite_list -> ERR_INVITEONLYCHAN
+		else if (channel.isInviteOnly() && !channel.isInvited(c)) {
+			c->sendMessage(Replies::ERR_INVITEONLYCHAN(channel.getName()));
+			return ;
+		}
 		// if channel.passwordSet -> ask for password -> ok or ERR_PASSWDMISMATCH
-
+		else if (channel.isReqPassword()) {
+			if (key == "" || key != channel.getLocalPass()) {
+				c->sendMessage(Replies::ERR_PASSWMISMATCH()); // change this msg
+				return ;
+			}
+		}
 		// all checks passed, add use to channel:
 		channel.addUser(c);
 		c->addChannel(&channel);

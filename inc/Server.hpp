@@ -104,18 +104,7 @@ public:
 	void		cleanupDisconnectedClients();
 	void		cleanupEmptyChannels();
 
-
-	// 	TODO: other main cmds
-//	void		handlePart(Client *c, const ParsedCmd &data);
-//	void		handleQuit(Client *c, const ParsedCmd &data);
-
-// 	TODO: operator cmds : 
-//		MODE (i, t, k, o, l): change specific things about channel
-//		NAMES; gives all names of people in the channel
-//		KICK, 
 //		INVITE, 
-//		TOPIC 
-
 
 	void		InvalidCmd(Client *c,const ParsedCmd &data);
 	//void	createChannel ?

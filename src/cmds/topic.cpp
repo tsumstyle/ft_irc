@@ -45,5 +45,5 @@ void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 		new_topic += data.args[i];
 	}
 	chan->setTopic(new_topic);
-	c->sendMessage("Topic changed"); //// change
+	c->sendMessage("Topic changed\r\n"); //// change
 }

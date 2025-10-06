@@ -26,3 +26,9 @@ QUIT without reason
 Network disconnection (close client socket)
 Server shutdown handling 
 */
+
+/* MODE
+try to MODE <channel> when not a memeber of channel
+try to MODE <channel> when not chanop
+
+*/

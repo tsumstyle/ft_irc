@@ -22,18 +22,19 @@ class Client;
 
 class Channel	{
 private:
-	std::string				_name;			// channel name
-	std::vector<Client*>	_users;			// list of clients that are on the channel //pointing to already existing clients; could also just store the fds
-	std::vector<Client*>	_operators;		// all operators (=moderators) of the channel
-	std::string				_localpass;		// password on channel
+	std::string				_name;
+	std::vector<Client*>	_users;
+	std::vector<Client*>	_operators;
+	std::vector<Client*>	_inviteList;
+	std::string				_localpass;
 
 	// for operator commands:
-	bool					_reqPassword; // false; // if !requirePassword and command "MODE +k" -> ask for new password
-	bool					_inviteOnly; // false;
-	bool					_topicRestricted; // true;
+	bool					_reqPassword;
+	bool					_inviteOnly;
+	bool					_topicRestricted;
 	std::string				_topic;
-	bool					_userLimitSet; // false; // if !_userLimitSet and command "MODE +l x" -> ser _userLimit = x 
-	size_t					_userLimit; // 0;
+	bool					_userLimitSet;
+	size_t					_userLimit;
 
 public:
 // constructors
@@ -46,13 +47,19 @@ public:
 	void					addUser(Client* user);
 	void					removeUser(Client* user);
 	bool					hasUser(Client* user);
+
 	void					addOperator(Client* user);
 	void					removeOperator(Client* user);
+	bool					isOperator(const Client* name);
+
 	void					broadcast(const std::string& msg, Client* sender);
 	std::string				getName();
 	std::vector<Client*>	getUsers();
 	Client*					findUser(const std::string& name);
-	bool					isOperator(const Client* name);
+
+	void					invite(Client* user);
+	void					uninvite(Client* user);
+	bool					isInvited(const Client* user);
 
 	// for chanop 26.9 -- caro
 	bool					isChannelFull();

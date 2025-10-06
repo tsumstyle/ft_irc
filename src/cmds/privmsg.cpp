@@ -14,6 +14,10 @@
 #include "../../inc/Channel.hpp"
 #include "../../inc/replies.hpp"
 
+// should messages say what channel they are received on?
+// #ch1: caro: hello world
+// private message: caro: hello world
+
 void Server::handleDirectMsg(Client *sender, std::string target, std::string msg) {
 	Client *receiver = findClientByNick(target);
 	if (!receiver) 
@@ -26,6 +30,8 @@ void Server::handleChannelMsg(Client *c, std::string target, std::string msg) {
 	Channel *ch = findChannel(target);
 	if (!ch)
 		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), target));
+	else if (!ch->hasUser(c))
+		c->sendMessage(Replies::ERR_NOTONCHANNEL(ch->getName()));
 	else
 		ch->broadcast(msg, c);	
 }
@@ -42,8 +48,11 @@ void Server::handlePrivMsg(Client *c, const ParsedCmd &data) {
 	std::string target = data.args[0];
 	std::string msg;
 	for (size_t i = 1; i < data.args.size(); i++) {
-		msg += " " + data.args[i];
+		if (i != 1)
+			msg += " ";
+		msg += data.args[i];
 	}
+	msg += "\r\n";
 
 	if (target[0] == '#')
 		handleChannelMsg(c, target, msg);
