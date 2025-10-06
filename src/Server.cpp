@@ -194,6 +194,8 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		handleTopic(c, data);
 	else if (data.cmd == "KICK")
 		handleKick(c, data);
+	else if (data.cmd == "INVITE")
+		handleInvite(c, data);
 	else
 		InvalidCmd(c, data);
 }
