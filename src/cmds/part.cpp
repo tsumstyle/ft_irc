@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 13:58:49 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 15:15:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	Server::partFromChannel(Client* c, Channel* channel, const std::string& rea
 		channel->broadcast(reply, NULL);
 		channel->removeUser(c);
 		channel->removeOperator(c);
-		// TODO:  Clean invitations: Remove client from channel's invitation list
 		c->removeChannel(channel);
 		if (channel->getUsers().empty()) {
 			_channels.erase(channel->getName());

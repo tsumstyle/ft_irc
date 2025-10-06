@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:24:54 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 13:57:36 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 15:14:20 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, co
 		// all checks passed, add use to channel:
 		channel.addUser(c);
 		c->addChannel(&channel);
-		// TODO: remove from invite list if they were invited
+		channel.uninvite(c);
 		channel.broadcast(":" + c->getSource() + " JOIN " + channel_name + "\r\n", NULL);
 		serverLog(c, " joined channel " + channel_name);
 	}

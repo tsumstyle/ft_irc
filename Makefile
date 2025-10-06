@@ -6,7 +6,7 @@
 #    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/04 13:11:48 by aroux             #+#    #+#              #
-#    Updated: 2025/10/06 14:19:06 by aroux            ###   ########.fr        #
+#    Updated: 2025/10/06 15:23:52 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,11 +77,6 @@ valgrind:
 valfull:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 	./$(NAME) 8081 test
-
-valchild:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-	--track-fds=yes --trace-children=yes --suppressions=readline_suppress.supp \
-	./$(NAME) 8080 test
 
 # Rebuild everything
 re: fclean all
