@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 16:02:46 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 13:59:50 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ Behavior:
    
 
 void	Server::handleUser(Client *c, const ParsedCmd &data) {
-	std::string nick = c->getNick().empty() ? "*" : c->getNick();
 	if (c->getState() == NEW) {
-		c->sendMessage(Replies::ERR_NOTREGISTERED(nick, "USER"));	// TODO: check, i'm not sure
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "USER"));	// TODO: check, i'm not sure
 		return ;
 	}
 	if (c->getState() == REGISTERED) {
@@ -36,7 +35,7 @@ void	Server::handleUser(Client *c, const ParsedCmd &data) {
 		return ;
 	}
 	if (data.args.empty() || data.args.size() < 4) {
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(nick, "USER"));
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "USER"));
 		return ;
 	}
 	std::string	username = data.args[0];
@@ -48,12 +47,12 @@ void	Server::handleUser(Client *c, const ParsedCmd &data) {
 		if (c->getState() == NICK_OK) {
 			c->setState(REGISTERED);
 			serverLog(c, " is fully registered");
-			c->sendMessage(Replies::RPL_WELCOME(nick, username));		
+			c->sendMessage(Replies::RPL_WELCOME(c->getNick(), username));		
 		}
 		else {
 			c->setState(USERNAME_OK);
 			serverLog(c, " set username to '" + username + "'");
-			c->sendMessage(Replies::RPL_YOURHOST(nick));
+			c->sendMessage(Replies::RPL_YOURHOST(c->getNick()));
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/29 15:25:27 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 13:48:59 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ public:
 	
 // getters and setters
 	int						getSocket() const;
-	const std::string&		getNick() const;
+	std::string				getNick() const;
 	const std::string&		getUser() const;
 	clientState				getState() const;
 	std::string				getSource() const;

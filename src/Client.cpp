@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 15:26:56 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 13:48:43 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,13 @@ Client&	Client::operator=(const Client& other) {
 
 // getters
 int	Client::getSocket() const { return _socket; }
-const std::string&	Client::getNick() const { return _nick; }
+
+std::string	Client::getNick() const { 
+	if (_nick.empty())
+		return "*";
+	return _nick; 
+}
+		
 const std::string&	Client::getUser() const { return _user; }
 clientState	Client::getState() const { return _state; }
 std::string	Client::getSource() const { return _nick + "!" + _user + "@" + SERVER_NAME; }

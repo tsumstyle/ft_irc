@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 17:22:45 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 10:59:54 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <map>
 #include <cstdlib>			// exit(), EXIT_FAILURE, EXIT_SUCCESS
+#include <csignal>			// signal()
 #include <errno.h>			// not sure if we're allowed to use it
 #include <poll.h>
 #include <unistd.h>			// read(), open(), close()
@@ -33,6 +34,8 @@ struct ParsedCmd;
 
 class Server {
 private:
+	bool							_running;
+	static Server*					_instance;			// for static signal handler???
 	int								_port;
 	std::string						_server_pass; //server password to connect;
 	int								_server_socket;
@@ -62,7 +65,6 @@ public:
 	bool		isValidChar(const char c);
 	bool		isValidUsername(const std::string& username);
 
-
 // CMD handlers:
 	void		handleCmd(Client *c, const ParsedCmd &data);
 	void		handlePass(Client *c, const ParsedCmd &data);
@@ -85,6 +87,16 @@ public:
 	void		handleTopic(Client *c, const ParsedCmd &data);
 	void		handleKick(Client *c, const ParsedCmd &data);
 	void		handleInvite(Client *c, const ParsedCmd &data);
+
+// signal handlers
+	void		setSignals();
+	static void	signalHandler(int signal);
+	bool		isRunning() const;
+	void		stop();
+
+// error handlers
+	void		handleSocketError(int fd);
+	void		cleanShutdown();
 
 // utils
 	Channel*	findChannel(std::string target);
