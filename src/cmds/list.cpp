@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   list.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:26:11 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/28 14:25:16 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/06 13:59:15 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
 #include "../../inc/replies.hpp"
 
+// channel topic still has to be included in the listing.
 void Server::handleList(Client *c) {
 	for (std::map<std::string, Channel>::iterator it = _channels.begin();
 		it != _channels.end(); ++it)
