@@ -6,7 +6,7 @@
 #    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/04 13:11:48 by aroux             #+#    #+#              #
-#    Updated: 2025/09/29 15:31:15 by aroux            ###   ########.fr        #
+#    Updated: 2025/10/06 14:19:06 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,9 @@ OBJ_DIR = obj
 
 # Sources and objects
 SRC 	=	$(SRC_DIR)/main.cpp		\
-			$(SRC_DIR)/Channel.cpp	$(SRC_DIR)/Client.cpp	$(SRC_DIR)/Server.cpp \
-			$(SRC_DIR)/utilities.cpp	$(SRC_DIR)/parser.cpp \
+			$(SRC_DIR)/Channel.cpp			$(SRC_DIR)/Client.cpp				$(SRC_DIR)/Server.cpp \
+			$(SRC_DIR)/Server_signals.cpp	$(SRC_DIR)/Server_error_handler.cpp	$(SRC_DIR)/Server_utils.cpp \
+			$(SRC_DIR)/utilities.cpp		$(SRC_DIR)/parser.cpp \
 			$(SRC_DIR)/cmds/pass.cpp	$(SRC_DIR)/cmds/user.cpp	$(SRC_DIR)/cmds/nick.cpp \
 			$(SRC_DIR)/cmds/join.cpp	$(SRC_DIR)/cmds/part.cpp	$(SRC_DIR)/cmds/quit.cpp \
 			$(SRC_DIR)/cmds/invalid.cpp	$(SRC_DIR)/cmds/privmsg.cpp	$(SRC_DIR)/cmds/names.cpp \
@@ -75,7 +76,7 @@ valgrind:
 
 valfull:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-	./$(NAME) 8080 test
+	./$(NAME) 8081 test
 
 valchild:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \

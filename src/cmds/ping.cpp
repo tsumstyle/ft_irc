@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:55 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 16:24:14 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 13:59:07 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ Behavior:
   - Logs the ping request on the server.
 */
 void	Server::handlePing(Client *c, const ParsedCmd &data) {
-	std::string nick = c->getNick().empty() ? "*" : c->getNick();
 	if (c->getState() != REGISTERED) {
-		c->sendMessage(Replies::ERR_NOTREGISTERED(nick, "PING"));
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "PING"));
 		return;
 	}
 	if (data.args.empty()) {
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(nick, "PING"));
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PING"));
 		return ;
 	}
 	std::string token = data.args[0];

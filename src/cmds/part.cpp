@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 16:13:05 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 13:58:49 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@ PART with reason
 PART from channel you're not in */
 
 void	Server::handlePart(Client *c, const ParsedCmd &data) {
-	std::string nick = c->getNick().empty() ? "*" : c->getNick();
 	if (c->getState() != REGISTERED) {
-		c->sendMessage(Replies::ERR_NOTREGISTERED(nick, "PART"));
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "PART"));
 		return ;
 	}
 	if (data.args.empty()) {
-		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(nick, "PART"));
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), "PART"));
 		return ;
 	}
 	std::string	reason;
@@ -41,16 +40,16 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 	for (size_t i = 0; i < channelNames.size(); i++) {							
 		std::string	channelName = channelNames[i];
 		if (channelName[0] != '#') {
-			c->sendMessage(Replies::ERR_NOSUCHCHANNEL(nick, data.args[i]));
+			c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[i]));
 			continue;
 		}
 		Channel *ch = findChannel(channelName);
 		if (!ch) {
-			c->sendMessage(Replies::ERR_NOSUCHCHANNEL(nick, channelName));
+			c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), channelName));
 			continue ;
 		}	
 		if (!ch->hasUser(c)) {
-			c->sendMessage(Replies::ERR_NOTONCHANNEL(nick, ch->getName()));
+			c->sendMessage(Replies::ERR_NOTONCHANNEL(c->getNick(), ch->getName()));
 			continue ;
 		}
 		channelsToPart.push_back(ch);

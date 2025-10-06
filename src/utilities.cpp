@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:24:08 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/28 13:50:42 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/06 12:21:22 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ std::string	getTimeStamp() {
 }
 
 void	serverLog(Client* c, const std::string& msg) {
-	std::cout << "[" << getTimeStamp() << "] [SERVER] " << c->getNick() << msg << std::endl;
+	if (c)
+		std::cout << "[" << getTimeStamp() << "] [SERVER] " << c->getNick() << msg << std::endl;
+	else
+		std::cout << "[" << getTimeStamp() << "] [SERVER] " << msg << std::endl;
 }
 
 std::string toLower(const std::string& str) {
@@ -43,6 +46,8 @@ std::string toLower(const std::string& str) {
 		lowered[i] = std::tolower(static_cast<unsigned char>(str[i]));
 	return lowered;
 }
+
+
 
 std::vector<std::string>	split(const std::string& str, char delimiter) {
 	std::vector<std::string>	result;

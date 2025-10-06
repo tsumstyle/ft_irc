@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 17:22:51 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/06 14:19:39 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,42 +14,59 @@
 #include "../inc/utilities.hpp"
 #include "../inc/parser.hpp"
 
+Server*	Server::_instance = NULL;
+
 #define BUFSIZE 510
 //#define QUEUE_SIZE 10 --> inside the listen() function
 
 //constructors
-Server::Server() : _port(6667), _server_pass("default_pw") {}
+Server::Server() : _running(true), _port(6667), _server_pass("default_pw"), _server_socket(-1) { _instance = this; }
 
-Server::Server(const int& port, const std::string& password) : _port(port), _server_pass(password) {}
+Server::Server(const int& port, const std::string& password) : _running(true), 
+															   _port(port),
+															   _server_pass(password),
+															   _server_socket(-1) { _instance = this; }
 
-Server::Server(const Server& copy) : _port(copy._port),
+Server::Server(const Server& copy) : _running(true),
+									 _port(copy._port),
 									 _server_pass(copy._server_pass),
 									 _server_socket(copy._server_socket),
 									 _fds(copy._fds),
-									 _connected(copy._connected) {}
+									 _connected(copy._connected) { _instance = this; }
 
 Server::~Server() {
 // close client sockets and delete Client objects
+	serverLog(NULL, "Server destructor: cleaning up resources");
+	int	closedClients = 0;
 	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); ++it) {
-		close (it->first);
-		delete it->second;
+		if (it->second) {
+			serverLog(NULL, "Closing client fd" + toString(it->first));
+			close (it->first);
+			delete it->second;
+			closedClients++;
+		}	
 	}
 	_connected.clear();
 // close server socket
 	if (_server_socket != -1) {
+		serverLog(NULL, "Closing server socket");
 		close(_server_socket);
 		_server_socket = -1;
 	}
 // clear other containers
 	_fds.clear();
 	_channels.clear();
+
+	serverLog(NULL, "Server cleanup complete. Closed " + toString(closedClients) + " client connections.");
 }
 
 //assigment operator
 Server&	Server::operator=(const Server& other) {
 	if (this != &other) {
+		 _instance = other._instance; 
 		_port = other._port;
 	 	_server_pass = other._server_pass,
+		_running = other._running;
 		_server_socket = other._server_socket;
 		_fds = other._fds;
 		_connected = other._connected;
@@ -99,17 +116,33 @@ void	Server::start() {
 }
 
 void	Server::run() {
-	while (true) {
-		int	activity = poll(_fds.data(), _fds.size(), -1); // poll() blocks until any of these sockets has an event (new connection, incoming data, etc.), and then you check the .revents field of each pollfd.	
+	setSignals();
+	serverLog(NULL, "Server started on port " + toString(_port));
+	while (_running) {
+		int	activity = 0;
+		activity = poll(_fds.data(), _fds.size(), -1); // poll() blocks until any of these sockets has an event (new connection, incoming data, etc.), and then you check the .revents field of each pollfd.	
 		if (activity == -1) {
-			std::cerr << "Error: poll system call failed" << std::endl;
+			if (errno == EINTR) {
+				if (!_running)
+					break;
+				continue;
+			}
+			serverLog(NULL, "Error: poll system call failed");
 			break;
+		}
+		if (activity == 0) {		//timeout - check if we should shutdown
+			if (!_running)
+				break;
+			continue;
 		}
 		// iterate through all fds:
 		for (size_t i = 0; i < _fds.size(); i++)	{
+			if (!_running)
+				break;
 			if (_fds[i].fd == -1)
 				continue;
 		// if there are events (if the option POLLIN is set in revents i.e. socket is readable)
+			
 			if (_fds[i].revents & POLLIN) {	// bitwise 'AND'
 			// if it's the server socket: accept new client
 				if(_fds[i].fd == _server_socket) 
@@ -118,12 +151,13 @@ void	Server::run() {
 				else
 					handleClient(_fds[i].fd);
 			}
-			// TODO: handle other events like errors: _fds[i].revents & (POLLERR | POLLHUP | POLLNVAL
+			if (_fds[i].revents & (POLLERR | POLLHUP | POLLNVAL))
+					handleSocketError(_fds[i].fd);
 		}
 		cleanupDisconnectedClients();
 		cleanupEmptyChannels();
 	}
-	close(_server_socket);
+	cleanShutdown();
 }
 
 void	Server::acceptClient() {
@@ -137,6 +171,7 @@ void	Server::acceptClient() {
 	pollfd	client_poll;
 	client_poll.fd = client_socket;
 	client_poll.events = POLLIN;
+	client_poll.revents = 0;
 	_fds.push_back(client_poll);
 // instantiate Client object and add it to the _connected map
 	_connected[client_socket] = new Client(client_socket); // dont forget to DELETE against memleaks
@@ -154,12 +189,17 @@ void	Server::handleClient(int fd) {		// read from the connection
 	}
 	else {
 		buffer[bytes_read] = '\0';
+		std::string input(buffer);		// INPUT validation
+		if (input.find_first_not_of(" \t\n\r") == std::string::npos)
+			return ;
 		parse_data = parseMsg(std::string(buffer));
 		toUpperCmd(&parse_data);
-		std::cout << "CMD: " << parse_data.cmd << std::endl; 						//for debug
-		for (unsigned long i = 0; i < parse_data.args.size(); i++)					//for debug
-			std::cout << "Arg " << i << " " << parse_data.args[i] << std::endl;	//for debug
-		handleCmd(client, parse_data);
+		if (!parse_data.cmd.empty()) {
+			std::cout << "CMD: " << parse_data.cmd << std::endl; 						//for debug
+			for (unsigned long i = 0; i < parse_data.args.size(); i++)					//for debug
+				std::cout << "Arg " << i << " " << parse_data.args[i] << std::endl;	//for debug
+			handleCmd(client, parse_data);
+		}
 	}
 }
 
@@ -198,90 +238,5 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		InvalidCmd(c, data);
 }
 
-bool	Server::isNickTaken(const std::string& nick) {
-	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); it++) {
-		if (it->second && it->second->getNick() == nick)
-			return true;
-	}
-	return false;
-}
 
-bool	Server::isValidChar(const char c) {
-	if (std::isalpha(c))
-		return true;
-	const char symbols[] = "[]\\`^{}|_";
-	for (int i = 0; symbols[i]; ++i)
-		if (c == symbols[i])
-			return true;
-	return false;
-}
 
-bool	Server::isValidNick(const std::string& str) {
-	if (str.empty() || str.size() > 9)
-		return false;
-	if (!isValidChar(str[0]))
-		return false;
-	for (size_t i = 1; i < str.length(); ++i)
-		if (!isValidChar(str[i]) && !std::isdigit(str[i]) && str[i] != '-')
-			return false;
-	return true;
-}
-
-bool Server::isValidUsername(const std::string& username) {
-	if (username.empty() || username.length() > 12)
-		return false;
-	for (size_t i = 0; i < username.length(); i++) {
-		char c = username[i];
-		if (!std::isalnum(c) && c != '-' && c != '_')
-			return false;
-	}
-	return true;
-}
-
-Channel *Server::findChannel(std::string target) {
-	std::string	lowerTarget = toLower(target);
-	//std::cout << "lowertarget = " << lowerTarget << std::endl; //TODO: remove when no debugging needed anymore
-	std::map<std::string, Channel>::iterator it = _channels.find(lowerTarget);
-	if (it != _channels.end())
-		return &it->second;
-	return NULL;
-}
-
-Client* Server::findClientByNick(const std::string& nick) {
-	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); ++it) {
-		if (it->second && it->second->getNick() == nick)
-			return it->second;
-	}
-	return NULL;
-}
-
-void	Server::cleanupDisconnectedClients() {
-	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end();) {
-		if (it->second->getState() == DISCONNECTED) {
-			std::map<int, Client*>::iterator to_erase = it;
-			++it;
-			close(to_erase->first);
-			for (size_t i = 0; i < _fds.size(); i++) {
-				if (_fds[i].fd == to_erase->first) {
-					_fds[i].fd = -1;
-					break;
-				}
-			}
-			delete to_erase->second;
-			_connected.erase(to_erase);	
-		}
-		else
-			it++;
-	}
-}
-
-void	Server::cleanupEmptyChannels() {
-	for (std::map<std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ) {
-		if (it->second.getUsers().empty()) {
-			std::cout << "Removing empty channel: " << it->first << std::endl;
-			_channels.erase(it++);
-		}
-		else
-			++it;
-	}
-}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 15:27:04 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/28 13:50:54 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/06 11:56:46 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@
 #include <vector>
 
 class Client;
+
+template<typename T>
+std::string toString(const T& value) {
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
+}
 
 int 						err_handler(std::string msg);
 bool 						isnum(std::string arg);
