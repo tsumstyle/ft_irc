@@ -65,7 +65,7 @@ void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, co
 			return;
 		}
 		// if channel.userlimitset && channel.full -> ERR_CHANNELISFULL
-		// if channel.inviteOnly -> ERR_INVITEONLYCHAN
+		// if channel.inviteOnly && !in_invite_list -> ERR_INVITEONLYCHAN
 		// if channel.passwordSet -> ask for password -> ok or ERR_PASSWDMISMATCH
 
 		// all checks passed, add use to channel:

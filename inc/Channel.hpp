@@ -25,6 +25,7 @@ private:
 	std::string				_name;			// channel name
 	std::vector<Client*>	_users;			// list of clients that are on the channel //pointing to already existing clients; could also just store the fds
 	std::vector<Client*>	_operators;		// all operators (=moderators) of the channel
+	std::vector<Client*>	_inviteList;
 	std::string				_localpass;		// password on channel
 
 	// for operator commands:
@@ -46,13 +47,19 @@ public:
 	void					addUser(Client* user);
 	void					removeUser(Client* user);
 	bool					hasUser(Client* user);
+
 	void					addOperator(Client* user);
 	void					removeOperator(Client* user);
+	bool					isOperator(const Client* name);
+
 	void					broadcast(const std::string& msg, Client* sender);
 	std::string				getName();
 	std::vector<Client*>	getUsers();
 	Client*					findUser(const std::string& name);
-	bool					isOperator(const Client* name);
+
+	void					invite(Client* user);
+	void					uninvite(Client* user);
+	bool					isInvited(const Client* user);
 
 	// for chanop 26.9 -- caro
 	bool					isChannelFull();

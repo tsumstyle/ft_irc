@@ -88,6 +88,22 @@ void	Channel::removeUser(Client* user) {
 	err_handler("User is not in channel");
 }
 
+void	Channel::broadcast(const std::string& msg, Client* sender) {
+	for (size_t i = 0; i < _users.size(); i++) {
+		if (_users[i] != sender)
+			_users[i]->sendMessage(msg);
+	}
+}
+
+std::string	Channel::getName(){
+	return (_name);
+}
+
+std::vector<Client*>	Channel::getUsers() {
+	return (_users);
+}
+
+// operators
 void	Channel::addOperator(Client* user) {
 	for (size_t i = 0; i < _operators.size(); i++) {
 		if (user == _operators[i])
@@ -105,19 +121,38 @@ void	Channel::removeOperator(Client* user) {
 	}
 }
 
-void	Channel::broadcast(const std::string& msg, Client* sender) {
-	for (size_t i = 0; i < _users.size(); i++) {
-		if (_users[i] != sender)
-			_users[i]->sendMessage(msg);
+bool	Channel::isOperator(const Client* name) {
+	for (size_t i = 0; i < this->_operators.size(); i++) {
+		if (this->_operators[i] == name)
+			return true;
+	}
+	return false;
+}
+
+// invite list -- caro 6.10
+void	Channel::invite(Client* user) {
+	for (size_t i = 0; i < this->_inviteList.size(); i++) {
+		if (user == this->_inviteList[i])
+			return ;
+	}
+	this->_inviteList.push_back(user);
+}
+
+void	Channel::uninvite(Client* user) {
+	for (size_t i = 0; i < this->_inviteList.size(); i++) {
+		if (user == this->_inviteList[i]) {
+			this->_inviteList.erase(this->_inviteList.begin() + i);
+			return ;
+		}
 	}
 }
 
-std::string	Channel::getName(){
-	return (_name);
-}
-
-std::vector<Client*>	Channel::getUsers() {
-	return (_users);
+bool	Channel::isInvited(const Client* user) {
+	for (size_t i = 0; i < this->_inviteList.size(); i++) {
+		if (this->_inviteList[i] == user)
+			return true;
+	}
+	return false;
 }
 
 // added 29.9 -- caro
@@ -127,14 +162,6 @@ Client*	Channel::findUser(const std::string& name) {
 			return (this->_users[i]);
 	}
 	return (NULL);
-}
-
-bool	Channel::isOperator(const Client* name) {
-	for (size_t i = 0; i < this->_operators.size(); i++) {
-		if (this->_operators[i] == name)
-			return true;
-	}
-	return false;
 }
 
 // added for chanop 26.9 -- caro
@@ -173,7 +200,6 @@ std::string	Channel::getTopic() {
 	return this->_topic;
 }
 
-// added 29.9 -- caro
 void	Channel::setUserLimitSet(bool desired) {
 	this->_userLimitSet = desired;
 }
