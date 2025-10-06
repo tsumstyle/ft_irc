@@ -76,11 +76,7 @@ void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, co
 		}
 		// if channel.passwordSet -> ask for password -> ok or ERR_PASSWDMISMATCH
 		else if (channel.isReqPassword()) {
-			if (key == "") {
-				c->sendMessage(Replies::ERR_KEYSET(channel.getName()));
-				return ;
-			}
-			else if (key != channel.getLocalPass()) {
+			if (key == "" || key != channel.getLocalPass()) {
 				c->sendMessage(Replies::ERR_PASSWMISMATCH()); // change this msg
 				return ;
 			}

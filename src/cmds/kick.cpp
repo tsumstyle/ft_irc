@@ -53,6 +53,6 @@ void	Server::handleKick(Client *c, const ParsedCmd &data) {
 	
 	std::string explanation = "You've been kicked from " + chan->getName();
 	if (reason != "")
-		explanation += ". Reason given: " + reason;
+		explanation += ". Reason given: " + reason + "\r\n";
 	victim->sendMessage(explanation);
 }

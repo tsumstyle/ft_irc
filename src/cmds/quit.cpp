@@ -13,6 +13,8 @@
 #include "../../inc/Server.hpp"
 #include "../../inc/replies.hpp"
 
+// enter after QUIT to get terminal back?
+
 /* QUIT
 
 Requirements:
