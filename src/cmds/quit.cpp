@@ -42,4 +42,5 @@ void	Server::handleQuit(Client *c, const ParsedCmd &data) {
 	}
 	c->setState(DISCONNECTED);
 	serverLog(c, " quit: " + reason);
+	// close(c->getSocket()); this doesnt change anything
 }

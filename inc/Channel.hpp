@@ -52,7 +52,7 @@ public:
 	void					removeOperator(Client* user);
 	bool					isOperator(const Client* name);
 
-	void					broadcast(const std::string& msg, Client* sender);
+	void					broadcast(const std::string& msg, Client* sender, Channel* chan);
 	std::string				getName();
 	std::vector<Client*>	getUsers();
 	Client*					findUser(const std::string& name);

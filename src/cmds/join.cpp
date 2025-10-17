@@ -84,7 +84,8 @@ void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, co
 		channel.addUser(c);
 		c->addChannel(&channel);
 		channel.uninvite(c);
-		channel.broadcast(":" + c->getSource() + " JOIN " + channel_name + "\r\n", NULL);
+
+		channel.broadcast(yellow(":" + c->getSource() + " JOIN " + channel_name + "\r\n"), NULL, NULL);
 		serverLog(c, " joined channel " + channel_name);
 	}
 	else {
@@ -93,7 +94,7 @@ void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, co
 		newChannel.addUser(c);
 		newChannel.addOperator(c);
 		c->addChannel(&newChannel);
-		c->sendMessage(":" + c->getSource() + " JOIN " + channel_name + " (new channel created)\r\n");
+		c->sendMessage(yellow(":" + c->getSource() + " JOIN " + channel_name + " (new channel created)\r\n"));
 		serverLog(c, " created and joined channel " + channel_name);
 	}
 }

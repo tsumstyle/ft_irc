@@ -25,6 +25,7 @@
 #include "Channel.hpp"
 #include "utilities.hpp"
 #include "parser.hpp"
+#include "colors.hpp"
 
 #ifndef	SERVER_NAME
 	#define SERVER_NAME "InstantRegretChat"

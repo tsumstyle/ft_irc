@@ -37,7 +37,7 @@ void	Server::cleanShutdown() {
 			std::vector<Channel*>	channels = it->second->getChannels();
 			for (size_t i = 0; i < channels.size(); i++) {
 				std::string	goodbyeChannelMsg = ":" + it->second->getSource() + " QUIT : server shutdown\r\n";
-				channels[i]->broadcast(goodbyeChannelMsg, NULL);
+				channels[i]->broadcast(goodbyeChannelMsg, NULL, NULL);
 			}
 		}
 	}

@@ -174,7 +174,10 @@ void	Server::acceptClient() {
 	_fds.push_back(client_poll);
 	_connected[client_socket] = new Client(client_socket); // dont forget to DELETE against memleaks
 	Client *c = _connected[client_socket];
-	std::string welcome = "Welcome to InstantRegretChat! Please enter your password using the PASS command.\r\n";
+
+
+	//std::string welcome = "Welcome to InstantRegretChat! Please enter your password using the PASS command.\r\n";
+	std::string welcome = welcome_message();
 	c->sendMessage(welcome);
 }
 
