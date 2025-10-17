@@ -40,7 +40,7 @@ private:
 	std::string	_nick;
 	std::string	_user;
 	clientState	_state;
-	int			_socket;
+	int			_socket; // caro1710: fd?
 	std::vector<Channel*>	_channels;
 
 public:

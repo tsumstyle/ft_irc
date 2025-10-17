@@ -65,7 +65,7 @@ void	Server::partFromChannel(Client* c, Channel* channel, const std::string& rea
 		if (!reason.empty()) 
 			reply += " :" + reason;
 		reply += "\r\n";
-		channel->broadcast(reply, NULL);
+		channel->broadcast(reply, NULL, NULL);
 		channel->removeUser(c);
 		channel->removeOperator(c);
 		c->removeChannel(channel);

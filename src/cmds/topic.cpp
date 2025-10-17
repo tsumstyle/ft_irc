@@ -19,9 +19,10 @@ TOPIC:
 
 void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 	std::string	reply;
-	if (data.args.size() < 1)
+	if (data.args.size() < 1) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
-
+		return ; // <----
+	}
 	Channel *chan = findChannel(data.args[0]);
 	if (!chan) {
 		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[0]));
@@ -34,6 +35,7 @@ void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 			c->sendMessage(Replies::RPL_TOPIC(chan));
 		return ;
 	}
+	// 2 or more args
 	if (chan->isTopicRestricted() && !chan->isOperator(c)) {
 		c->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(chan->getName()));
 		return ;
@@ -45,5 +47,5 @@ void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 		new_topic += data.args[i];
 	}
 	chan->setTopic(new_topic);
-	c->sendMessage("Topic changed\r\n"); //// change
+	c->sendMessage(yellow(chan->getName()) + " :Topic changed\r\n"); //// change
 }

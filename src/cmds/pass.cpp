@@ -37,6 +37,6 @@ void	Server::handlePass(Client *c, const ParsedCmd &data) {
 	}
 	else {
 		c->sendMessage(Replies::ERR_PASSWMISMATCH());
-		c->setState(DISCONNECTED);
+		//c->setState(DISCONNECTED); // caro 16.10: this made it impossible to try again after using wrong passwd. or do anything else
 	}
 }

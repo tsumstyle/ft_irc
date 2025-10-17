@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/Channel.hpp"
+#include "colors.hpp"
 
 // constructors_operators
 Channel::Channel() : _name("defaultchannel"),
@@ -89,10 +90,14 @@ void	Channel::removeUser(Client* user) {
 	err_handler("User is not in channel");
 }
 
-void	Channel::broadcast(const std::string& msg, Client* sender) {
+void	Channel::broadcast(const std::string& msg, Client* sender, Channel* chan) { // i would also send it to the sender, as in a group chat. you see your own
 	for (size_t i = 0; i < _users.size(); i++) {
-		if (_users[i] != sender)
+		if (chan)
+			_users[i]->sendMessage((yellow(chan->getName()) + ": " + sender->getNick() + ": ") + msg);
+		else
 			_users[i]->sendMessage(msg);
+		// if (_users[i] != sender)
+		// 	_users[i]->sendMessage(msg);
 	}
 }
 
