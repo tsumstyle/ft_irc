@@ -33,7 +33,7 @@ void Server::handleChannelMsg(Client *c, std::string target, std::string msg) {
 	else if (!ch->hasUser(c))
 		c->sendMessage(Replies::ERR_NOTONCHANNEL(ch->getName()));
 	else
-		ch->broadcast(msg, c, ch);
+		ch->broadcast(msg, c, NULL);
 }
 
 void Server::handlePrivMsg(Client *c, const ParsedCmd &data) {

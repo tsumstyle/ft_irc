@@ -85,11 +85,7 @@ void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, co
 		c->addChannel(&channel);
 		channel.uninvite(c);
 
-		serverLog(c, "good so far!!!!");
-
 		channel.broadcast(yellow(":" + c->getSource() + " JOIN " + channel_name + "\r\n"), NULL, NULL);
-		// message to channel that x has joined?
-
 		serverLog(c, " joined channel " + channel_name);
 	}
 	else {
