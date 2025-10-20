@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 13:59:50 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/20 17:17:59 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ Behavior:
 
 void	Server::handleUser(Client *c, const ParsedCmd &data) {
 	if (c->getState() == NEW) {
-		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "USER"));	// TODO: check, i'm not sure
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "USER"));	
 		return ;
 	}
 	if (c->getState() == REGISTERED) {
-		c->sendMessage(Replies::ERR_ALREADYREGISTERED());	// TODO: check, i'm not sure
+		c->sendMessage(Replies::ERR_ALREADYREGISTERED());
 		return ;
 	}
 	if (data.args.empty() || data.args.size() < 4) {

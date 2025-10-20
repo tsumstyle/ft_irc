@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 14:49:28 by nick             ###   ########.fr       */
+/*   Updated: 2025/10/20 16:33:03 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,6 @@ void	Server::acceptClient() {
 
 void	Server::handleClient(int fd) {		// read from the connection
 	char	buffer[BUFSIZE];
-	ParsedCmd parse_data;
 	Client*	client = _connected[fd];
 	ssize_t	bytes_read = recv(fd, buffer, BUFSIZE - 1, 0); // read fucntion for sockets
 	
@@ -193,16 +192,19 @@ void	Server::handleClient(int fd) {		// read from the connection
 	}
 	else {
 		buffer[bytes_read] = '\0';
-		std::string input(buffer);		// INPUT validation
-		if (input.find_first_not_of(" \t\n\r") == std::string::npos)
-			return ;
-		parse_data = parseMsg(std::string(buffer));
-		toUpperCmd(&parse_data);
-		if (!parse_data.cmd.empty()) {
-			std::cout << "CMD: " << parse_data.cmd << std::endl; 						//for debug
-			for (unsigned long i = 0; i < parse_data.args.size(); i++)					//for debug
-				std::cout << "Arg " << i << " " << parse_data.args[i] << std::endl;	//for debug
-			handleCmd(client, parse_data);
+		client->appendBuffer(buffer);
+		while (client->hasFullMessage()) {
+			std::string message = client->getMessage();
+			if (message.find_first_not_of(" \t\n\r") == std::string::npos)
+				continue;
+			ParsedCmd parse_data = parseMsg(message);
+			toUpperCmd(&parse_data);			
+			if (!parse_data.cmd.empty()) {													// TODO: remove at the end
+				std::cout << "CMD: " << parse_data.cmd << std::endl; 						//for debug
+				for (unsigned long i = 0; i < parse_data.args.size(); i++)					//for debug
+					std::cout << "Arg " << i << " " << parse_data.args[i] << std::endl;		//for debug
+				handleCmd(client, parse_data);
+			}
 		}
 	}
 }

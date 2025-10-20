@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:26:11 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/06 13:59:15 by nick             ###   ########.fr       */
+/*   Updated: 2025/10/20 17:06:44 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 
 // channel topic still has to be included in the listing.
 void Server::handleList(Client *c) {
+	if (c->getState() != REGISTERED) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "LIST"));
+		return;
+	}
 	for (std::map<std::string, Channel>::iterator it = _channels.begin();
 		it != _channels.end(); ++it)
 	{

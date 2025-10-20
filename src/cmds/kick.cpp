@@ -20,6 +20,10 @@ KICK:
 void	Server::handleKick(Client *c, const ParsedCmd &data) {
 	// data.cmd = KICK
 	// data.args = <channel> <target> [<reason>]
+	if (c->getState() != REGISTERED) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), data.cmd));
+		return;
+	}
 	if (data.args.size() < 2) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
 		return ;

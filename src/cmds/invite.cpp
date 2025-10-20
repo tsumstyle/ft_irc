@@ -9,7 +9,10 @@ When channel is inviteonly, people not on invitelist cannot join.
 
 void	Server::handleInvite(Client *c, const ParsedCmd &data) {
 	// INVITE <channel> <target>
-
+	if (c->getState() != REGISTERED) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), data.cmd));
+		return;
+	}
 	// args < 3?
 	if (data.args.size() < 2) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));

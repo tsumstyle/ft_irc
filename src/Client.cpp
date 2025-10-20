@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 13:48:43 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/20 16:31:27 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ Client::Client() : _nick(""), _user(""), _state(NEW), _socket(-1) {}
 Client::Client(int client_socket) : _nick(""), 
 									_user(""), 
 									_state(NEW), 
-									_socket(client_socket) {}
+									_socket(client_socket),
+									_buffer("") {}
 
 Client::Client(const Client& copy) : _nick(copy._nick),
 									 _user(copy._user),
 									 _state(copy._state),
-									 _socket(copy._socket)	{}
+									 _socket(copy._socket),
+									 _buffer(copy._buffer) {}
 
 Client::~Client() {}
 
@@ -35,6 +37,7 @@ Client&	Client::operator=(const Client& other) {
 		_state = other._state;
 		_socket	= other._socket;
 		_channels = other._channels;
+		_buffer = other._buffer;
 	}
 	return *this;
 }
@@ -83,4 +86,42 @@ bool	Client::isOnChannel(Channel* channel) {
 		return false;
 	else
 		return true;
+}
+
+// handle client buffer
+void	Client::appendBuffer(const std::string& msg) {
+	if (msg.size() > MAX_MESSAGE_SIZE) {
+		sendMessage("ERROR :Message too long\r\n");
+		return;
+	}
+	if (_buffer.size() + msg.size() > MAX_BUFFER_SIZE) {
+		_buffer.clear();
+		sendMessage("ERROR :Input line too long- max is " + toString(MAX_MESSAGE_SIZE) + " bytes\r\n");
+		serverLog(this, "ERROR: Buffer overflow detected");
+		setState(DISCONNECTED);
+		return;
+	}	
+	_buffer += msg;
+}
+
+void	Client::clearBuffer() { _buffer.clear(); }
+
+const std::string&	Client::getBuffer() { return _buffer; }
+
+bool	Client::hasFullMessage() const { return _buffer.find("\r\n") != std::string::npos; }
+
+std::string	Client::getMessage() {
+	size_t pos = _buffer.find("\r\n");
+	if (pos != std::string::npos)	{
+		std::string message = _buffer.substr(0, pos);
+		_buffer.erase(0, pos + 2);		// clean the buffer (including \r\n)
+		return message;
+	}
+	pos = _buffer.find('\n');
+	if (pos != std::string::npos) {
+		std::string message = _buffer.substr(0, pos);
+		_buffer.erase(0, pos + 1);
+		return message;
+	}
+	return "";
 }

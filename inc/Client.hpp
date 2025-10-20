@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/06 13:48:59 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/20 16:43:42 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,15 @@
 #include "Channel.hpp"
 
 #ifndef	SERVER_NAME
-	#define SERVER_NAME "InstantRegretChat"
+	# define SERVER_NAME "InstantRegretChat"
+#endif
+
+#ifndef MAX_MESSAGE_SIZE
+	# define MAX_MESSAGE_SIZE 512
+#endif
+
+#ifndef MAX_BUFFER_SIZE
+	# define MAX_BUFFER_SIZE 1024
 #endif
 
 enum	clientState {
@@ -30,7 +38,7 @@ enum	clientState {
 	NICK_OK,		// sent NICK but not USER
 	USERNAME_OK,	// sent USER but not NCIK
 	REGISTERED,		// NICK+USER set, can join channel and do other stuff
-	DISCONNECTED,
+	DISCONNECTED,	// to be cleaned from the server on next loop
 };
 
 class Channel;
@@ -42,6 +50,7 @@ private:
 	clientState	_state;
 	int			_socket; // caro1710: fd?
 	std::vector<Channel*>	_channels;
+	std::string	_buffer;
 
 public:
 // constructors
@@ -67,8 +76,12 @@ public:
 	void	addChannel(Channel* channel);
 	void	removeChannel(Channel* channel);
 	bool	isOnChannel(Channel* channel);
-	// addChannel: becomes part of this channel, and channel is part of the Client's list of channels
-	// removeChannel: is removed from this channel, and channel is remove from the client's list of channels
 
+// handle client buffer
+	void		appendBuffer(const std::string& bytesReceived);
+	void		clearBuffer();
+	const		std::string& getBuffer();
+	bool		hasFullMessage() const;
+	std::string	getMessage();
 };
 

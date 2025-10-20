@@ -113,10 +113,18 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 // }
 
 void	Server::handleMode(Client *c, const ParsedCmd &data) {
-
 	std::string	reply;
-	if (data.args.size() < 3) {
-		reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
+	if (c->getState() != REGISTERED) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), data.cmd));
+		return;
+	}
+	if (data.args.size() < 1) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
+		return;
+	}
+	if (data.args[0].empty() < 1) {
+		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
+		return;
 	}
 	if (data.args[0][0] == '#') {
 		reply = handleMode_channel(c, data);

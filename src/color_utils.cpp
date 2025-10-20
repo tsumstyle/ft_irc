@@ -50,5 +50,7 @@ std::string welcome_message() {
 	msg << "      $$ |$$ |      \\$$$$$$$\\ \n";
 	msg << "      \\__|\\__|       \\_______|\n";
 	msg << "                              \n";
+	msg << " 	  our InstantRegretChat	  \n";
+	msg << "                              \n";
 	return (msg.str());
 }

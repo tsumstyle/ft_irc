@@ -19,6 +19,10 @@ TOPIC:
 
 void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 	std::string	reply;
+	if (c->getState() != REGISTERED) {
+		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "TOPIC"));
+		return ;
+	}
 	if (data.args.size() < 1) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
 		return ; // <----
