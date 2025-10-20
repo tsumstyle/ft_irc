@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/20 16:33:03 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/20 17:22:10 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,6 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		handleNick(c, data);
 	else if (data.cmd == "USER")		// username --> idem
 		handleUser(c, data);
-	
 // 2. user commands
 	else if (data.cmd == "JOIN") 		// join a channel
 		handleJoin(c, data);
