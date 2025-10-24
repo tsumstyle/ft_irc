@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 13:13:29 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 16:56:15 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ void	Channel::broadcast(const std::string& msg, Client* sender, Channel* chan) {
 			_users[i]->sendMessage((yellow(chan->getName()) + ": " + sender->getNick() + ": ") + msg);
 		else
 			_users[i]->sendMessage(msg);
-		// if (_users[i] != sender)
-		// 	_users[i]->sendMessage(msg);
 	}
 }
 

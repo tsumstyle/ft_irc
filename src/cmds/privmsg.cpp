@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:08:36 by nick              #+#    #+#             */
-/*   Updated: 2025/10/24 14:45:09 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/24 17:02:50 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void Server::handleChannelMsg(Client *c, std::string target, std::string msg) {
 	else if (!ch->hasUser(c))
 		c->sendMessage(Replies::ERR_NOTONCHANNEL(ch->getName()));
 	else
-		ch->broadcast(msg, c, NULL);
+		ch->broadcast(msg, c, ch);
 }
 
 void Server::handlePrivMsg(Client *c, const ParsedCmd &data) {

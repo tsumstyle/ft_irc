@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 14:48:21 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/24 17:11:47 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,20 +210,20 @@ void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 		handlePass(c, data);
 	else if (data.cmd == "NICK")
 		handleNick(c, data);
-	else if (data.cmd == "USER")		// username --> idem
+	else if (data.cmd == "USER")
 		handleUser(c, data);
 // 2. user commands
-	else if (data.cmd == "JOIN") 		// join a channel
+	else if (data.cmd == "JOIN")
 		handleJoin(c, data);
-	else if (data.cmd == "PRIVMSG") 	// send a message to another user, or to a whole channel
+	else if (data.cmd == "PRIVMSG")
 		handlePrivMsg(c, data);
-	else if (data.cmd == "PART") 		// quit one channel
+	else if (data.cmd == "PART")
 		handlePart(c, data);
-	else if (data.cmd == "QUIT")		// quit server
+	else if (data.cmd == "QUIT")
 		handleQuit(c, data);
-	else if (data.cmd == "NAMES")	//display all nicks in a channel
+	else if (data.cmd == "NAMES")
 		handleNames(c, data);
-	else if (data.cmd == "LIST") //display list of all channels and details
+	else if (data.cmd == "LIST")
 		handleList(c);
 	else if (data.cmd == "PING")
 		handlePing(c, data);

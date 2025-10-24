@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/20 16:31:27 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 17:08:19 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	Client::sendMessage(const std::string& msg) const {
 }
 
 void	Client::addChannel(Channel* channel) {
-	if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end()) {		// check that client isn't already in this channel
+	if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end()) {
 		_channels.push_back(channel);
 	}
 }
@@ -82,13 +82,12 @@ void	Client::removeChannel(Channel* channel) {
 }
 
 bool	Client::isOnChannel(Channel* channel) {
-	if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end())		// if client is not on channel
+	if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end())
 		return false;
 	else
 		return true;
 }
 
-// handle client buffer
 void	Client::appendBuffer(const std::string& msg) {
 	if (msg.size() > MAX_MESSAGE_SIZE) {
 		sendMessage("ERROR :Message too long\r\n");
@@ -114,7 +113,7 @@ std::string	Client::getMessage() {
 	size_t pos = _buffer.find("\r\n");
 	if (pos != std::string::npos)	{
 		std::string message = _buffer.substr(0, pos);
-		_buffer.erase(0, pos + 2);		// clean the buffer (including \r\n)
+		_buffer.erase(0, pos + 2);
 		return message;
 	}
 	pos = _buffer.find('\n');
