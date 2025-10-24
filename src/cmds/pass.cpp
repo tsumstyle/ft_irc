@@ -3,24 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:12 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 16:13:37 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 15:09:31 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
 #include "../../inc/replies.hpp"
 
-/*  PASS
-Requirements:
-   - Must be the first command sent by the client (state == NEW), otherwise ignore or send ERR_ALREADYREGISTERED (462).
-   - Must match server password; otherwise send ERR_PASSWDMISMATCH (464). 
-Behavior:
-   - If valid, sets client state to PASS_OK.
-   - Logs the successful password verification on the server. */
-   
 void	Server::handlePass(Client *c, const ParsedCmd &data) {
 	std::string reply;
 	if (c->getState() != NEW) {
@@ -35,8 +27,6 @@ void	Server::handlePass(Client *c, const ParsedCmd &data) {
 		c->setState(PASS_OK);
 		c->sendMessage("Password accepted. Provide NICK and USER.\r\n");
 	}
-	else {
-		c->sendMessage(Replies::ERR_PASSWMISMATCH());
-		//c->setState(DISCONNECTED); // caro 16.10: this made it impossible to try again after using wrong passwd. or do anything else
-	}
+	else
+		c->sendMessage(Replies::ERR_PASSWDMISMATCH());
 }

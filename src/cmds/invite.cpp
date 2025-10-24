@@ -8,41 +8,34 @@ When channel is inviteonly, people not on invitelist cannot join.
 #include "../../inc/replies.hpp"
 
 void	Server::handleInvite(Client *c, const ParsedCmd &data) {
-	// INVITE <channel> <target>
 	if (c->getState() != REGISTERED) {
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), data.cmd));
 		return;
 	}
-	// args < 3?
 	if (data.args.size() < 2) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
 		return ;
 	}
-	// channel exists?
 	Channel *chan = findChannel(data.args[0]);
 	if (!chan) {
 		c->sendMessage(Replies::ERR_NOSUCHCHANNEL(c->getNick(), data.args[0]));
 		return ;
 	}
-	// c member of channel?
 	else if (!chan->findUser(c->getNick())) {
 		c->sendMessage(Replies::ERR_NOTONCHANNEL(chan->getName()));
 		return ;
 	}
-	// c->chanop?
 	else if (!chan->isOperator(c)) {
 		c->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(chan->getName()));
 		return ;
 	}
-	// target exists?
 	Client *target = findClientByNick(data.args[1]);
 	if (!target) {
 		c->sendMessage(Replies::ERR_NOSUCHNICK(c->getNick(), data.args[1]));
 		return ;
 	}
-	// target already in channel?
 	else if (chan->findUser(target->getNick())) {
-		c->sendMessage(Replies::ERR_USERONCHANNEL(c->getNick(), chan->getName())); // nick of c or of target? or both?
+		c->sendMessage(Replies::ERR_USERONCHANNEL(c->getNick(), chan->getName()));
 		return ;
 	}
 

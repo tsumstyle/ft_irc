@@ -2,24 +2,7 @@
 #include "../../inc/Channel.hpp"
 #include "../../inc/replies.hpp"
 
-/*
-KICK:
-	- kicks a user from a channel
-	- usage: /KICK <channel> <target> [<comment>]
-
-	check:
-		- at least channel and target. if not: ERR_MOREPARAMSNEEDED
-		- user is chanop. if not: ERR_CHANOPRIVSNEEDED
-	
-	- if target not on channel -> ignore
-	- if target on channel -> remove from channel members. msg with comments
-*/
-
-// void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason)
-
 void	Server::handleKick(Client *c, const ParsedCmd &data) {
-	// data.cmd = KICK
-	// data.args = <channel> <target> [<reason>]
 	if (c->getState() != REGISTERED) {
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), data.cmd));
 		return;

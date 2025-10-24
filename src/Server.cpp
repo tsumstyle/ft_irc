@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/20 17:22:10 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 14:48:21 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,15 +199,10 @@ void	Server::handleClient(int fd) {		// read from the connection
 				continue;
 			ParsedCmd parse_data = parseMsg(message);
 			toUpperCmd(&parse_data);			
-			if (!parse_data.cmd.empty()) {													// TODO: remove at the end
-				std::cout << "CMD: " << parse_data.cmd << std::endl; 						//for debug
-				for (unsigned long i = 0; i < parse_data.args.size(); i++)					//for debug
-					std::cout << "Arg " << i << " " << parse_data.args[i] << std::endl;		//for debug
 				handleCmd(client, parse_data);
 			}
 		}
 	}
-}
 
 void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 // 1. login commands

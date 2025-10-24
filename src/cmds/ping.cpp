@@ -3,26 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ping.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:55 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 13:59:07 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 15:10:06 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
 #include "../../inc/replies.hpp"
 
-/* PING
-Requirements:
-  - Must be sent by a registered client.
-  - Must include a token to respond to; otherwise behavior may vary (typically ignored).
-
-Behavior:
-  - Replies with PONG <token> to the client.
-  - Keeps the connection alive (heartbeat).
-  - Logs the ping request on the server.
-*/
 void	Server::handlePing(Client *c, const ParsedCmd &data) {
 	if (c->getState() != REGISTERED) {
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "PING"));

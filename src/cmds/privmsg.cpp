@@ -3,20 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:08:36 by nick              #+#    #+#             */
-/*   Updated: 2025/10/06 13:59:16 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 14:45:09 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
 #include "../../inc/Channel.hpp"
 #include "../../inc/replies.hpp"
-
-// should messages say what channel they are received on?
-// #ch1: caro: hello world
-// private message: caro: hello world
 
 void Server::handleDirectMsg(Client *sender, std::string target, std::string msg) {
 	Client *receiver = findClientByNick(target);

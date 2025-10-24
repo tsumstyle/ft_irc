@@ -3,21 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 15:15:36 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 14:38:35 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
 #include "../../inc/replies.hpp"
-
-/* test:
-PART single channel
-PART multiple channels
-PART with reason
-PART from channel you're not in */
 
 void	Server::handlePart(Client *c, const ParsedCmd &data) {
 	if (c->getState() != REGISTERED) {

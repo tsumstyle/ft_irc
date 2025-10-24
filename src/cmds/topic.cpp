@@ -2,21 +2,6 @@
 #include "../../inc/Channel.hpp"
 #include "../../inc/replies.hpp"
 
-/*
-TOPIC:
-	1) - /TOPIC <channel> 
-	2) - /TOPIC <channel> <topic>
-
-	1) returns current topic
-
-	2) check:
-	if channel.isTopicRestricted {
-		if (channel.topicRestricted && !chanop)
-			-> privileges needed
-		else
-			-> change topic
-*/
-
 void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 	std::string	reply;
 	if (c->getState() != REGISTERED) {
@@ -25,7 +10,7 @@ void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 	}
 	if (data.args.size() < 1) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
-		return ; // <----
+		return ;
 	}
 	Channel *chan = findChannel(data.args[0]);
 	if (!chan) {
@@ -39,7 +24,6 @@ void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 			c->sendMessage(Replies::RPL_TOPIC(chan));
 		return ;
 	}
-	// 2 or more args
 	if (chan->isTopicRestricted() && !chan->isOperator(c)) {
 		c->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(chan->getName()));
 		return ;
@@ -51,5 +35,5 @@ void	Server::handleTopic(Client *c, const ParsedCmd &data) {
 		new_topic += data.args[i];
 	}
 	chan->setTopic(new_topic);
-	c->sendMessage(yellow(chan->getName()) + " :Topic changed\r\n"); //// change
+	c->sendMessage(yellow(chan->getName()) + " :Topic changed\r\n");
 }

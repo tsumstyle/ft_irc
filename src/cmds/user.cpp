@@ -3,27 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:20 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/20 17:17:59 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 14:47:13 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
 #include "../../inc/replies.hpp"
-
-/* USER
-Requirements:
-   - Client must have sent PASS first (state != NEW), otherwise send ERR_NOTREGISTERED (451).
-   - Must provide all required parameters (username, hostname, servername, realname), otherwise send ERR_NEEDMOREPARAMS (461). 
-Behavior:
-   - Sets the client's username and real name.
-   - Updates client state:
-       - If NICK_OK, client becomes REGISTERED → send welcome messages.
-       - Otherwise, state becomes USERNAME_OK (waiting for NICK command).
-   - Logs the username assignment on the server. */
-   
 
 void	Server::handleUser(Client *c, const ParsedCmd &data) {
 	if (c->getState() == NEW) {

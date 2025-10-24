@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:26:11 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/20 17:06:44 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 13:00:30 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void Server::handleList(Client *c) {
 		oss << ch->getUsers().size();
 		std::string reply = "322 " + c->getNick() + " " 
 							+ channel_name + " "
-							+ oss.str();
+							+ oss.str() + " "
+							+ ch->getTopic();
 		c->sendMessage(reply + "\r\n");
 	}
 	c->sendMessage("323 " + c->getNick() + " :End of /LIST\r\n");

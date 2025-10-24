@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/30 17:41:12 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 15:09:11 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ namespace Replies {
 		return bg_red("462 :") + red("You may not reregister\r\n");
 	}
 
-	inline std::string	ERR_PASSWMISMATCH() { // i think it's PASSWDMISMATCH ? with D
+	inline std::string	ERR_PASSWDMISMATCH() {
 		return bg_red("464 :") + red("Password incorrect\r\n");
 	}
 

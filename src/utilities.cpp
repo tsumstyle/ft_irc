@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:24:08 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/06 12:21:22 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/24 13:07:20 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/utilities.hpp"
+#include "../inc/colors.hpp"
 #include "../inc/Client.hpp"
 
 
@@ -35,9 +36,9 @@ std::string	getTimeStamp() {
 
 void	serverLog(Client* c, const std::string& msg) {
 	if (c)
-		std::cout << "[" << getTimeStamp() << "] [SERVER] " << c->getNick() << msg << std::endl;
+		std::cout << "[" << getTimeStamp() << "] " << GREEN << "[SERVER] " << RESET << c->getNick() << msg << std::endl;
 	else
-		std::cout << "[" << getTimeStamp() << "] [SERVER] " << msg << std::endl;
+		std::cout << "[" << getTimeStamp() << "] " << GREEN << "[SERVER] " << RESET << msg << std::endl;
 }
 
 std::string toLower(const std::string& str) {
