@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:47:02 by nboer             #+#    #+#             */
-/*   Updated: 2025/09/29 14:58:12 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:49:31 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ ParsedCmd	parseMsg(const std::string& raw) {
 	if (!raw.empty() && raw[0] == ':') {
 			iss >> token;
 			data.prefix = token.substr(1);
-			// check prefix?
 			std::cout << "prefix: " << data.prefix << std::endl;
 	}
 	iss >> data.cmd;

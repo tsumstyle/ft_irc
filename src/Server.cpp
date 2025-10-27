@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 10:34:43 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:54:45 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 Server*	Server::_instance = NULL;
 
 #define BUFSIZE 510
-//#define QUEUE_SIZE 10 --> inside the listen() function
 
 //constructors
 Server::Server() : _running(true), _port(6667), _server_pass("default_pw"), _server_socket(-1) { _instance = this; }
@@ -79,22 +78,14 @@ void	Server::start() {
 // 1) creating a socket (fd that will be used for communication) : IPv4, TCP
 	_server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_server_socket == -1) {
-		std::cout << "Failed to create socket. errno: " << errno <<std::endl;	// dont think we're allowed errno
+		std::cout << "Failed to create socket." << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	
-//	2) specify address
-// sockaddr_in (struct used to define the address we want to assign to the socket in the case of an Internet Protocol (IP))
-// struct sockaddr_in {
-//    sa_family_t    sin_family; /* address family: AF_INET */
-//    in_port_t      sin_port;   /* port in network byte order */
-//    struct in_addr sin_addr;   /* internet address */
-// };
-
-// listen to port _port
+//	2) specify address:
 	sockaddr_in	server_address;
 	server_address.sin_family = AF_INET;
-	server_address.sin_addr.s_addr = INADDR_ANY;	// accepts from any IP
+	server_address.sin_addr.s_addr = INADDR_ANY;		// accepts from any IP
 	server_address.sin_port = htons(_port); 			// htons converts to network byte order
 
 // 3) bind socket : bind() assigns an IP address and port to the socket:
@@ -130,7 +121,7 @@ void	Server::run() {
 			serverLog(NULL, "Error: poll system call failed");
 			break;
 		}
-		if (activity == 0) {		//timeout - check if we should shutdown
+		if (activity == 0) {
 			if (!_running)
 				break;
 			continue;
@@ -179,14 +170,14 @@ void	Server::acceptClient() {
 	c->sendMessage(welcome);
 }
 
-void	Server::handleClient(int fd) {		// read from the connection
+void	Server::handleClient(int fd) {
 	char	buffer[BUFSIZE];
 	Client*	client = _connected[fd];
-	ssize_t	bytes_read = recv(fd, buffer, BUFSIZE - 1, 0); // read fucntion for sockets
+	ssize_t	bytes_read = recv(fd, buffer, BUFSIZE - 1, 0); // read function for sockets
 	
 	if (bytes_read <= 0)	{
 		std::cout << "Client disconnected: fd " << fd << std::endl;
-		client->setState(DISCONNECTED); 	// mark for cleanup
+		client->setState(DISCONNECTED); 					// mark for cleanup
 	}
 	else {
 		buffer[bytes_read] = '\0';

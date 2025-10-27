@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:24:08 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/24 13:07:20 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:54:56 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/utilities.hpp"
 #include "../inc/colors.hpp"
 #include "../inc/Client.hpp"
-
 
 int	err_handler(std::string msg) {
 	std::cerr << "Error: " << msg << std::endl;
@@ -47,8 +46,6 @@ std::string toLower(const std::string& str) {
 		lowered[i] = std::tolower(static_cast<unsigned char>(str[i]));
 	return lowered;
 }
-
-
 
 std::vector<std::string>	split(const std::string& str, char delimiter) {
 	std::vector<std::string>	result;

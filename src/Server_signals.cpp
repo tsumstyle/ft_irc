@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 14:04:30 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 10:31:29 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 12:02:53 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	Server::signalHandler(int signal) {
 			signalName = "Unknown signal";
 			break;
 	}
-	if (_instance)	{		// signal handlers must be in static functions. but static function cannot access non-static member variables directly, so we use a static pointer to the current instance
+	if (_instance)	{					// signal handlers must be in static functions. but static function cannot access non-static member variables directly, so we use a static pointer to the current instance
 		std:: string msg = "Received " + signalName + " (" + toString(signal) + "), initiating clean shutdown...";
 		serverLog(NULL, msg);
 		_instance->stop();

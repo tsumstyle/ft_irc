@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:49 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 15:09:11 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:58:52 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,8 @@
 	#define SERVER_NAME "InstantRegretChat"
 #endif
 
-/* Replies from server to client (confirmation or error message) when client inputs command 
-	follow the IRC reply code (eg: ERR_ALREADYREGISTERED, RPL_JOIN) and format.
-	We can add color to it to make it cute */
 namespace Replies {
-// command replies
 	inline std::string	RPL_WELCOME(const std::string& nick, const std::string& user) {
-		//return bg_blue("001 " + nick + " :") + "Welcome to the IRC network, " + nick + "!" + " (user: " + user + ")\r\n";
 		return bg_blue("Welcome to the IRC network, " + nick + "!" + " (user: " + user + ")\r\n\n");
 	}
 
@@ -46,13 +41,13 @@ namespace Replies {
 
 	inline std::string RPL_NAMES(Client *c, const std::string& ch, const std::string& users){
 		std::string reply;
-		const std::string	serverName = SERVER_NAME; 		// 29.9Alex: added that so we don't hardcode it individually everywhere (it's defined in Server.hpp)
+		const std::string	serverName = SERVER_NAME; 		
 		reply = ":" + serverName + " 353 " + c->getNick() + " = " + ch + " :" + users + "\r\n";
 		reply += ":" + serverName + " 366 " + c->getNick() + " " + ch + " :End of /NAMES list.\r\n";
 		return reply;
 	}
 
-	inline std::string	RPL_PRIVMSG(const std::string& sender, const std::string& target, const std::string& msg) { // messages on channels are currently also priv. maybe add RPL_CHANMSG with another color and distintc from DM
+	inline std::string	RPL_PRIVMSG(const std::string& sender, const std::string& target, const std::string& msg) { 
 		return green(":" + sender + " PRIVMSG " + target + " :") + msg + "\r\n"; 
 	}
 
@@ -63,16 +58,6 @@ namespace Replies {
 	inline std::string	RPL_NOTOPIC(Channel *channel) {
 		return yellow(channel->getName() + " Topic") + " :" + " No topic is set\r\n";
 	}
-	/*
-	    331     RPL_NOTOPIC
-                        "<channel> :No topic is set"
-        332     RPL_TOPIC
-                        "<channel> :<topic>"
-
-                - When sending a TOPIC message to determine the
-                  channel topic, one of two replies is sent.  If
-                  the topic is set, RPL_TOPIC is sent back else
-                  RPL_NOTOPIC.*/
 
 /******************\ 
 *      ERRORS      *
@@ -105,12 +90,16 @@ namespace Replies {
 		return bg_red("442 " + nick + " " + channel + " :") + red("You're not on that channel\r\n");
 	}
 
-	inline std::string	ERR_NOTREGISTERED(const std::string& nick, const std::string& cmd) {
-		return bg_red("451 " + nick + " " + cmd + " :") + red("You have not registered\r\n");
+	inline std::string	ERR_NOTONCHANNEL(const std::string &channel) {
+		return bg_red("442 " + channel + " :") + red("You're not on that channel\r\n");
 	}
 
 	inline std::string	ERR_USERONCHANNEL(const std::string& nick, const std::string& channel) {
 		return bg_red("443 " + nick + " " + channel + " :") + red("is already on channel\r\n");
+	}
+
+	inline std::string	ERR_NOTREGISTERED(const std::string& nick, const std::string& cmd) {
+		return bg_red("451 " + nick + " " + cmd + " :") + red("You have not registered\r\n");
 	}
 
 	inline std::string	ERR_NEEDMOREPARAMS(const std::string& nick, const std::string& cmd) {
@@ -125,31 +114,23 @@ namespace Replies {
 		return bg_red("464 :") + red("Password incorrect\r\n");
 	}
 
-	// added for chanop things:
-	inline std::string	ERR_NOTONCHANNEL(const std::string &channel) {
-		return bg_red("442 " + channel + " :") + red("You're not on that channel\r\n");
-	}
-	
 	inline std::string	ERR_KEYSET(const std::string& channel) {
 		return bg_red("467 " + channel + " :") + red("Channel key already set\r\n");
 	}
 
-	inline std::string	ERR_CHANNELISFULL(const std::string& channel) { // fix number
+	inline std::string	ERR_CHANNELISFULL(const std::string& channel) {
 		return bg_red("471 " + channel + " :") + red("Cannot join channel (+l)\r\n");
 	}
 
-	inline std::string	ERR_INVITEONLYCHAN(const std::string& channel) { // fix number
+	inline std::string	ERR_INVITEONLYCHAN(const std::string& channel) {
 		return bg_red("471 " + channel + " :") + red("Cannot join channel (+i)\r\n");
 	}
 
-	inline std::string	ERR_CHANOPRIVSNEEDED(const std::string& channel) { // fix number
+	inline std::string	ERR_CHANOPRIVSNEEDED(const std::string& channel) {
 		return bg_red("471 " + channel + " :") + red("You're not channel operator\r\n");
 	}
 
 	inline std::string ERR_BADCHANMASK(const std::string& nick, const std::string& channel) {
 		return bg_red("476 " + nick + " " + channel + " :") + red("Invalid channel mask\r\n");
 	}
-
-
-	//inline std::string	RPL_CHANNELMODEIS(const )
 }

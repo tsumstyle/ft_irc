@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 10:59:54 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 12:01:26 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,18 @@ struct ParsedCmd;
 class Server {
 private:
 	bool							_running;
-	static Server*					_instance;			// for static signal handler???
+	static Server*					_instance;
 	int								_port;
-	std::string						_server_pass; //server password to connect;
+	std::string						_server_pass;
 	int								_server_socket;
-	std::vector<pollfd>				_fds;	// vector of pollfds : // pollfd describes which fd poll() should watch and what events to look for // events: input, output, errors; and revents (what events actually happened, set by poll(
+	std::vector<pollfd>				_fds;
 	std::map<int, Client*>			_connected;	
-	std::map<std::string, Channel>	_channels;	//1509A: chattie recommends storing the channels as real objects (rather than pointers), contrary to clients (stored as pointers)
+	std::map<std::string, Channel>	_channels;
 
 public:
 // constructors
 	Server();
-	Server(const int& port, const std::string& password);	// param constructor with a specified port value
+	Server(const int& port, const std::string& password);
 	~Server();
 	Server(const Server& copy);
 	Server& operator=(const Server& other);
@@ -57,10 +57,10 @@ public:
 	const std::string	getPass() const {return _server_pass;};
 	
 // member functions
-	void		start();	// setup socket, bind, listen
-	void		run();		// main loop with accept(), recv()
-	void		acceptClient();	// accept a new client and adds to client list
-	void		handleClient(int fd); 	//read from a client
+	void		start();
+	void		run();
+	void		acceptClient();
+	void		handleClient(int fd);
 	bool		isNickTaken(const std::string& nick);
 	bool		isValidNick(const std::string& str);
 	bool		isValidChar(const char c);
@@ -73,7 +73,7 @@ public:
 	void		handleUser(Client *c, const ParsedCmd &data);
 	void		handlePing(Client *c, const ParsedCmd &data);
 	void		handleJoin(Client *c, const ParsedCmd &data);
-	void		handleJoinOneChannel(Client *c, const std::string& channel_name, const std::string& /* key */);
+	void		handleJoinOneChannel(Client *c, const std::string& channel_name, const std::string& key);
 	void		handlePrivMsg(Client *c, const ParsedCmd &data);
 	void		handleNames(Client *c, const ParsedCmd &data);
 	void		handleChannelMsg(Client *c, std::string target, std::string msg);
@@ -83,8 +83,7 @@ public:
 	void		partFromChannel(Client* c, Channel* channel, const std::string& reason);
 	void		handleList(Client *c);
 	void		handleMode(Client *c, const ParsedCmd &data);
-	std::string		handleMode_channel(Client *c, const ParsedCmd &data);
-	//std::string	handleMode_user(Client *c, const ParsedCmd &data);
+	std::string	handleMode_channel(Client *c, const ParsedCmd &data);
 	void		handleTopic(Client *c, const ParsedCmd &data);
 	void		handleKick(Client *c, const ParsedCmd &data);
 	void		handleInvite(Client *c, const ParsedCmd &data);
@@ -105,10 +104,7 @@ public:
 	void		cleanupDisconnectedClients();
 	void		cleanupEmptyChannels();
 
-//		INVITE, 
-
+//	invalid
 	void		InvalidCmd(Client *c,const ParsedCmd &data);
-	//void	createChannel ?
-
 };
 

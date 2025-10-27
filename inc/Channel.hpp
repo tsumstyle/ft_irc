@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 11:26:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/09/29 13:13:39 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:55:43 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ public:
 	void					uninvite(Client* user);
 	bool					isInvited(const Client* user);
 
-	// for chanop 26.9 -- caro
 	bool					isChannelFull();
 	bool					isUserLimitSet();
 	size_t					getUserLimit();
@@ -71,7 +70,6 @@ public:
 	bool					isTopicRestricted();
 	std::string				getTopic();
 
-	// for MODE - setters. 29.9 -- caro
 	void					setUserLimitSet(bool desired);
 	void					setUserLimit(const std::string& lim);
 	void					setReqPassword(bool desired);

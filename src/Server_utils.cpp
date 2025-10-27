@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 14:04:34 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 10:29:36 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:50:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "../inc/utilities.hpp"
 #include "../inc/parser.hpp"
 
-// other utils
 bool	Server::isNickTaken(const std::string& nick) {
 	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); it++) {
 		if (it->second && it->second->getNick() == nick)

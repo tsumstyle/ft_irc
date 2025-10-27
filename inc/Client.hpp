@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 14:06:42 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/20 16:43:42 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:55:55 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ private:
 	std::string	_nick;
 	std::string	_user;
 	clientState	_state;
-	int			_socket; // caro1710: fd?
+	int			_socket;
 	std::vector<Channel*>	_channels;
 	std::string	_buffer;
 
@@ -72,7 +72,7 @@ public:
 	void				setState(clientState state);
 
 // other member functions	
-	void	sendMessage(const std::string& msg) const;	// send data
+	void	sendMessage(const std::string& msg) const;
 	void	addChannel(Channel* channel);
 	void	removeChannel(Channel* channel);
 	bool	isOnChannel(Channel* channel);
