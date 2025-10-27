@@ -34,10 +34,7 @@ void	Server::handleKick(Client *c, const ParsedCmd &data) {
 		}
 	}
 	partFromChannel(victim, chan, reason);
-
-	// here some placeholder messages
-	c->sendMessage("User " + victim->getNick() + " kicked from channel " + chan->getName() + " >:)\r\n"); ///// change
-	
+	c->sendMessage("User " + victim->getNick() + " kicked from channel " + chan->getName() + " >:)\r\n");
 	std::string explanation = "You've been kicked from " + chan->getName();
 	if (reason != "")
 		explanation += ". Reason given: " + reason + "\r\n";

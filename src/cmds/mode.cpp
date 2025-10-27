@@ -16,7 +16,6 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 		reply = Replies::ERR_CHANOPRIVSNEEDED(chan->getName());
 	}
 	else {
-		// actual things
 		if (data.args[1] == "+i") {
 			if (data.args.size() == 2) {
 				chan->setInviteOnly(true);

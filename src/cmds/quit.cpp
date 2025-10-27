@@ -6,7 +6,7 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:16 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 15:56:43 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:41:21 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	Server::handleQuit(Client *c, const ParsedCmd &data) {
 				reason += " " + data.args[i];
 		}
 	}
-
 	std::vector<Channel*>	channels = c->getChannels();
 	for (size_t i = 0; i < channels.size(); i++) {
 		partFromChannel(c, channels[i], reason);

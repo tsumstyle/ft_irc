@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 10:28:07 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:42:10 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "../inc/replies.hpp"
 #include "colors.hpp"
 
-// constructors_operators
 Channel::Channel() : _name("defaultchannel"),
 					 _localpass(""),
 					 _reqPassword(false),
@@ -46,7 +45,6 @@ Channel::Channel(const Channel& copy) : _name(copy._name),
 
 Channel::~Channel() {}
 
-// assignment operator
 Channel& Channel::operator=(const Channel& other) {
 	if (this != &other) {
 		_name = other._name;
@@ -63,7 +61,6 @@ Channel& Channel::operator=(const Channel& other) {
 	return *this;
 }
 
-// other members functions
 bool	Channel::hasUser(Client* user) {
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (user == _users[i])
@@ -89,7 +86,7 @@ void	Channel::removeUser(Client* user) {
 	user->sendMessage(Replies::ERR_NOTONCHANNEL(user->getNick(), getName()));
 }
 
-void	Channel::broadcast(const std::string& msg, Client* sender, Channel* chan) { // i would also send it to the sender, as in a group chat. you see your own
+void	Channel::broadcast(const std::string& msg, Client* sender, Channel* chan) {
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (chan)
 			_users[i]->sendMessage((yellow(chan->getName()) + ": " + sender->getNick() + ": ") + msg);
@@ -106,11 +103,10 @@ std::vector<Client*>	Channel::getUsers() {
 	return (_users);
 }
 
-// operators
 void	Channel::addOperator(Client* user) {
 	for (size_t i = 0; i < _operators.size(); i++) {
 		if (user == _operators[i])
-			return ; //  write error msg?
+			return ;
 	}
 	_operators.push_back(user);
 }
@@ -132,7 +128,6 @@ bool	Channel::isOperator(const Client* name) {
 	return false;
 }
 
-// invite list -- caro 6.10
 void	Channel::invite(Client* user) {
 	for (size_t i = 0; i < this->_inviteList.size(); i++) {
 		if (user == this->_inviteList[i])
@@ -158,7 +153,6 @@ bool	Channel::isInvited(const Client* user) {
 	return false;
 }
 
-// added 29.9 -- caro
 Client*	Channel::findUser(const std::string& name) {
 	for (size_t i = 0; i < this->_users.size(); i++) {
 		if (this->_users[i]->getNick() == name)
@@ -167,7 +161,6 @@ Client*	Channel::findUser(const std::string& name) {
 	return (NULL);
 }
 
-// added for chanop 26.9 -- caro
 bool	Channel::isChannelFull() {
 	if (this->_userLimitSet) {
 		return this->_users.size() >= this->_userLimit;
@@ -208,8 +201,7 @@ void	Channel::setUserLimitSet(bool desired) {
 }
 
 void	Channel::setUserLimit(const std::string& lim) {
-	this->_userLimit = atoi(lim.c_str()); // is this the best way?
-	// check number is valid, return 0 on fail?
+	this->_userLimit = atoi(lim.c_str());
 }
 
 void	Channel::setReqPassword(bool desired) {

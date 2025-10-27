@@ -6,14 +6,13 @@
 /*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:26:11 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/24 13:00:30 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:40:48 by nboer            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Server.hpp"
 #include "../../inc/replies.hpp"
 
-// channel topic still has to be included in the listing.
 void Server::handleList(Client *c) {
 	if (c->getState() != REGISTERED) {
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), "LIST"));
