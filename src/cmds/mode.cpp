@@ -19,25 +19,25 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 		if (data.args[1] == "+i") {
 			if (data.args.size() == 2) {
 				chan->setInviteOnly(true);
-				reply = yellow("Channel set to invite only\r\n");
+				reply = yellow("Channel " + chan->getName() + " set to invite only\r\n");
 			}
 		}
 		else if (data.args[1] == "-i") {
 			if (data.args.size() == 2) {
 				chan->setInviteOnly(false);
-				reply = yellow("Channel no longer invite only\r\n");
+				reply = yellow("Channel " + chan->getName() + " no longer invite only\r\n");
 			}
 		}
 		else if (data.args[1] == "+t") {
 			if (data.args.size() == 2) {
 				chan->setTopicRestricted(true);
-				reply = yellow("TOPIC restricted to channel operators\r\n");
+				reply = yellow("TOPIC on " + chan->getName() + " restricted to channel operators\r\n");
 			}
 		}
 		else if (data.args[1] == "-t") {
 			if (data.args.size() == 2) {
 				chan->setTopicRestricted(false);
-				reply = yellow("TOPIC no longer restricted to channel operators\r\n");
+				reply = yellow("TOPIC on " + chan->getName() + " no longer restricted to channel operators\r\n");
 			}
 		}
 		else if (data.args[1] == "+o") {
@@ -47,7 +47,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 			Client* target = chan->findUser(data.args[2]);
 			if (target && !chan->isOperator(target)) {
 				chan->addOperator(target);
-				reply = yellow("Added " + target->getNick() + " as an operator\r\n");
+				reply = yellow("Added " + target->getNick() + " as an operator on " + chan->getName() + "\r\n");
 			}
 		}
 		else if (data.args[1] == "-o") {
@@ -57,7 +57,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 			Client* target = chan->findUser(data.args[2]);
 			if (target && chan->isOperator(target)) {
 				chan->removeOperator(target);
-				reply = yellow("Removed " + target->getNick() + " as an operator\r\n");
+				reply = yellow("Removed " + target->getNick() + " as an operator on " + chan->getName() + "\r\n");
 			}
 		}
 		else if (data.args[1] == "+k") {
@@ -67,7 +67,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 			if (!chan->isReqPassword()) {
 				chan->setLocalPass(data.args[2]);
 				chan->setReqPassword(true);
-				reply = yellow("Password is now required\r\n");
+				reply = yellow("Password is now required on " + chan->getName() + "\r\n");
 			}
 			else if (chan->isReqPassword()) {
 				reply = Replies::ERR_KEYSET(chan->getName());
@@ -76,7 +76,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 		else if (data.args[1] == "-k") {
 			if (data.args.size() == 2) {
 				chan->setReqPassword(false);
-				reply = yellow("Password no longer required\r\n");
+				reply = yellow("Password no longer required on " + chan->getName() + "\r\n");
 			}
 		}
 		else if (data.args[1] == "+l") {
@@ -86,7 +86,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 			if (!chan->isUserLimitSet()) {
 				chan->setUserLimit(data.args[2]);
 				chan->setUserLimitSet(true);
-				reply = yellow("User limit set to " + data.args[2] + "\r\n");
+				reply = yellow("User limit set to " + data.args[2] + "on " + chan->getName() + "\r\n");
 			}
 			else if (chan->isUserLimitSet()) {
 				reply = yellow("User limit is already set\r\n");
@@ -95,7 +95,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 		else if (data.args[1] == "-l") {
 			if (data.args.size() == 2) {
 				chan->setUserLimitSet(false);
-				reply = yellow("User limit removed\r\n");
+				reply = yellow("User limit removed on " + chan->getName() + "\r\n");
 			}
 		}
 		else {
@@ -119,7 +119,6 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
 		return;
 	}
-
 	if (data.args[0][0] == '#') {
 		reply = handleMode_channel(c, data);
 	}
