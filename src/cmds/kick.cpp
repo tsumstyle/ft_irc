@@ -22,7 +22,7 @@ void	Server::handleKick(Client *c, const ParsedCmd &data) {
 	}
 	Client *victim = chan->findUser(data.args[1]);
 	if (!victim) {
-		c->sendMessage(Replies::ERR_NOSUCHNICK(c->getNick(), data.args[1])); /// change
+		c->sendMessage(Replies::ERR_NOTONCHANNEL(c->getNick(), data.args[1]));
 		return ;
 	}
 	std::string reason = "";

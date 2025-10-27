@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 14:04:34 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 14:20:27 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 10:29:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ bool Server::isValidUsername(const std::string& username) {
 
 Channel *Server::findChannel(std::string target) {
 	std::string	lowerTarget = toLower(target);
-	//std::cout << "lowertarget = " << lowerTarget << std::endl; //TODO: remove when no debugging needed anymore
 	std::map<std::string, Channel>::iterator it = _channels.find(lowerTarget);
 	if (it != _channels.end())
 		return &it->second;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 17:11:47 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/27 10:34:43 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,17 +166,15 @@ void	Server::acceptClient() {
 		std::cout << "accept failed" << std::endl;
 		return;
 	}
-	std::cout << "New client connected: fd " << client_socket << std::endl;
 	pollfd	client_poll;
 	client_poll.fd = client_socket;
 	client_poll.events = POLLIN;
 	client_poll.revents = 0;
 	_fds.push_back(client_poll);
-	_connected[client_socket] = new Client(client_socket); // dont forget to DELETE against memleaks
+	_connected[client_socket] = new Client(client_socket);
 	Client *c = _connected[client_socket];
 
-
-	//std::string welcome = "Welcome to InstantRegretChat! Please enter your password using the PASS command.\r\n";
+	serverLog(NULL, "New client connected! Client socket: " + toString(client_socket));
 	std::string welcome = welcome_message();
 	c->sendMessage(welcome);
 }

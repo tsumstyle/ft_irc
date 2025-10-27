@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 14:04:30 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 14:19:38 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 10:31:29 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,9 @@
 #include "../inc/parser.hpp"
 
 void	Server::setSignals() {
-    std::cout << "DEBUG: Setting up signal handlers" << std::endl;
-    std::cout << "DEBUG: _instance = " << _instance << std::endl;
 	signal(SIGINT, Server::signalHandler);		//ctrl+C
-	std::cout << "DEBUG: SIGINT handler set" << std::endl;
 	signal(SIGTERM, Server::signalHandler);		//ctrl+D
-	std::cout << "DEBUG: SIGTERM handler set" << std::endl;
 	signal(SIGQUIT, Server::signalHandler);		//ctrl+antislash
-	std::cout << "DEBUG: SIGQUIT handler set - signal setup complete" << std::endl;
 }
 
 void	Server::signalHandler(int signal) {

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 16:01:18 by nboer             #+#    #+#             */
-/*   Updated: 2025/10/06 13:58:08 by aroux            ###   ########.fr       */
+/*   Updated: 2025/10/27 10:58:20 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ void	Server::handleNames(Client *c, const ParsedCmd &data){
 			std::string names;
 			std::vector<Client*> _users = ch->getUsers();
 			for (size_t i = 0; i < _users.size(); ++i) {
-					names += _users[i]->getNick();
+				if (ch->isOperator(_users[i]))
+					names += "@";
+				names += _users[i]->getNick();
 				if (i < _users.size() - 1)
 					names += " ";
 				reply = Replies::RPL_NAMES(c, ch->getName(), names);

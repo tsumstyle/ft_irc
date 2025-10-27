@@ -45,7 +45,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 			if (data.args.size() < 3) {
 				reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
 			}
-			Client* target = chan->findUser(data.args[3]);
+			Client* target = chan->findUser(data.args[2]);
 			if (target && !chan->isOperator(target)) {
 				chan->addOperator(target);
 				reply = yellow("Added " + target->getNick() + " as an operator\r\n");
@@ -112,14 +112,15 @@ void	Server::handleMode(Client *c, const ParsedCmd &data) {
 		c->sendMessage(Replies::ERR_NOTREGISTERED(c->getNick(), data.cmd));
 		return;
 	}
-	if (data.args.size() < 1) {
+	if (data.args.empty()) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
 		return;
 	}
-	if (data.args[0].empty() < 1) {
+	if (data.args.size() < 2) {
 		c->sendMessage(Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd));
 		return;
 	}
+
 	if (data.args[0][0] == '#') {
 		reply = handleMode_channel(c, data);
 	}

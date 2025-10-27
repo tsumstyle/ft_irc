@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 14:38:35 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:11:59 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,46 +55,15 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 }
 
 void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason) {
-		std::string reply = ":" + c->getSource() + " PART " + channel->getName();	// replace @host part with getSource() function
-		if (!reason.empty()) 
-			reply += " :" + reason;
-		reply += "\r\n";
-		channel->broadcast(reply, NULL, NULL);
-		channel->removeUser(c);
-		channel->removeOperator(c);
-		c->removeChannel(channel);
-		if (channel->getUsers().empty()) {
-			_channels.erase(channel->getName());
-		}	
+	serverLog(c, " parted from channel " + channel->getName());
+	std::string reply = ":" + c->getSource() + " PART " + channel->getName();	// replace @host part with getSource() function
+	if (!reason.empty()) 
+		reply += " :" + reason;
+	reply += "\r\n";
+	channel->broadcast(reply, NULL, NULL);
+	channel->removeUser(c);
+	channel->removeOperator(c);
+	c->removeChannel(channel);
+	if (channel->getUsers().empty())
+		_channels.erase(channel->getName());
 }
-
-/* Basic Functionality
-    Purpose: Remove a client from one or more channels
-    Syntax: PART <channel>[,<channel>...] [:<reason>]
-    Authentication: Client must be registered (not restricted by channel modes)
-
-Parameter Handling
-    Minimum parameters: At least one channel name required
-    Multiple channels: Support comma-separated channel list
-    Optional reason: Reason text after the colon (can be empty)
-Channel Validation
-    Valid channel names: Must start with # or & and follow naming conventions
-    Channel existence: Verify each channel exists on the server
-    Case sensitivity: Channel names are case-insensitive (convert to consistent case)
-Membership Checks
-    Client in channel: Client must be a member of each channel they're trying to leave
-    Error handling: Proper errors if client tries to leave channels they're not in
-Notification System
-    Broadcast PART message: Send PART message to ALL members of each channel
-    Message format: :nick!user@host PART #channel :reason
-    Exclude sender: Don't send the message back to the client who's leaving
-Cleanup Operations
-    Remove from channel: Remove client from channel's member list
-    Remove operator status: If client was operator, remove from operators list
-    Clean invitations: Remove client from channel's invitation list
-    Channel deletion: If channel becomes empty, delete the channel object entirely
-Error Responses
-    461 ERR_NEEDMOREPARAMS - Not enough parameters
-    403 ERR_NOSUCHCHANNEL - Channel doesn't exist
-    442 ERR_NOTONCHANNEL - Client not in specified channel
-    451 ERR_NOTREGISTERED - Client not registered */

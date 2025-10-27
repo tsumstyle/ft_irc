@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:27:12 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 15:09:31 by nboer            ###   ########.fr       */
+/*   Updated: 2025/10/27 10:39:28 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	Server::handlePass(Client *c, const ParsedCmd &data) {
 	if (data.args[0] == _server_pass) {
 		c->setState(PASS_OK);
 		c->sendMessage("Password accepted. Provide NICK and USER.\r\n");
+		serverLog(c, " entered right password");
 	}
 	else
 		c->sendMessage(Replies::ERR_PASSWDMISMATCH());
