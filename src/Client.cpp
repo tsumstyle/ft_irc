@@ -88,19 +88,20 @@ bool	Client::isOnChannel(Channel* channel) {
 		return true;
 }
 
-void	Client::appendBuffer(const std::string& msg) {
+int	Client::appendBuffer(const std::string& msg) {
 	if (msg.size() > MAX_MESSAGE_SIZE) {
 		sendMessage("ERROR :Message too long\r\n");
-		return;
+		return 1;
 	}
 	if (_buffer.size() + msg.size() > MAX_BUFFER_SIZE) {
 		_buffer.clear();
-		sendMessage("ERROR :Input line too long- max is " + toString(MAX_MESSAGE_SIZE) + " bytes\r\n");
-		serverLog(this, "ERROR: Buffer overflow detected");
-		setState(DISCONNECTED);
-		return;
-	}	
+		sendMessage("ERROR :Input line too long- max is " + toString(MAX_MESSAGE_SIZE) + " bytes\r\n"); // this message the client will not see. the client has collapsed and died
+		serverLog(this, " ERROR: Buffer overflow detected");
+		setState(DISCONNECTED); //the client died before setting itself as disconnected
+		return 0;
+	}
 	_buffer += msg;
+	return 1;
 }
 
 void	Client::clearBuffer() { _buffer.clear(); }

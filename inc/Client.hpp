@@ -78,7 +78,7 @@ public:
 	bool	isOnChannel(Channel* channel);
 
 // handle client buffer
-	void		appendBuffer(const std::string& bytesReceived);
+	int			appendBuffer(const std::string& bytesReceived);
 	void		clearBuffer();
 	const		std::string& getBuffer();
 	bool		hasFullMessage() const;
