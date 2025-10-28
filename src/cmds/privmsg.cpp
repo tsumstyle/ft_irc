@@ -16,7 +16,7 @@
 
 void Server::handleDirectMsg(Client *sender, std::string target, std::string msg) {
 	Client *receiver = findClientByNick(target);
-	if (!receiver) 
+	if (!receiver || (receiver->getState() != REGISTERED)) 
 		sender->sendMessage(Replies::ERR_NOSUCHNICK(sender->getNick(), target));
 	else 
 		receiver->sendMessage(Replies::RPL_PRIVMSG(sender->getNick(), target, msg));

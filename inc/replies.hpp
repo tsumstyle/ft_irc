@@ -30,7 +30,7 @@ namespace Replies {
 
 	inline std::string	RPL_YOURHOST(const std::string& nick) {
 		const std::string	serverName = SERVER_NAME;
-		const std::string	serverVersion = "ft_irc_1.0";
+		const std::string	serverVersion = "ft_irc_1.2";
 		return blue(":" + serverName + " 002 " + nick + " :") + "Your host is " + blue(serverName) +
 		", running version " + blue(serverVersion) + "\r\n";
 	}
@@ -123,11 +123,11 @@ namespace Replies {
 	}
 
 	inline std::string	ERR_INVITEONLYCHAN(const std::string& channel) {
-		return bg_red("471 " + channel + " :") + red("Cannot join channel (+i)\r\n");
+		return bg_red("473 " + channel + " :") + red("Cannot join channel (+i)\r\n");
 	}
 
 	inline std::string	ERR_CHANOPRIVSNEEDED(const std::string& channel) {
-		return bg_red("471 " + channel + " :") + red("You're not channel operator\r\n");
+		return bg_red("482 " + channel + " :") + red("You're not channel operator\r\n");
 	}
 
 	inline std::string ERR_BADCHANMASK(const std::string& nick, const std::string& channel) {
