@@ -82,7 +82,15 @@ void	Server::cleanupDisconnectedClients() {
 					break;
 				}
 			}
-			delete to_erase->second;
+			Client *disconnected_client = to_erase->second;
+
+			std::vector<Channel*> chans = disconnected_client->getChannels();
+			for (std::vector<Channel*>::iterator i = chans.begin(); i != chans.end(); i++) {
+				Channel *ch = *i;
+				ch->removeUser(disconnected_client);
+			}
+
+			delete disconnected_client;
 			_connected.erase(to_erase);	
 		}
 		else

@@ -181,16 +181,7 @@ void	Server::handleClient(int fd) {
 	}
 	else {
 		buffer[bytes_read] = '\0';
-		if (!client->appendBuffer(buffer)) {
-			// remove from all channels
-			std::vector<Channel*> chans = client->getChannels();
-			for (std::vector<Channel*>::iterator i = chans.begin(); i != chans.end(); i++) {
-				Channel *ch = *i;
-				ch->removeUser(client);
-			}
-			// remove user / nick / 
-			client->setState(DISCONNECTED);
-		}
+		client->appendBuffer(buffer);
 		while (client->hasFullMessage()) {
 			std::string message = client->getMessage();
 			if (message.find_first_not_of(" \t\n\r") == std::string::npos)
