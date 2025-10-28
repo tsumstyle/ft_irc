@@ -53,6 +53,10 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 }
 
 void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason) {
+	if (channel->isOperator(c) && channel->amountOperators() == 1) {
+		// decide what to do
+		;
+	}
 	serverLog(c, " parted from channel " + channel->getName());
 	std::string reply = ":" + c->getSource() + " PART " + channel->getName();
 	if (!reason.empty()) 

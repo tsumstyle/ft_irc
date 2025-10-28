@@ -51,6 +51,7 @@ public:
 	void					addOperator(Client* user);
 	void					removeOperator(Client* user);
 	bool					isOperator(const Client* name);
+	size_t					amountOperators();
 
 	void					broadcast(const std::string& msg, Client* sender, Channel* chan);
 	std::string				getName();

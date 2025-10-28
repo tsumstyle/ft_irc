@@ -128,6 +128,11 @@ bool	Channel::isOperator(const Client* name) {
 	return false;
 }
 
+size_t	Channel::amountOperators() {
+	size_t amt = this->_operators.size();
+	return amt;
+};
+
 void	Channel::invite(Client* user) {
 	for (size_t i = 0; i < this->_inviteList.size(); i++) {
 		if (user == this->_inviteList[i])
