@@ -54,8 +54,14 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 
 void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason) {
 	if (channel->isOperator(c) && channel->amountOperators() == 1) {
-		// decide what to do
-		;
+		channel->broadcast("No moderators left in the channel. Channel deleted\r\n", NULL, channel);
+		// if channel has no members it will be removed by the cleanup
+		std::vector<Client *> users = channel->getUsers();
+		for (size_t i = 0; i < users.size(); i++) {
+			if (users[i] == c) // this user is handled further down. this way he's the last one out
+				break;
+			channel->removeUser(users[i]);
+		}
 	}
 	serverLog(c, " parted from channel " + channel->getName());
 	std::string reply = ":" + c->getSource() + " PART " + channel->getName();
