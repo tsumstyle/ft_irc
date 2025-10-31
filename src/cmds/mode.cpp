@@ -48,6 +48,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 			if (target && !chan->isOperator(target)) {
 				chan->addOperator(target);
 				reply = yellow("Added " + target->getNick() + " as an operator on " + chan->getName() + "\r\n");
+				target->sendMessage(yellow("You've been made an operator in " + chan->getName() + "\r\n"));
 			}
 		}
 		else if (data.args[1] == "-o") {
