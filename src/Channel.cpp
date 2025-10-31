@@ -88,8 +88,11 @@ void	Channel::removeUser(Client* user) {
 
 void	Channel::broadcast(const std::string& msg, Client* sender, Channel* chan) {
 	for (size_t i = 0; i < _users.size(); i++) {
-		if (chan)
+		if (chan && sender)
 			_users[i]->sendMessage((yellow(chan->getName()) + ": " + sender->getNick() + ": ") + msg);
+		else if (chan && !sender) {
+			_users[i]->sendMessage(red("Automatic message:") + " " + yellow(chan->getName()) + ": " + red(msg));
+		}
 		else
 			_users[i]->sendMessage(msg);
 	}
