@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/11/03 13:05:35 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 13:15:08 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	Server::partFromChannel(Client* c, Channel* channel, const std::string& rea
 	std::string reply = ":" + c->getSource() + " PART " + channel->getName();
 	if (!reason.empty()) 
 		reply += " :" + reason;
-	reply += "\r\n";
 	channel->broadcast(reply, NULL, NULL);
 	channel->removeUser(c);
 	channel->removeOperator(c);
