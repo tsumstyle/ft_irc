@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/11/03 13:04:02 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 13:10:02 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	Channel::broadcast(const std::string& msg, Client* sender, Channel* chan) {
 			_users[i]->sendMessage(red("Automatic message:") + " " + yellow(chan->getName()) + ": " + red(msg) + "\r\n");
 		}
 		else
-			_users[i]->sendMessage(msg);
+			_users[i]->sendMessage(msg + "\r\n");
 	}
 }
 
