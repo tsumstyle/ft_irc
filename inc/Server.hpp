@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 13:32:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 12:01:26 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 11:17:45 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <map>
+#include <cerrno>			// errno
 #include <cstdlib>			// exit(), EXIT_FAILURE, EXIT_SUCCESS
 #include <csignal>			// signal()
 #include <errno.h>			// not sure if we're allowed to use it
@@ -21,6 +22,7 @@
 #include <unistd.h>			// read(), open(), close()
 #include <sys/socket.h>		// socket()
 #include <netinet/in.h>		// sockaddr_in (struct used to define the address we want to assign to the socket in the case of an Internet Protocol (IP))
+#include <fcntl.h>			// fcntl() and O_NONBLOCK
 #include "Client.hpp"
 #include "Channel.hpp"
 #include "utilities.hpp"
@@ -99,6 +101,7 @@ public:
 	void		cleanShutdown();
 
 // utils
+	void		setSocketToNonBlocking(int socket_fd, bool isServerSocket);
 	Channel*	findChannel(std::string target);
 	Client* 	findClientByNick(const std::string& nick);
 	void		cleanupDisconnectedClients();

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 14:08:03 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/06 14:20:32 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 10:52:16 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	Server::stop() { _running = false; }
 void	Server::handleSocketError(int fd) {
 	Client* client = _connected[fd];
 	if (client) {
-		std::cout << "Socket error on fd " << fd << " = client " << client->getNick() << std::endl;
+		serverLog(NULL, "Socket error on fd " + toString(fd) + " = client " + client->getNick());
 		client->setState(DISCONNECTED);
 	}
 }

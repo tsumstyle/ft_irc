@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 11:54:45 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 11:16:50 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ Server&	Server::operator=(const Server& other) {
 	if (this != &other) {
 		 _instance = other._instance; 
 		_port = other._port;
-	 	_server_pass = other._server_pass,
+	 	_server_pass = other._server_pass;
 		_running = other._running;
 		_server_socket = other._server_socket;
 		_fds = other._fds;
@@ -78,24 +78,31 @@ void	Server::start() {
 // 1) creating a socket (fd that will be used for communication) : IPv4, TCP
 	_server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_server_socket == -1) {
-		std::cout << "Failed to create socket." << std::endl;
+		serverLog(NULL, "Failed to create socket.");
 		exit(EXIT_FAILURE);
 	}
-	
+	setSocketToNonBlocking(_server_socket, true);
+	if (!_running) {
+		close(_server_socket);
+		exit(EXIT_FAILURE);
+	}
+
 //	2) specify address:
 	sockaddr_in	server_address;
 	server_address.sin_family = AF_INET;
-	server_address.sin_addr.s_addr = INADDR_ANY;		// accepts from any IP
+	server_address.sin_addr.s_addr = INADDR_ANY;		// accepts connection from any IP: local machine, local network, public internet...
 	server_address.sin_port = htons(_port); 			// htons converts to network byte order
 
 // 3) bind socket : bind() assigns an IP address and port to the socket:
 	if (bind(_server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) < 0)	{
-		std::cout << "Failed to bind port " << _port << std::endl;
+		serverLog(NULL, "Failed to bind port.");
+		close(_server_socket);
 		exit(EXIT_FAILURE);
 	}
 // 4) listen to port: 
 	if (listen(_server_socket, 10) < 0)	{ // we set it to accept 10 queued connections
-		std::cout << "Failed to listen on socket." << std::endl;
+		serverLog(NULL, "Failed to listen on socket.");
+		close(_server_socket);
 		exit(EXIT_FAILURE);
 	}
 // 5) Setup poll and create server_poll: fds[0]: server listening socket
@@ -111,7 +118,7 @@ void	Server::run() {
 	serverLog(NULL, "Server started on port " + toString(_port));
 	while (_running) {
 		int	activity = 0;
-		activity = poll(_fds.data(), _fds.size(), -1); // poll() blocks until any of these sockets has an event (new connection, incoming data, etc.), and then you check the .revents field of each pollfd.	
+		activity = poll(_fds.data(), _fds.size(), -1); // poll() waits until any of these sockets has an event (new connection, incoming data, etc.), and then you check the .revents field of each pollfd.	
 		if (activity == -1) {
 			if (errno == EINTR) {
 				if (!_running)
@@ -154,9 +161,11 @@ void	Server::run() {
 void	Server::acceptClient() {
 	int	client_socket = accept(_server_socket, NULL, NULL);
 	if (client_socket < 0)	{
-		std::cout << "accept failed" << std::endl;
+		if (errno != EWOULDBLOCK && errno != EAGAIN)
+			serverLog(NULL, "accept failed");
 		return;
 	}
+	setSocketToNonBlocking(client_socket, false);
 	pollfd	client_poll;
 	client_poll.fd = client_socket;
 	client_poll.events = POLLIN;
@@ -175,9 +184,15 @@ void	Server::handleClient(int fd) {
 	Client*	client = _connected[fd];
 	ssize_t	bytes_read = recv(fd, buffer, BUFSIZE - 1, 0); // read function for sockets
 	
-	if (bytes_read <= 0)	{
-		std::cout << "Client disconnected: fd " << fd << std::endl;
+	if (bytes_read == 0)	{
+		serverLog(NULL, "Client disconnected: fd " + toString(fd));
 		client->setState(DISCONNECTED); 					// mark for cleanup
+	} 
+	else if (bytes_read < 0) {
+		if (errno == EWOULDBLOCK || errno == EAGAIN)		// if there is no data yet
+			return;
+		serverLog(NULL, "Client disconnected: fd " + toString(fd));
+		client->setState(DISCONNECTED); 
 	}
 	else {
 		buffer[bytes_read] = '\0';
@@ -191,7 +206,7 @@ void	Server::handleClient(int fd) {
 				handleCmd(client, parse_data);
 			}
 		}
-	}
+}
 
 void	Server::handleCmd(Client *c, const ParsedCmd &data) {
 // 1. login commands

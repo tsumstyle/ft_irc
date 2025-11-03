@@ -6,13 +6,29 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 14:04:34 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 11:50:19 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 10:52:39 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Server.hpp"
 #include "../inc/utilities.hpp"
 #include "../inc/parser.hpp"
+
+void	Server::setSocketToNonBlocking(int socket_fd, bool isServerSocket) {
+	int	flags = fcntl(socket_fd, F_GETFL, 0);
+	if (flags == -1) {
+		serverLog(NULL, "fcntl F_GETFL failed");
+		if (isServerSocket)
+			_running = false;
+		return;
+	}
+	if (fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK) == -1) {
+		serverLog(NULL, "fcntl F_SETFL failed");
+		if (isServerSocket)
+			_running = false;
+		return;
+	}
+}
 
 bool	Server::isNickTaken(const std::string& nick) {
 	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); it++) {
@@ -64,7 +80,8 @@ Channel *Server::findChannel(std::string target) {
 
 Client* Server::findClientByNick(const std::string& nick) {
 	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); ++it) {
-		if (it->second && it->second->getNick() == nick)
+		Client* client = it->second;
+		if (client && client->getNick() == nick && client->getState() == REGISTERED)
 			return it->second;
 	}
 	return NULL;
@@ -101,7 +118,7 @@ void	Server::cleanupDisconnectedClients() {
 void	Server::cleanupEmptyChannels() {
 	for (std::map<std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ) {
 		if (it->second.getUsers().empty()) {
-			std::cout << "Removing empty channel: " << it->first << std::endl;
+			serverLog(NULL, "Removing empty channel: " + it->first);
 			_channels.erase(it++);
 		}
 		else
