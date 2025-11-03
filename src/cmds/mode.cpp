@@ -33,19 +33,25 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 				chan->setTopicRestricted(true);
 				reply = yellow("TOPIC on " + chan->getName() + " restricted to channel operators\r\n");
 			}
+			else
+				reply = red("TOPIC +t : too many arguments\r\n");
 		}
 		else if (data.args[1] == "-t") {
 			if (data.args.size() == 2) {
 				chan->setTopicRestricted(false);
 				reply = yellow("TOPIC on " + chan->getName() + " no longer restricted to channel operators\r\n");
 			}
+			else
+				reply = red("TOPIC -t : too many arguments\r\n");
 		}
 		else if (data.args[1] == "+o") {
 			if (data.args.size() < 3) {
 				reply = Replies::ERR_NEEDMOREPARAMS(c->getNick(), data.cmd);
 			}
 			Client* target = chan->findUser(data.args[2]);
-			if (target && !chan->isOperator(target)) {
+			if (!target)
+				reply = Replies::ERR_NOSUCHNICK(data.args[2], data.cmd);
+			else if (target && !chan->isOperator(target)) {
 				chan->addOperator(target);
 				reply = yellow("Added " + target->getNick() + " as an operator on " + chan->getName() + "\r\n");
 				target->sendMessage(yellow("You've been made an operator in " + chan->getName() + "\r\n"));
@@ -87,7 +93,7 @@ std::string	Server::handleMode_channel(Client *c, const ParsedCmd& data) {
 			if (!chan->isUserLimitSet()) {
 				chan->setUserLimit(data.args[2]);
 				chan->setUserLimitSet(true);
-				reply = yellow("User limit set to " + data.args[2] + "on " + chan->getName() + "\r\n");
+				reply = yellow("User limit set to " + data.args[2] + " on " + chan->getName() + "\r\n");
 			}
 			else if (chan->isUserLimitSet()) {
 				reply = yellow("User limit is already set\r\n");

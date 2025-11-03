@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:00:47 by aroux             #+#    #+#             */
-/*   Updated: 2025/11/03 11:16:50 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 12:43:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,8 @@ void	Server::handleClient(int fd) {
 	}
 	else {
 		buffer[bytes_read] = '\0';
-		client->appendBuffer(buffer);
+		if (client->appendBuffer(buffer) == 0)
+			return ;
 		while (client->hasFullMessage()) {
 			std::string message = client->getMessage();
 			if (message.find_first_not_of(" \t\n\r") == std::string::npos)

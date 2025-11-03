@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:08:36 by nick              #+#    #+#             */
-/*   Updated: 2025/10/24 17:02:50 by nboer            ###   ########.fr       */
+/*   Updated: 2025/11/03 12:51:37 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void Server::handlePrivMsg(Client *c, const ParsedCmd &data) {
 			msg += " ";
 		msg += data.args[i];
 	}
-	msg += "\r\n";
 
 	if (target[0] == '#')
 		handleChannelMsg(c, target, msg);

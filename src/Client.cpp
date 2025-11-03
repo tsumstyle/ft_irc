@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:26 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 17:08:19 by nboer            ###   ########.fr       */
+/*   Updated: 2025/11/03 12:46:27 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ int	Client::appendBuffer(const std::string& msg) {
 	}
 	if (_buffer.size() + msg.size() > MAX_BUFFER_SIZE) {
 		_buffer.clear();
-		sendMessage("ERROR :Input line too long- max is " + toString(MAX_MESSAGE_SIZE) + " bytes\r\n");
-		serverLog(this, " ERROR: Buffer overflow detected");
+		sendMessage("ERROR :Input line too long- max is " + toString(MAX_MESSAGE_SIZE) + " bytes. You will be disconnected.\r\n");
+		serverLog(this, " ERROR: Buffer overflow detected. Disconnecting client...");
 		setState(DISCONNECTED);
 		return 0;
 	}
