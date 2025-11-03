@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:04:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 11:42:10 by nboer            ###   ########.fr       */
+/*   Updated: 2025/11/03 13:04:02 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,9 @@ void	Channel::removeUser(Client* user) {
 void	Channel::broadcast(const std::string& msg, Client* sender, Channel* chan) {
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (chan && sender)
-			_users[i]->sendMessage((yellow(chan->getName()) + ": " + sender->getNick() + ": ") + msg);
+			_users[i]->sendMessage((yellow(chan->getName()) + ": " + sender->getNick() + ": ") + msg + "\r\n");
 		else if (chan && !sender) {
-			_users[i]->sendMessage(red("Automatic message:") + " " + yellow(chan->getName()) + ": " + red(msg));
+			_users[i]->sendMessage(red("Automatic message:") + " " + yellow(chan->getName()) + ": " + red(msg) + "\r\n");
 		}
 		else
 			_users[i]->sendMessage(msg);

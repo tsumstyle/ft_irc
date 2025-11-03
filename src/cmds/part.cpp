@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:24:38 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/27 11:39:59 by nboer            ###   ########.fr       */
+/*   Updated: 2025/11/03 13:05:35 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	Server::handlePart(Client *c, const ParsedCmd &data) {
 
 void	Server::partFromChannel(Client* c, Channel* channel, const std::string& reason) {
 	if (channel->isOperator(c) && channel->amountOperators() == 1) {
-		channel->broadcast("No moderators left in the channel. Channel deleted\r\n", NULL, channel);
+		channel->broadcast("No moderators left in the channel. Channel deleted", NULL, channel);
 		// if channel has no members it will be removed by the cleanup
 		std::vector<Client *> users = channel->getUsers();
 		for (size_t i = 0; i < users.size(); i++) {

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:08:36 by nick              #+#    #+#             */
-/*   Updated: 2025/11/03 12:51:37 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 13:04:23 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void Server::handlePrivMsg(Client *c, const ParsedCmd &data) {
 			msg += " ";
 		msg += data.args[i];
 	}
-
+	
 	if (target[0] == '#')
 		handleChannelMsg(c, target, msg);
 	else

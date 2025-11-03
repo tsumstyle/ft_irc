@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nboer <nboer@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:24:54 by aroux             #+#    #+#             */
-/*   Updated: 2025/10/24 15:09:25 by nboer            ###   ########.fr       */
+/*   Updated: 2025/11/03 13:05:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	Server::handleJoinOneChannel(Client *c, const std::string& channel_name, co
 		c->addChannel(&channel);
 		channel.uninvite(c);
 
-		channel.broadcast(yellow(":" + c->getSource() + " JOIN " + channel_name + "\r\n"), NULL, NULL);
+		channel.broadcast(yellow(":" + c->getSource() + " JOIN " + channel_name), NULL, NULL);
 		serverLog(c, " joined channel " + channel_name);
 	}
 	else {

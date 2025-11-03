@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 14:08:03 by aroux             #+#    #+#             */
-/*   Updated: 2025/11/03 10:52:16 by aroux            ###   ########.fr       */
+/*   Updated: 2025/11/03 13:05:07 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	Server::cleanShutdown() {
 	for (std::map<int, Client*>::iterator it = _connected.begin(); it != _connected.end(); ++it) {
 		if (it->second) {
 		// send shutdown message to all connected clients
-			std::string	goodbyeMsg = "ERROR :Server is shutting down\r\n";
+			std::string	goodbyeMsg = "ERROR :Server is shutting down";
 			it->second->sendMessage(goodbyeMsg);
 		// send message to all channels the client is in
 			std::vector<Channel*>	channels = it->second->getChannels();
